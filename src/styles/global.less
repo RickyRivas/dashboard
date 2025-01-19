@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden scroll;
+    display: block;
+    position: relative;
+    font-size: 16px;
+
+    @media (min-width: 1300px) {
+        font-size: 20px;
+    }
+}
+
+/* ===============================================
+	h family || hfam 
+=============================================== */
+@h2fs: 25;
+@h3fs: 22;
+@h4fs: 21;
+@h5fs: 20;
+@h6fs: 19;
+
+h1,
+h2:not(.title),
+h3:not(.title),
+h4,
+h5,
+h6 {
+    line-height: 1;
+    color: #212121;
+    text-rendering: auto;
+    text-transform: capitalize;
+    .bold;
+}
+
+h1 {
+    font-size: unit((23/20), em);
+}
+
+h2:not(.title) {
+    font-size: unit((@h2fs/20), em);
+}
+
+h3:not(.title) {
+    font-size: unit((@h3fs/20), em);
+}
+
+h3.title {
+    margin-bottom: 1em;
+}
+
+h4 {
+    font-size: unit((@h4fs/20), em);
+}
+
+h5 {
+    font-size: unit((@h5fs/20), em);
+}
+
+h6 {
+    font-size: unit((@h6fs/20), em);
+}
+
+.container {
+    display: block;
+    width: 96%;
+    max-width: unit((1400/20), em);
+    margin: 0 auto;
+}
+
+.icon {
+    width: 100%;
+    height: auto;
+    .ib;
+}
+
+.btn {
+    .buttonreset;
+    .ib;
+    .va(top);
+    font-size: 12px;
+    line-height: 44px;
+    background-color: slateblue;
+    padding: 0 10px;
+    color: #fff;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus,
+    &.active,
+    &.open {
+        background-color: green;
+    }
+
+    &:disabled {
+        background-color: gray;
+        color: #000;
+    }
+}
