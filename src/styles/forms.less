@@ -1,0 +1,84 @@
+@border: 2px solid @primary;
+@fs: 16px;
+
+// all forms 
+form:not(.custom) {
+    display: block;
+    width: 100%;
+    padding: (20/20em) (20/20em);
+    border: @border;
+}
+
+.form-control {
+    display: block;
+    position: relative;
+    width: 100%;
+
+    // flatpickr/daypicker.svelte bug fix
+    &:not(.input) {
+        margin-bottom: 1em;
+    }
+
+    &.dropdownactive[class] {
+        z-index: 1777;
+
+        input {
+            border-color: @primary;
+            z-index: 1200;
+        }
+    }
+}
+
+label {
+    color: var(--heading);
+    display: block;
+    .fs(@fs);
+}
+
+input:not([type='checkbox']):not([type='radio']):not(.numInput),
+textarea,
+select {
+    display: block;
+    width: 100%;
+    position: relative;
+    color: @text;
+    border: @border;
+    transition: border-color .33s ease,
+        background-color .33s ease,
+        color .33s ease;
+    font: inherit;
+    outline: none;
+    .fs(@fs);
+    .lh((50/16));
+    resize: none;
+    padding: 0 1em;
+
+    &.error {
+        border-color: red;
+        background-color: lightpink;
+        color: #4E4B66;
+    }
+
+    &:focus,
+    &:active {
+        border-color: @secondary;
+    }
+
+    &:not([id]):disabled {
+        cursor: not-allowed;
+    }
+
+    &::placeholder {
+        color: #ccc;
+    }
+
+    &.success {
+        border-color: green;
+        background-color: lightgreen;
+        color: #4E4B66;
+    }
+
+    &:disabled {
+        background-color: #ccc;
+    }
+}

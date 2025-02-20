@@ -19,7 +19,7 @@ body {
 /* ===============================================
 	h family || hfam 
 =============================================== */
-@h2fs: 25;
+@h2fs: 23;
 @h3fs: 22;
 @h4fs: 21;
 @h5fs: 20;
@@ -39,7 +39,7 @@ h6 {
 }
 
 h1 {
-    font-size: unit((23/20), em);
+    font-size: unit((30/20), em);
 }
 
 h2:not(.title) {
@@ -68,7 +68,7 @@ h6 {
 
 .container {
     display: block;
-    width: 96%;
+    width: calc(100% - 1em);
     max-width: unit((1400/20), em);
     margin: 0 auto;
 }
@@ -79,26 +79,52 @@ h6 {
     .ib;
 }
 
+// anchors & buttons
 .btn {
     .buttonreset;
     .ib;
     .va(top);
-    font-size: 12px;
+    font-size: 16px;
     line-height: 44px;
-    background-color: slateblue;
+    background-color: @primary;
     padding: 0 10px;
     color: #fff;
-    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color .33s ease;
 
     &:hover,
     &:focus,
     &.active,
     &.open {
-        background-color: green;
+        background-color: @secondary;
     }
 
     &:disabled {
         background-color: gray;
         color: #000;
+    }
+}
+
+svg {
+    width: 100%;
+    height: auto;
+}
+
+// temp
+.settings-card {}
+
+.small-avatar {
+    width: 44px;
+    height: 44px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 50%;
+    border: 2px solid @primary;
+    .ib;
+    .va(top);
+
+    img {
+        object-fit: cover;
+        .overlay;
     }
 }
