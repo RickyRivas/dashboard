@@ -1,29 +1,20 @@
-import { authRedirect } from "$lib/supabase-auth";
 import { fail, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import type { EmailOtpType } from '@supabase/supabase-js';
 import { z } from "zod";
-// Check for OTP method first(means they came from valid reset link)
-// If no OTP but they're logged in (password method), redirect them to settings
-// If not logged in at all(empty array), redirect to login
 
-// clicking the reset link from their email will also log them in.
-export const load: ServerLoad = async ({ locals }) => {
-    const { data: aal } = await locals.supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+// user needs to be redirected from email with valid token to visit page
+export const load: ServerLoad = async ({ url, locals: { supabase } }) => {
+    const token_hash = url.searchParams.get('token_hash') as string;
+    const type = url.searchParams.get('type') as EmailOtpType | null;
 
-    // Check for OTP (came from reset link)
-    const isOTPVerified = aal?.currentAuthenticationMethods.some(
-        method => method.method === 'otp'
-    );
-
-    if (!isOTPVerified) {
-        // Check if they're logged in normally
-        if (aal?.currentAuthenticationMethods.length > 0) {
-            throw redirect(303, '/settings?error=Please request a password reset');
-        }
-        // Not logged in at all
-        throw redirect(303, '/login?error=Invalid reset password attempt');
+    if (token_hash && type === 'recovery') {
+        // verify token hash for valid recovery session
+        const { data, error } = await supabase.auth.verifyOtp({ token_hash, type })
+        if (error) redirect(303, '/')
+    } else {
+        // redirect home if not a recovery session
+        redirect(303, '/')
     }
-
-    return {};
 };
 
 export const actions: Actions = {
@@ -65,7 +56,7 @@ export const actions: Actions = {
 
         // If validation passes, update password
         const { error } = await locals.supabase.auth.updateUser({
-            password: newPassword
+            password: newPassword,
         });
 
         if (error) {
@@ -73,6 +64,6 @@ export const actions: Actions = {
         }
 
         // redirect on success
-        redirect(303, authRedirect)
+        redirect(303, '/app')
     }
 };

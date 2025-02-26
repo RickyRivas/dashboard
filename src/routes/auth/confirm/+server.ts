@@ -1,25 +1,26 @@
 // /auth/callback/+server.ts
+import { isAuthApiError } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
-import type { EmailOtpType } from '@supabase/supabase-js';
 
+// email signup/change confirm redirects here with code param
 export const GET = async ({ url, locals: { supabase } }) => {
-    const token_hash = url.searchParams.get('token_hash');
-    const type = url.searchParams.get('type') as EmailOtpType;
-    const next = url.searchParams.get('next') ?? '/';
-
-    if (token_hash && type) {
-        const { error } = await supabase.auth.verifyOtp({ token_hash, type });
-
-        if (!error) {
-            // Successful verification, redirect to the password reset page
-            if (type === 'recovery') {
-                throw redirect(303, '/reset-password');
+    const code = url.searchParams.get('code') as string;
+    if (code) {
+        try {
+            await supabase.auth.exchangeCodeForSession(code)
+        } catch (error) {
+            // If you open in another browser, need to redirect to login.
+            // Should not display error
+            if (isAuthApiError(error)) {
+                redirect(303, "/login?verified=true")
+            } else {
+                throw error
             }
-            // Handle other auth types (signup, etc)
-            throw redirect(303, next);
         }
     }
 
-    // Error case
-    throw redirect(303, '/');
+    const next = url.searchParams.get("next")
+    if (next) redirect(303, next)
+
+    redirect(303, "/settings/profile")
 };

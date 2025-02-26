@@ -72,12 +72,12 @@
 					bind:error={inputConfigs[i].error}
 				/>
 			{/each}
+			<p>Don't have an account? <a href="/register">Register</a></p>
+			{#if errorMessage}
+				<ErrorMessage {errorMessage} />
+			{/if}
 			<button class="auth-submit-btn btn" disabled={loading}> Sign In </button>
 		</form>
 		<p><a href="/forgot-password">Forgot password?</a></p>
-		<p>Don't have an account? <a href="/register">Register</a></p>
-		{#if errorMessage}
-			<ErrorMessage {errorMessage} />
-		{/if}
 	</div>
 </section>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import ErrorMessage from '$lib/components/form/ErrorMessage.svelte';
 	import FormInput from '$lib/components/form/FormInput.svelte';
 	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
 
@@ -31,6 +32,9 @@
 			error: ''
 		}
 	]);
+
+	const { data } = $props();
+	console.log(data);
 </script>
 
 <h1>Please reset your password below.</h1>
@@ -42,7 +46,7 @@
 
 		return async ({ result }) => {
 			loading = false;
-
+			console.log(result);
 			if (result.type === 'redirect') {
 				goto(result.location);
 			} else {
@@ -67,5 +71,8 @@
 			bind:error={inputConfigs[i].error}
 		/>
 	{/each}
+	{#if errorMessage}
+		<ErrorMessage {errorMessage} />
+	{/if}
 	<button class="btn" disabled={loading}>Update</button>
 </form>

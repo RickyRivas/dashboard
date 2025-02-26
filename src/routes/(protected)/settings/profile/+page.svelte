@@ -18,6 +18,8 @@
 	let { data }: { data: PageData } = $props();
 	let { user }: { user: User } = data;
 
+	console.log(user);
+
 	const hasPassword = Boolean(
 		// Check if they initially signed up with email
 		user.app_metadata.provider === 'email' ||
@@ -133,7 +135,7 @@
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td>{user.email}</td>
+						<td>{user.email} {user.email_confirmed_at ? '(Confirmed)' : ''}</td>
 					</tr>
 					<tr>
 						<td>Password:</td>
@@ -233,6 +235,16 @@
 				Edit Settings
 			</button>
 		{/if}
+
+		<h2>Connected Accounts</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>Google</td>
+					<td>Not Connected.</td>
+				</tr>
+			</tbody>
+		</table>
 	{/snippet}
 </SettingsLayout>
 

@@ -4,12 +4,17 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 body {
     font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    overflow: hidden scroll;
+    overflow: hidden;
     display: block;
     position: relative;
     font-size: 16px;
+    min-height: 100vh;
 
     @media (min-width: 1300px) {
         font-size: 20px;

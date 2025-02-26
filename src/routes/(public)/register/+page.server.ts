@@ -1,4 +1,3 @@
-import { authRedirect } from "$lib/supabase-auth";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
 
@@ -10,7 +9,7 @@ export const load = async ({ locals: { safeGetSession } }) => {
 }
 
 export const actions: Actions = {
-    register: async ({ request, locals }) => {
+    register: async ({ request, locals, url }) => {
         const { supabase } = locals;
 
         const formData = await request.formData();
@@ -61,9 +60,16 @@ export const actions: Actions = {
             });
         }
 
-
-        // create new user
-        const { data, error } = await supabase.auth.signUp({ email, password })
+        // create new user. user will need to confirm their email
+        const { data, error } = await supabase.auth.signUp({
+            email, password, options: {
+                data: {
+                    full_name: fullName,
+                },
+                // redirect to after user confirms email
+                emailRedirectTo: `${url.origin}/auth/confirm`
+            }
+        })
 
         if (error) {
             // Handle specific error codes
@@ -99,17 +105,7 @@ export const actions: Actions = {
             }
         }
 
-        // set fullname and any other attribute
-
-        const { error: setProfileError } = await supabase
-            .from('profiles')
-            .upsert({
-                id: data.user?.id,
-                full_name: fullName,
-                updated_at: new Date()
-            });
-
         // redirect
-        redirect(303, authRedirect)
+        return { success: true }
     },
 }

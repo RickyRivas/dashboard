@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
 	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
 	import ErrorMessage from '$lib/components/form/ErrorMessage.svelte';
 	import FormInput from '$lib/components/form/FormInput.svelte';
 	let loading = $state(false);
 	let errorMessage = $state('');
+	let successfulRegistration = $state(false);
 
 	let inputConfigs: InputConfig[] = $state([
 		{
@@ -62,13 +62,18 @@
 			autocomplete="off"
 			use:enhance={() => {
 				loading = true;
+				// clear errors
 				errorMessage = '';
+				inputConfigs.forEach((config) => {
+					config.error = '';
+				});
+
 				return async ({ result }) => {
 					loading = false;
-					console.log(result);
+
 					// upon successful login, redirect
-					if (result.type === 'redirect') {
-						goto(result.location);
+					if (result.type === 'success') {
+						successfulRegistration = true;
 					} else {
 						if (result.data.errorFields) {
 							inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.errorFields);
@@ -94,11 +99,16 @@
 					bind:error={inputConfigs[i].error}
 				/>
 			{/each}
+			{#if errorMessage}
+				<ErrorMessage {errorMessage} />
+			{/if}
+			{#if successfulRegistration}
+				<div class="success-form-message" style:color="green">
+					Check your email for the confirmation link.
+				</div>
+			{/if}
 			<button class="btn" disabled={loading}>Register</button>
 		</form>
-		{#if errorMessage}
-			<ErrorMessage {errorMessage} />
-		{/if}
 		<p>Already have an account? <a href="/login">log in</a></p>
 	</div>
 </section>

@@ -1,9 +1,8 @@
-import { resetPasswordRedirect } from "$lib/supabase-auth";
 import { fail, type Actions } from "@sveltejs/kit";
 import { z } from 'zod'
 
 export const actions: Actions = {
-    updateProfile: async ({ request, locals: { supabase, safeGetSession } }) => {
+    updateProfile: async ({ url, request, locals: { supabase, safeGetSession } }) => {
         const formData = await request.formData()
 
         const avatar_url = formData.get('avatar_url') as string
@@ -71,7 +70,11 @@ export const actions: Actions = {
 
             // handle email change if needed
             if (hasEmailChanged) {
-                const { error: emailError } = await supabase.auth.updateUser({ email: email })
+                const { error: emailError } = await supabase.auth.updateUser({
+                    email: email,
+                }, {
+                    emailRedirectTo: `${url.origin}/auth/confirm`
+                })
 
                 if (emailError) {
                     return fail(400, {

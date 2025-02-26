@@ -14,7 +14,6 @@
 	onMount(() => {
 		// Set up auth state listener
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-			console.log(_);
 			// Check if session has changed by comparing expiry times
 			if (newSession?.expires_at !== session?.expires_at) {
 				// If changed, invalidate the auth data (reload data)

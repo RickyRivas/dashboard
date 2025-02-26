@@ -1,6 +1,5 @@
 // redirect url upon successful login/register
 export const authRedirect = '/app'
-export const resetPasswordRedirect = '/reset-password'
 
 interface AppMetadata {
     provider: string;
