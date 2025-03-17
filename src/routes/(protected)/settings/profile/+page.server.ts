@@ -1,5 +1,6 @@
-import { fail, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { z } from 'zod'
+// import { PRIVATE_SUPABASE_SERVICE_ROLE } from "$env/static/private";
 
 export const actions: Actions = {
     updateProfile: async ({ url, request, locals: { supabase, safeGetSession } }) => {
@@ -147,5 +148,46 @@ export const actions: Actions = {
                 errorFields: []
             });
         }
+    },
+    deleteAccount: async ({ request, locals: {
+        supabase, supabaseServiceRole, safeGetSession
+    } }) => {
+        const { session, user } = await safeGetSession()
+        if (!session || !user?.id) {
+            throw redirect(303, "/login")
+        }
+
+        const formData = await request.formData()
+        const currentPassword = formData.get('password') as string
+
+        if (!currentPassword) {
+            return fail(400, {
+                message:
+                    "You must provide your current password to delete your account. If you forgot it, sign out then use 'forgot password' on the sign in page.",
+            })
+        }
+
+        // Check current password is correct before deleting account
+        const { error: pwError } = await supabase.auth.signInWithPassword({
+            email: user.email || "",
+            password: currentPassword,
+        })
+
+        if (pwError) return fail(400, { message: "Incorrect password." })
+
+        const { error } = await supabaseServiceRole.auth.admin.deleteUser(
+            user.id,
+            true,
+        )
+
+        if (error) {
+            console.error("Error deleting user", error)
+            return fail(500, {
+                message: "Unknown error. If this persists please contact us."
+            })
+        }
+
+        await supabase.auth.signOut()
+        redirect(303, "/")
     }
 };

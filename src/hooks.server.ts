@@ -1,5 +1,7 @@
+import { PRIVATE_SUPABASE_SERVICE_ROLE } from "$env/static/private";
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from "$env/static/public";
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js"
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -32,6 +34,14 @@ const auth: Handle = async ({ event, resolve }) => {
             }
         }
     })
+
+    // admin-level access that bypasses security restrictions
+    event.locals.supabaseServiceRole = createClient(
+        PUBLIC_SUPABASE_URL,
+        PRIVATE_SUPABASE_SERVICE_ROLE,
+        // ensures the elevated permissions aren't accidentally stored in cookies.
+        { auth: { persistSession: false } },
+    )
 
     /**
      * Unlike `supabase.auth.getSession()`, which returns the session _without_

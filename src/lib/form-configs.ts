@@ -106,3 +106,17 @@ export const resetPasswordFormConfig: InputConfig[] = [
         error: ''
     }
 ];
+
+export const deleteAccountFormConfig: InputConfig[] = [
+    {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        value: '',
+        required: true,
+        placeholder: 'Password',
+        disabled: false,
+        error: '',
+        autocomplete: 'current-password'
+    }
+];

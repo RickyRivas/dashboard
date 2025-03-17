@@ -9,11 +9,13 @@
 	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
 	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 	import { onMount } from 'svelte';
+	import AuthForm from '$lib/components/form/AuthForm.svelte';
 
 	let editing = $state(false);
 	let loading = $state(false);
 	let updateProfileForm: HTMLFormElement;
 	let resetPasswordForm: HTMLFormElement;
+	let showDeleteAccountForm = $state(false);
 
 	let { data }: { data: PageData } = $props();
 	let { user }: { user: User } = data;
@@ -27,6 +29,11 @@
 			user.amr?.some((method) => method.method === 'password')
 	);
 
+	// delete account
+	import { deleteAccountFormConfig } from '$lib/form-configs';
+	let deleteInputConfigs = $state(deleteAccountFormConfig);
+
+	// profile form
 	let inputConfigs: InputConfig[] = $state([
 		{
 			name: 'full_name',
@@ -241,6 +248,20 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<h2>Danger</h2>
+		{#if showDeleteAccountForm}
+			<p>Please enter your password to delete your account.</p>
+			<AuthForm
+				action="?/deleteAccount"
+				submitButtonText="Delete Account"
+				bind:inputConfigs={deleteInputConfigs}
+			/>
+		{:else}
+			<button class="btn" onclick={() => (showDeleteAccountForm = !showDeleteAccountForm)}>
+				Delete Account
+			</button>
+		{/if}
 	{/snippet}
 </SettingsLayout>
 
