@@ -1,3 +1,6 @@
+import { goto } from "$app/navigation";
+import type { SubmitFunction } from "@sveltejs/kit";
+
 export interface FormApiError {
     field: string;
     message: string;
@@ -43,6 +46,44 @@ export interface InputConfig {
     | 'cc-csc'
     // One-time code
     | 'one-time-code';
+}
+
+export function createFormHandler(
+    inputConfigs: InputConfig[],
+    setLoading: (isLoading: boolean) => void,
+    setErrorMessage: (message: string) => void,
+): SubmitFunction {
+    return async function () {
+        // clear errors
+        setErrorMessage('')
+        inputConfigs.forEach((config) => {
+            config.error = '';
+        });
+
+        setLoading(true)
+
+        return async ({ result }) => {
+            setLoading(false);
+
+            if (result.type === 'redirect') {
+                goto(result.location);
+                return
+            }
+
+            if (result.data) {
+                if (result.data.message) {
+                    setErrorMessage(result.data.message)
+                }
+
+                if (result.data.errors) {
+                    result.data.errors.forEach((error) => {
+                        const config = inputConfigs.find((config) => config.name === error.field);
+                        if (config) config.error = error.message;
+                    });
+                }
+            }
+        };
+    }
 }
 
 export function handleAPIErrorsForm(configs: InputConfig[], ApiErrors: FormApiError[]) {

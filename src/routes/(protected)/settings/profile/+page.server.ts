@@ -126,7 +126,7 @@ export const actions: Actions = {
 
             const { error } = await supabase.auth.resetPasswordForEmail(
                 session.user.email,
-                { redirectTo: `${url.origin}${resetPasswordRedirect}` }
+                { redirectTo: `${url.origin}/reset-password` }
             );
 
             if (error) {

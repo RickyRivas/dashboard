@@ -1,9 +1,10 @@
-import { fail, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { z } from "zod";
+import type { PageServerLoad } from "./$types";
 
 // user needs to be redirected from email with valid token to visit page
-export const load: ServerLoad = async ({ url, locals: { supabase } }) => {
+export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
     const token_hash = url.searchParams.get('token_hash') as string;
     const type = url.searchParams.get('type') as EmailOtpType | null;
 
@@ -43,14 +44,14 @@ export const actions: Actions = {
         });
 
         if (!validationResult.success) {
-            const errorMessages = validationResult.error.issues.map(issue => ({
+            const validationErrors = validationResult.error.issues.map(issue => ({
                 field: issue.path[0].toString(),
                 message: issue.message
             }));
 
             return fail(400, {
                 message: 'Validation errors.',
-                validationErrors: errorMessages
+                errors: validationErrors
             });
         }
 

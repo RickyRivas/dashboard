@@ -1,4 +1,3 @@
-// /auth/callback/+server.ts
 import { isAuthApiError } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
 
@@ -22,5 +21,5 @@ export const GET = async ({ url, locals: { supabase } }) => {
     const next = url.searchParams.get("next")
     if (next) redirect(303, next)
 
-    redirect(303, "/settings/profile")
+    redirect(303, "/app")
 };

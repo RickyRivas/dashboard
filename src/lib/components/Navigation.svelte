@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
 	import { navigationRoutes } from '$lib/navigation';
@@ -34,15 +35,17 @@
 
 			{#if navType === 'protected'}
 				<button onclick={logout} class="btn">Logout</button>
-				{#if page.data.profile.avatar_url}
-					<div class="small-avatar">
-						<img
-							src={page.data.profile.avatar_url}
-							alt={page.data.profile.full_name}
-							width="40"
-							height="40"
-						/>
-					</div>
+				{#if page.data.profile}
+					{#if page.data.profile.avatar_url}
+						<div class="small-avatar">
+							<img
+								src={page.data.profile.avatar_url}
+								alt={page.data.profile.full_name}
+								width="40"
+								height="40"
+							/>
+						</div>
+					{/if}
 				{/if}
 			{/if}
 

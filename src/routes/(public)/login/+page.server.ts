@@ -12,20 +12,20 @@ export const actions: Actions = {
     login: async ({ request, locals }) => {
         const { supabase } = locals;
 
-        const data = await request.formData();
-        const email = data.get('email') as string;
-        const password = data.get('password') as string;
+        const formData = await request.formData();
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
 
         if (!email.trim() || !password.trim()) {
             return fail(400, { message: 'Email or Password missing.' })
         }
 
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
         if (error) {
             const { status } = error
             if (status === 400) return fail(status, { message: 'Username or Password is incorrect.' })
-            if (status === 500) return fail(status, { message: 'Server error. Please try again later.' })
+            else return fail(status, { message: error.message })
         } else {
             // success!
             redirect(303, authRedirect)

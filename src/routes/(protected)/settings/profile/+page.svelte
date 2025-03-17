@@ -18,8 +18,6 @@
 	let { data }: { data: PageData } = $props();
 	let { user }: { user: User } = data;
 
-	console.log(user);
-
 	const hasPassword = Boolean(
 		// Check if they initially signed up with email
 		user.app_metadata.provider === 'email' ||
@@ -69,7 +67,6 @@
 	let avatar_url = $state(page.data.profile.avatar_url);
 	let onUpload = (error, result, widget) => {
 		if (!error && result) {
-			console.log('url of new image:', result.info.url);
 			avatar_url = result.info.url;
 		}
 	};
@@ -153,10 +150,9 @@
 				class="custom"
 				method="post"
 				bind:this={updateProfileForm}
-				use:enhance={({ cancel }) => {
+				use:enhance={() => {
 					loading = true;
 					return async ({ result }) => {
-						console.log(result);
 						loading = false;
 
 						if (result.type === 'success') {

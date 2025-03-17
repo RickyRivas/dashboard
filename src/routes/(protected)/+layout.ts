@@ -42,15 +42,39 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
     } = await supabase.auth.getUser();
 
     if (!session || !user) {
-        redirect(303, '/')
+        throw redirect(303, '/')
     }
 
     // grab profile data
-    const { data: profile } = await supabase
+    const { data: profile, error: fetchProfileError } = await supabase
         .from("profiles")
         .select(`*`)
         .eq("id", user.id)
         .single()
+
+    // special case: If authenticated but no profile row in DB, recreate it from auth data
+    // todo: notify admin
+    if (fetchProfileError && fetchProfileError.code === 'PGRST116') {
+        console.warn(`User ${session.user.id} missing profile, recreating`);
+
+        // Extract basic info from auth that you collected at signup
+        await supabase
+            .from('profiles')
+            .insert({
+                id: session.user.id,
+                full_name: '',
+                updated_at: new Date()
+            });
+
+        // hard return new data
+        const tempProfileData = {
+            id: session.user.id,
+            full_name: '',
+            updated_at: new Date()
+        }
+
+        return { session, supabase, user, profile: tempProfileData, amr: null }
+    }
 
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
 

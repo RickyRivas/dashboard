@@ -1,6 +1,5 @@
-import { authRedirect, resetPasswordRedirect } from "$lib/supabase-auth";
-import type { Actions } from "@sveltejs/kit";
-import { fail, redirect } from "@sveltejs/kit";
+import { authRedirect } from "$lib/supabase-auth";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const actions: Actions = {
@@ -8,6 +7,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const email = formData.get('email') as string
 
+        // validate fields
         const emailSchema = z
             .object({
                 email: z.string()
@@ -16,34 +16,24 @@ export const actions: Actions = {
                     .max(64, "Email cannot exceed 64 characters"),
             })
 
-        // validate fields
-        const validationResult = emailSchema.safeParse({
-            email,
-        });
-
+        const validationResult = emailSchema.safeParse({ email });
         if (!validationResult.success) {
-            const errorMessages = validationResult.error.issues.map(issue => ({
+            const validationErrors = validationResult.error.issues.map(issue => ({
                 field: issue.path[0].toString(),
                 message: issue.message
             }));
 
-            return fail(400, {
-                message: 'Validation errors.',
-                validationErrors: errorMessages
-            });
+            return fail(400, { errors: validationErrors });
         }
 
+        // send reset request
         const { error } = await supabase.auth.resetPasswordForEmail(
             email,
             { redirectTo: `${url.origin}/reset-password` }
         );
 
         if (error) {
-            console.error('Reset password error:', error);
-            return fail(400, {
-                message: 'Failed to send reset password email',
-                errorFields: []
-            });
+            return fail(400, { message: 'Failed to send reset password email' });
         }
 
         redirect(303, authRedirect)
