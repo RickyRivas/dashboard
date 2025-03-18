@@ -11,6 +11,8 @@
 			submitButtonText="Sign In"
 			action="?/login"
 			bind:inputConfigs
+			showRememberMe={true}
+			oAuth={true}
 			footerContent="<p>Don't have an account? <a href='/register'>Register</a></p> <p><a href='/forgot-password'>Forgot password?</a></p>"
 		/>
 	</div>

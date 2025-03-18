@@ -10,6 +10,7 @@
 		required: boolean;
 		error: string | null;
 		disabled: boolean;
+		oauthUserDisable?: boolean;
 		autocomplete:
 			| 'off'
 			| 'on'
@@ -56,6 +57,7 @@
 		error = $bindable(null),
 		disabled = $bindable(false),
 		autocomplete = undefined,
+		oauthUserDisable = false,
 		id = `input-${Math.random().toString(36).substr(2, 9)}`
 	}: Prop = $props();
 
@@ -73,21 +75,38 @@
 	{#if label}
 		<label for={id} class:required>
 			{label}
+			{oauthUserDisable ? '- Change Email through your provider.' : ''}
 		</label>
 	{/if}
-	<input
-		{id}
-		{type}
-		{name}
-		{placeholder}
-		{required}
-		{disabled}
-		{value}
-		{autocomplete}
-		bind:this={inputElement}
-		class:error
-		oninput={handleInput}
-	/>
+	<!-- oauthUserDisable is for fields that users signed in with a provider cant change. -->
+	{#if oauthUserDisable}
+		<input
+			{id}
+			{type}
+			{name}
+			{placeholder}
+			{required}
+			disabled={true}
+			{value}
+			{autocomplete}
+			bind:this={inputElement}
+			class:error
+		/>
+	{:else}
+		<input
+			{id}
+			{type}
+			{name}
+			{placeholder}
+			{required}
+			{disabled}
+			{value}
+			{autocomplete}
+			bind:this={inputElement}
+			class:error
+			oninput={handleInput}
+		/>
+	{/if}
 	{#if error}
 		<ErrorMessage errorMessage={error} />
 	{/if}

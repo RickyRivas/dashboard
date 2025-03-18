@@ -1,193 +1,146 @@
+import { deleteUserSchema, profileSchema, validateForm } from "$lib/zod-helper";
+import type { Provider, UserIdentity } from "@supabase/supabase-js";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
-import { z } from 'zod'
-// import { PRIVATE_SUPABASE_SERVICE_ROLE } from "$env/static/private";
 
 export const actions: Actions = {
     updateProfile: async ({ url, request, locals: { supabase, safeGetSession } }) => {
-        const formData = await request.formData()
-
-        const avatar_url = formData.get('avatar_url') as string
-        const full_name = formData.get('full_name') as string
-        // const username = formData.get('username') as string
-        const email = formData.get('email') as string
-
-        // validation
-        const FormData = z.object({
-            // avatar_url: z.string().min(2),
-            full_name: z.string().min(2),
-            // username: z.string().min(2),
-            email: z.string().email(),
-        })
-
-        const validationResult = FormData.safeParse({
-            // avatar_url,
-            full_name,
-            // username,
-            email
-        })
-
-        if (!validationResult.success) {
-            const errorMessages = validationResult.error.issues.map(issue => ({
-                field: issue.path[0].toString(),
-                message: issue.message
-            }));
-
-            return fail(400, {
-                message: 'Please check your info.',
-                validationErrors: errorMessages
-            });
-        }
-
         // save profile data
-        const { session } = await safeGetSession()
+        const { user } = await safeGetSession();
+        const formData = await request.formData();
+        const oauthOnly = formData.get('oauth-only') as string;
 
-        try {
-            const { data: currentProfile, error: profileError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session?.user.id)
-                .single()
+        const avatar_url = formData.get('avatar_url');
+        const full_name = formData.get('full_name')
+        const email = oauthOnly ? user.email : formData.get('email')
 
-            if (profileError) {
-                return fail(500, {
-                    message: 'Failed to fetch current profile',
-                    errorFields: []
-                })
-            }
+        const validateFormResult = await validateForm(profileSchema, { avatar_url, full_name, email })
+        if (validateFormResult.errors) return fail(400, { message: 'Form validation failure.', errors: validateFormResult.errors });
 
-            // Check if any values have changed
-            const hasProfileChanges =
-                avatar_url !== currentProfile.avatar_url ||
-                full_name !== currentProfile.full_name
+        const { data: fetchedProfile, error: failedProfileFetch } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single()
 
-            const hasEmailChanged = email !== session?.user.email;
+        if (failedProfileFetch) return fail(500, { message: 'Failed to update profile.', errors: [] })
 
-            // If nothing changed, return early
-            if (!hasProfileChanges && !hasEmailChanged) {
-                return {
-                    message: 'No changes detected'
-                };
-            }
+        // Check if any values have changed
+        const hasProfileChanges =
+            avatar_url !== fetchedProfile.avatar_url ||
+            full_name !== fetchedProfile.full_name
 
-            // handle email change if needed
-            if (hasEmailChanged) {
-                const { error: emailError } = await supabase.auth.updateUser({
-                    email: email,
-                }, {
-                    emailRedirectTo: `${url.origin}/auth/confirm`
-                })
+        const hasEmailChanged = email !== user.email;
 
-                if (emailError) {
-                    return fail(400, {
-                        errorFields: [{ field: 'email', message: 'Failed to update email.' }]
-                    });
-                }
-            }
+        // If nothing changed, return early
+        if (!hasProfileChanges && !hasEmailChanged) return { success: true };
 
-            // Update profile if there are changes
-            if (hasProfileChanges) {
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .upsert({
-                        id: session?.user.id,
-                        full_name,
-                        avatar_url,
-                        updated_at: new Date()
-                    });
+        // handle email change if needed
+        if (hasEmailChanged) {
+            const { error } = await supabase.auth.updateUser({
+                email: email
+            }, {
+                emailRedirectTo: `${url.origin}/auth/confirm`
+            })
 
-                if (updateError) {
-                    return fail(400, {
-                        errorFields: [{ field: 'full_name', message: 'Failed to update profile' }, { field: 'avatar_url', message: 'Failed to update profile' }]
-                    });
-                }
-            }
-
-            return {
-                message: hasEmailChanged
-                    ? 'Profile updated. Please check your email to confirm the email change.'
-                    : 'Profile updated successfully'
-            };
-        } catch (error) {
-            console.error('Unexpected error:', error);
-            return fail(500, {
-                message: 'An unexpected error occurred',
-                errorFields: []
-            });
+            if (error) return fail(error.status as number, { errors: [{ field: 'email', message: 'Failed to update email.' }] });
         }
+
+        // Update profile if there are changes
+        if (hasProfileChanges) {
+            const { error: updateProfileError } = await supabase
+                .from('profiles')
+                .upsert({
+                    id: user.id,
+                    full_name,
+                    avatar_url,
+                    updated_at: new Date()
+                });
+
+            if (updateProfileError) return fail(400, { message: 'Failed to update profile.' });
+        }
+
+        return { success: true }
     },
     sendPasswordResetRequest: async ({ url, locals: { supabase, safeGetSession } }) => {
-        try {
-            const { session } = await safeGetSession();
+        const { user } = await safeGetSession();
+        const { error } = await supabase.auth.resetPasswordForEmail(
+            user.email as string,
+            { redirectTo: `${url.origin}/reset-password` }
+        );
 
-            if (!session) {
-                return fail(401, {
-                    message: 'You must be logged in to reset your password'
-                });
-            }
+        if (error) return fail(error.status as number, { message: 'Failed to send request' });
 
-            const { error } = await supabase.auth.resetPasswordForEmail(
-                session.user.email,
-                { redirectTo: `${url.origin}/reset-password` }
-            );
-
-            if (error) {
-                console.error('Reset password error:', error);
-                return fail(400, {
-                    message: 'Failed to send reset password email',
-                    errorFields: []
-                });
-            }
-
-            return {
-                message: 'Password reset email sent. Please check your inbox.'
-            };
-
-        } catch (err) {
-            return fail(500, {
-                message: 'An unexpected error occurred',
-                errorFields: []
-            });
-        }
+        return { success: true };
     },
     deleteAccount: async ({ request, locals: {
         supabase, supabaseServiceRole, safeGetSession
     } }) => {
-        const { session, user } = await safeGetSession()
-        if (!session || !user?.id) {
-            throw redirect(303, "/login")
-        }
-
+        const { user } = await safeGetSession()
         const formData = await request.formData()
-        const currentPassword = formData.get('password') as string
+        const confirm = formData.get('confirm')
+        const validateFormResult = await validateForm(deleteUserSchema, { confirm })
 
-        if (!currentPassword) {
-            return fail(400, {
-                message:
-                    "You must provide your current password to delete your account. If you forgot it, sign out then use 'forgot password' on the sign in page.",
-            })
-        }
-
-        // Check current password is correct before deleting account
-        const { error: pwError } = await supabase.auth.signInWithPassword({
-            email: user.email || "",
-            password: currentPassword,
-        })
-
-        if (pwError) return fail(400, { message: "Incorrect password." })
+        if (validateFormResult.errors) return fail(400, { message: 'Form validation failure.', errors: validateFormResult.errors });
 
         const { error } = await supabaseServiceRole.auth.admin.deleteUser(
             user.id,
             true,
         )
 
-        if (error) {
-            console.error("Error deleting user", error)
-            return fail(500, {
-                message: "Unknown error. If this persists please contact us."
-            })
-        }
+        if (error) return fail(error.status as number, { message: "There was an error deleting your account." })
 
         await supabase.auth.signOut()
         redirect(303, "/")
+    },
+    linkProvider: async ({ request, locals: { supabase } }) => {
+        const formData = await request.formData()
+        const providerToLinkTo = formData.get('provider') as Provider
+
+        const { data, error } = await supabase.auth.linkIdentity({
+            provider: providerToLinkTo
+        })
+
+        if (error) return fail(error.status as number, { message: 'Failed to link to provider.' })
+        else throw redirect(303, data.url)
+    },
+    unlinkProvider: async ({ request, locals: { supabase, safeGetSession, supabaseServiceRole } }) => {
+        // we only get this far if the user chooses to 'unlink' from a oauth provider
+        const { user } = await safeGetSession()
+        if (!user?.id) throw redirect(303, "/login")
+
+        const formData = await request.formData()
+        const providerToUnlinkTo = formData.get('provider') as Provider
+        const identities = await supabase.auth.getUserIdentities()
+        const foundIdentity = identities.data?.identities.find(
+            identity => identity.provider === providerToUnlinkTo
+        ) as UserIdentity
+
+        const { error } = await supabase.auth.unlinkIdentity(foundIdentity)
+
+        if (error) {
+            // if user has only signed up with oauth, extract from and set the email provider, and then unlink.
+            if (error.code === 'single_identity_not_deletable') {
+                const oauthIdentityEmail = foundIdentity?.identity_data?.email
+
+                if (oauthIdentityEmail) {
+                    const { error: updateupdateEmailError } = await supabaseServiceRole.auth.admin.updateUserById(
+                        user?.id,
+                        { email: foundIdentity?.identity_data?.email }
+                    )
+
+                    if (updateupdateEmailError) fail(updateupdateEmailError.status as number, { message: 'Something went wrong.' })
+
+                    // retry unlink 
+                    const { error } = await supabase.auth.unlinkIdentity(foundIdentity)
+                    if (updateupdateEmailError) fail(error?.status as number, { message: error?.message })
+                    else throw redirect(303, '/auth/confirm?next=/settings/profile')
+                }
+            }
+
+            // other
+            return fail(error.status as number, { message: error.message })
+        }
+
+        else throw redirect(303, '/auth/confirm?next=/settings/profile')
     }
 };

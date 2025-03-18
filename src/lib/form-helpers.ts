@@ -15,6 +15,7 @@ export interface InputConfig {
     placeholder: string;
     disabled: boolean;
     error: string;
+    oAuthOnly?: boolean
     autocomplete?: | 'off'
     | 'on'
     // Sign-in/credentials

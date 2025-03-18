@@ -1,15 +1,27 @@
 <script lang="ts">
+	// layout
 	import SettingsLayout from '$lib/layouts/SettingsLayout.svelte';
-	import type { User } from '@supabase/supabase-js';
-	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
-	import { invalidate } from '$app/navigation';
-	import { page } from '$app/state';
-	import FormInput from '$lib/components/form/FormInput.svelte';
-	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
-	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
-	import { onMount } from 'svelte';
+
+	// components
 	import AuthForm from '$lib/components/form/AuthForm.svelte';
+	import FormInput from '$lib/components/form/FormInput.svelte';
+
+	// helpers
+	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
+
+	// svelte imports
+	import { page } from '$app/state';
+	import { invalidate } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
+	import { appAvailableProviders } from '$lib/auth-controller';
+
+	// supabase
+	import type { User } from '@supabase/supabase-js';
+
+	// cloudinary
+	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 
 	let editing = $state(false);
 	let loading = $state(false);
@@ -20,52 +32,23 @@
 	let { data }: { data: PageData } = $props();
 	let { user }: { user: User } = data;
 
-	const hasPassword = Boolean(
-		// Check if they initially signed up with email
-		user.app_metadata.provider === 'email' ||
-			// Check if password is in their auth methods
-			user.app_metadata.providers?.includes('email') ||
-			// Check AMR for password auth
-			user.amr?.some((method) => method.method === 'password')
+	// providers
+	const hasEmailAuthentication = user?.identities?.some(
+		(provider) => provider.provider === 'email'
 	);
 
-	// delete account
-	import { deleteAccountFormConfig } from '$lib/form-configs';
+	// delete account form config
+	import { deleteAccountFormConfig, profileSettingsInputConfigs } from '$lib/form-configs';
 	let deleteInputConfigs = $state(deleteAccountFormConfig);
 
 	// profile form
-	let inputConfigs: InputConfig[] = $state([
-		{
-			name: 'full_name',
-			label: 'Name',
-			type: 'text',
-			value: page.data.profile.full_name,
-			required: true,
-			placeholder: 'Name',
-			disabled: false,
-			error: ''
-		},
-		{
-			name: 'email',
-			label: 'Email',
-			type: 'email',
-			value: user.email,
-			required: true,
-			placeholder: 'Email',
-			disabled: false,
-			error: ''
-		}
-	]);
+	let inputConfigs: InputConfig[] = $state(profileSettingsInputConfigs);
 
-	$effect(() => {
-		// clear errors when we toggle off editing
-		if (!editing) {
-			inputConfigs.forEach((config) => (config.error = ''));
-		}
-		// image url
-		avatar_url = page.data.profile.avatar_url;
-	});
+	inputConfigs[0].value = page.data.profile.full_name;
+	inputConfigs[1].value = user.email as string;
+	inputConfigs[1].oAuthOnly = !hasEmailAuthentication;
 
+	// send reset password request
 	let sendPasswordRequestState = $state('');
 	let sendPasswordRequestLoading = $state(false);
 
@@ -107,6 +90,12 @@
 
 		'requestIdleCallback' in window ? requestIdleCallback(onIdle) : setTimeout(onIdle, 1);
 	});
+
+	$effect(() => {
+		// clear errors when we toggle off editing
+		if (!editing) inputConfigs.forEach((config) => (config.error = ''));
+		avatar_url = page.data.profile.avatar_url;
+	});
 </script>
 
 <SettingsLayout>
@@ -119,18 +108,15 @@
 					<tr>
 						<td>Avatar:</td>
 						<td>
-							{#if page.data.profile.avatar_url}
-								<div class="small-avatar">
-									<img
-										src={page.data.profile.avatar_url}
-										alt={page.data.profile.full_name}
-										width="40"
-										height="40"
-									/>
-								</div>
-							{:else}
-								No avatar set.
-							{/if}
+							<div class="small-avatar">
+								<img
+									src={page.data.profile.avatar_url || '/images/avatar-placeholder.jpg'}
+									alt={page.data.profile.full_name || 'placeholder'}
+									width="40"
+									height="40"
+									decoding="async"
+								/>
+							</div>
 						</td>
 					</tr>
 					<tr>
@@ -139,16 +125,14 @@
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td>{user.email} {user.email_confirmed_at ? '(Confirmed)' : ''}</td>
+						<td>{user.email}</td>
 					</tr>
-					<tr>
-						<td>Password:</td>
-						{#if hasPassword}
+					{#if hasEmailAuthentication}
+						<tr>
+							<td>Password:</td>
 							<td>***</td>
-						{:else}
-							<td>Password not set.</td>
-						{/if}
-					</tr>
+						</tr>
+					{/if}
 				</tbody>
 			</table>
 		{:else}
@@ -165,18 +149,18 @@
 						if (result.type === 'success') {
 							invalidate('supabase:auth');
 							editing = false;
-						} else {
-							// check for validation and supabase errors
-							if (result.data.validationErrors) {
-								inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.validationErrors);
-							}
-							if (result.data.errorFields) {
-								inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.errorFields);
-							}
+						}
+
+						if (result.data.errors) {
+							inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.errors);
 						}
 					};
 				}}
 			>
+				{#if !hasEmailAuthentication}
+					<input type="hidden" name="oauth-only" value={true} />
+				{/if}
+
 				<input type="hidden" name="avatar_url" bind:value={avatar_url} />
 				{#if avatar_url}
 					<div class="small-avatar">
@@ -185,7 +169,7 @@
 				{/if}
 				<button onclick={handleClick} type="button" class="btn"> Upload Image</button>
 
-				{#each inputConfigs as { name, label, placeholder, required, disabled, type }, i}
+				{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly }, i}
 					<FormInput
 						id={name}
 						{name}
@@ -196,22 +180,26 @@
 						bind:value={inputConfigs[i].value}
 						bind:disabled={loading}
 						bind:error={inputConfigs[i].error}
+						autocomplete="off"
+						oauthUserDisable={oAuthOnly}
 					/>
 				{/each}
 
-				<!-- Password -->
-				<div class="form-control">
-					<label for=""> Password </label>
-					<button class="btn" type="button" onclick={() => resetPasswordForm.requestSubmit()}>
-						Send Password Reset Request
-					</button>
-					{#if sendPasswordRequestLoading}
-						<span>Sending...</span>
-					{/if}
-					{#if sendPasswordRequestState}
-						<span>{sendPasswordRequestState}</span>
-					{/if}
-				</div>
+				{#if hasEmailAuthentication}
+					<!-- Password -->
+					<div class="form-control">
+						<label for=""> Password </label>
+						<button class="btn" type="button" onclick={() => resetPasswordForm.requestSubmit()}>
+							Send Password Reset Request
+						</button>
+						{#if sendPasswordRequestLoading}
+							<span>Sending...</span>
+						{/if}
+						{#if sendPasswordRequestState}
+							<span>{sendPasswordRequestState}</span>
+						{/if}
+					</div>
+				{/if}
 
 				<button class="btn">Save</button>
 				<button
@@ -219,8 +207,10 @@
 					class="btn"
 					onclick={() => {
 						editing = false;
-					}}>Cancel</button
+					}}
 				>
+					Cancel
+				</button>
 			</form>
 		{/if}
 
@@ -235,28 +225,69 @@
 					editing = true;
 				}}
 			>
-				Edit Settings
+				Edit Profile
 			</button>
 		{/if}
 
-		<h2>Connected Accounts</h2>
+		<!-- -->
+		<h2>Connected accounts:</h2>
 		<table>
 			<tbody>
-				<tr>
-					<td>Google</td>
-					<td>Not Connected.</td>
-				</tr>
+				{#each appAvailableProviders as provider}
+					<tr>
+						<td style="text-transform: capitalize;">{provider.name}</td>
+						<td>
+							{user.identities?.some((i) => i.provider === provider.name)
+								? 'Connected'
+								: 'Not Connected'}
+							{#if !user.identities?.some((i) => i.provider === provider.name)}
+								<form
+									class="custom inline"
+									action="?/linkProvider"
+									method="post"
+									use:enhance={() => {
+										return async ({ result }) => {
+											if (result.type === 'redirect') {
+												window.location = result.location;
+											}
+										};
+									}}
+								>
+									<input type="hidden" name="provider" value={provider.name} />
+									<button class="btn">Link</button>
+								</form>
+							{:else}
+								<form
+									class="custom inline"
+									action="?/unlinkProvider"
+									method="post"
+									use:enhance={() => {
+										return async ({ result }) => {
+											if (result.type === 'redirect') {
+												window.location = result.location;
+											}
+										};
+									}}
+								>
+									<input type="hidden" name="provider" value={provider.name} />
+									<button class="btn">Unlink</button>
+								</form>
+							{/if}
+						</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 
+		<!-- -->
 		<h2>Danger</h2>
 		{#if showDeleteAccountForm}
-			<p>Please enter your password to delete your account.</p>
 			<AuthForm
 				action="?/deleteAccount"
 				submitButtonText="Delete Account"
 				bind:inputConfigs={deleteInputConfigs}
 			/>
+			<button class="btn" onclick={() => (showDeleteAccountForm = false)}>Cancel</button>
 		{:else}
 			<button class="btn" onclick={() => (showDeleteAccountForm = !showDeleteAccountForm)}>
 				Delete Account
@@ -270,14 +301,12 @@
 	action="?/sendPasswordResetRequest"
 	class="screenreader custom"
 	method="post"
-	use:enhance={({ cancel }) => {
+	use:enhance={() => {
 		sendPasswordRequestLoading = true;
 		return async ({ result }) => {
 			sendPasswordRequestLoading = false;
-
-			if (result.data.message) {
-				sendPasswordRequestState = result.data.message;
-			}
+			if (result.status === 200) sendPasswordRequestState = 'Please check your email.';
+			else sendPasswordRequestState = 'Something went wrong.';
 		};
 	}}
 >

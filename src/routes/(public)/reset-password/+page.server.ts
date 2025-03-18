@@ -61,7 +61,7 @@ export const actions: Actions = {
         });
 
         if (error) {
-            return fail(400, { message: error.message });
+            return fail(error.status as number, { message: error.message });
         }
 
         // redirect on success

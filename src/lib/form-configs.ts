@@ -109,14 +109,37 @@ export const resetPasswordFormConfig: InputConfig[] = [
 
 export const deleteAccountFormConfig: InputConfig[] = [
     {
-        name: 'password',
-        label: 'Password',
-        type: 'password',
+        name: 'confirm',
+        label: "Please type 'confirm' to delete your account.",
+        type: 'confirm',
         value: '',
         required: true,
-        placeholder: 'Password',
+        placeholder: '',
         disabled: false,
         error: '',
-        autocomplete: 'current-password'
+        autocomplete: 'off'
+    }
+];
+
+export const profileSettingsInputConfigs: InputConfig[] = [
+    {
+        name: 'full_name',
+        label: 'Name',
+        type: 'text',
+        value: '',
+        required: true,
+        placeholder: 'Name',
+        disabled: false,
+        error: ''
+    },
+    {
+        name: 'email',
+        label: 'Email',
+        type: 'email',
+        value: '',
+        required: true,
+        placeholder: 'Email',
+        disabled: true,
+        error: '',
     }
 ];

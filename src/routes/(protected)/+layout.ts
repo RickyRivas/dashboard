@@ -41,6 +41,10 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
         data: { user }
     } = await supabase.auth.getUser();
 
+    if (session && !user) {
+        throw redirect(303, `/auth/confirm?signout=true&access_token=${session.access_token}`)
+    }
+
     if (!session || !user) {
         throw redirect(303, '/')
     }
