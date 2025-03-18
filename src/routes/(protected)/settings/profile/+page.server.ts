@@ -7,12 +7,17 @@ export const actions: Actions = {
         try {
             // save profile data
             const { user } = await safeGetSession();
-            const formData = await request.formData();
-            const oauthOnly = formData.get('oauth-only') as string;
 
+            const { data: fetchedUserIdentities, error: fetchedUserIdentitiesError } = await supabase.auth.getUserIdentities()
+
+            const hasEmailAuthentication = fetchedUserIdentities?.identities.some(
+                (provider) => provider.provider === 'email'
+            ) || null;
+
+            const formData = await request.formData();
             const avatar_url = formData.get('avatar_url');
             const full_name = formData.get('full_name')
-            const email = oauthOnly ? user.email : formData.get('email')
+            const email = !hasEmailAuthentication ? user.email : formData.get('email')
 
             const validateFormResult = await validateForm(profileSchema, { avatar_url, full_name, email })
             if (validateFormResult.errors) return fail(400, { message: 'Form validation failure.', errors: validateFormResult.errors });
@@ -61,7 +66,6 @@ export const actions: Actions = {
             }
 
             return { success: true }
-
         } catch (e) {
             return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
