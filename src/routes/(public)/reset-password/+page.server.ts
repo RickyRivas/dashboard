@@ -1,7 +1,7 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { EmailOtpType } from '@supabase/supabase-js';
-import { z } from "zod";
 import type { PageServerLoad } from "./$types";
+import { newPasswordSchema, validateForm } from "$lib/zod-helper";
 
 // user needs to be redirected from email with valid token to visit page
 export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
 
     if (token_hash && type === 'recovery') {
         // verify token hash for valid recovery session
-        const { data, error } = await supabase.auth.verifyOtp({ token_hash, type })
+        const { error } = await supabase.auth.verifyOtp({ token_hash, type })
         if (error) redirect(303, '/')
     } else {
         // redirect home if not a recovery session
@@ -20,51 +20,28 @@ export const load: PageServerLoad = async ({ url, locals: { supabase } }) => {
 
 export const actions: Actions = {
     resetPassword: async ({ request, locals }) => {
-        const formData = await request.formData()
-        const newPassword = formData.get('newPassword') as string
-        const newPasswordConfirmed = formData.get('confirmPassword') as string
+        try {
+            const formData = await request.formData()
+            const newPassword = formData.get('newPassword') as string
+            const newPasswordConfirmed = formData.get('confirmPassword') as string
 
-        const newPasswordSchema = z
-            .object({
-                newPassword: z.string()
-                    .min(6, "Password must be at least 6 characters")
-                    .regex(/[A-Z]/, "Must contain uppercase letter")
-                    .regex(/[0-9]/, "Must contain number"),
-                newPasswordConfirmed: z.string()
+            const validateFormResult = await validateForm(newPasswordSchema, {
+                newPassword,
+                newPasswordConfirmed
             })
-            .refine((data) => data.newPassword === data.newPasswordConfirmed, {
-                message: "Passwords don't match",
-                path: ["confirmPassword"]
+
+            if (validateFormResult.errors) return fail(400, { errors: validateFormResult.errors });
+
+            const { error } = await locals.supabase.auth.updateUser({
+                password: newPassword,
             });
 
-        // validate
-        const validationResult = newPasswordSchema.safeParse({
-            newPassword,
-            newPasswordConfirmed
-        });
+            if (error) return fail(error.status as number, { message: error.message });
 
-        if (!validationResult.success) {
-            const validationErrors = validationResult.error.issues.map(issue => ({
-                field: issue.path[0].toString(),
-                message: issue.message
-            }));
+            return { success: true, redirectTo: '/app' }
 
-            return fail(400, {
-                message: 'Validation errors.',
-                errors: validationErrors
-            });
+        } catch (e) {
+            return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
-
-        // If validation passes, update password
-        const { error } = await locals.supabase.auth.updateUser({
-            password: newPassword,
-        });
-
-        if (error) {
-            return fail(error.status as number, { message: error.message });
-        }
-
-        // redirect on success
-        redirect(303, '/app')
     }
 };

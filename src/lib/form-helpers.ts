@@ -82,6 +82,10 @@ export function createFormHandler(
                         if (config) config.error = error.message;
                     });
                 }
+
+                if (result.status === 200 && result?.data?.redirectTo) {
+                    window.location = result.data.redirectTo;
+                }
             }
         };
     }

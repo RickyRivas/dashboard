@@ -10,28 +10,32 @@ export const load = async ({ locals: { safeGetSession } }) => {
 
 export const actions: Actions = {
     login: async ({ request, locals }) => {
-        const { supabase } = locals;
+        try {
+            const { supabase } = locals;
+            const formData = await request.formData();
+            const email = formData.get('email') as string;
+            const password = formData.get('password') as string;
+            const rememberMe = formData.get('rememberme') as string;
 
-        const formData = await request.formData();
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
-        const rememberMe = formData.get('rememberme') as string;
+            if (!email.trim() || !password.trim()) {
+                return fail(400, { message: 'Email or Password missing.' })
+            }
 
-        if (!email.trim() || !password.trim()) {
-            return fail(400, { message: 'Email or Password missing.' })
-        }
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email, password
+            })
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email, password
-        })
+            if (error) {
+                const { status } = error
+                if (status === 400) return fail(status, { message: 'Username or Password is incorrect.' })
+                else return fail(status, { message: error.message })
+            } else {
+                // success!
+                return { success: true, redirectTo: authRedirect }
+            }
 
-        if (error) {
-            const { status } = error
-            if (status === 400) return fail(status, { message: 'Username or Password is incorrect.' })
-            else return fail(status, { message: error.message })
-        } else {
-            // success!
-            redirect(303, authRedirect)
+        } catch (e) {
+            return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
     },
     oauthSignin: async ({ request, locals: { supabase } }) => {

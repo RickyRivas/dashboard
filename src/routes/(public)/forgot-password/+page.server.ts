@@ -1,41 +1,26 @@
 import { authRedirect } from "$lib/supabase-auth";
-import { fail, redirect, type Actions } from "@sveltejs/kit";
-import { z } from "zod";
+import { forgotPasswordSchema } from "$lib/zod-helper";
+import { validateForm } from "$lib/zod-helper";
+import { fail, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
     passwordResetRequest: async ({ url, request, locals: { supabase } }) => {
-        const formData = await request.formData()
-        const email = formData.get('email') as string
+        try {
+            const formData = await request.formData()
+            const email = formData.get('email') as string
 
-        // validate fields
-        const emailSchema = z
-            .object({
-                email: z.string()
-                    .email("Please enter a valid email address")
-                    .min(5, "Email must be at least 5 characters")
-                    .max(64, "Email cannot exceed 64 characters"),
-            })
+            const validateFormResult = await validateForm(forgotPasswordSchema, { email })
+            if (validateFormResult.errors) return fail(400, { errors: validateFormResult.errors });
 
-        const validationResult = emailSchema.safeParse({ email });
-        if (!validationResult.success) {
-            const validationErrors = validationResult.error.issues.map(issue => ({
-                field: issue.path[0].toString(),
-                message: issue.message
-            }));
+            const { error } = await supabase.auth.resetPasswordForEmail(
+                email,
+                { redirectTo: `${url.origin}/reset-password` }
+            );
 
-            return fail(400, { errors: validationErrors });
+            if (error) return fail(400, { message: 'Failed to send reset password email' });
+            return { success: true, redirectTo: authRedirect }
+        } catch (e) {
+            return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
-
-        // send reset request
-        const { error } = await supabase.auth.resetPasswordForEmail(
-            email,
-            { redirectTo: `${url.origin}/reset-password` }
-        );
-
-        if (error) {
-            return fail(400, { message: 'Failed to send reset password email' });
-        }
-
-        redirect(303, authRedirect)
     }
 }

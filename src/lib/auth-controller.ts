@@ -1,4 +1,4 @@
 // providers
 export const appAvailableProviders = [
-    { name: 'google', iconPath: '' }
+    { name: 'google', iconPath: '' },
 ]

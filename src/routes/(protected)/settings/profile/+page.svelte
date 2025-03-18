@@ -11,7 +11,7 @@
 
 	// svelte imports
 	import { page } from '$app/state';
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
@@ -67,8 +67,12 @@
 		}
 	}
 
-	function handleClick() {
+	function uploadAvatar() {
 		if (uploadWidget) uploadWidget.open();
+	}
+
+	function removeAvatar() {
+		avatar_url = '/avatar-placeholder.jpg';
 	}
 
 	configureCloudinary({
@@ -110,7 +114,7 @@
 						<td>
 							<div class="small-avatar">
 								<img
-									src={page.data.profile.avatar_url || '/images/avatar-placeholder.jpg'}
+									src={page.data.profile.avatar_url || '/avatar-placeholder.jpg'}
 									alt={page.data.profile.full_name || 'placeholder'}
 									width="40"
 									height="40"
@@ -162,12 +166,16 @@
 				{/if}
 
 				<input type="hidden" name="avatar_url" bind:value={avatar_url} />
-				{#if avatar_url}
-					<div class="small-avatar">
-						<img src={avatar_url} alt={page.data.profile.full_name} width="40" height="40" />
-					</div>
-				{/if}
-				<button onclick={handleClick} type="button" class="btn"> Upload Image</button>
+				<div class="small-avatar">
+					<img
+						src={avatar_url || '/avatar-placeholder.jpg'}
+						alt={page.data.profile.full_name || ''}
+						width="40"
+						height="40"
+					/>
+				</div>
+				<button onclick={uploadAvatar} type="button" class="btn"> Upload Image</button>
+				<button onclick={removeAvatar} type="button" class="btn"> Remove Image</button>
 
 				{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly }, i}
 					<FormInput
@@ -247,8 +255,8 @@
 									method="post"
 									use:enhance={() => {
 										return async ({ result }) => {
-											if (result.type === 'redirect') {
-												window.location = result.location;
+											if (result.type === 'success' && result?.data?.redirectTo) {
+												window.location = result.data.redirectTo;
 											}
 										};
 									}}
@@ -263,8 +271,8 @@
 									method="post"
 									use:enhance={() => {
 										return async ({ result }) => {
-											if (result.type === 'redirect') {
-												window.location = result.location;
+											if (result.type === 'success' && result?.data?.redirectTo) {
+												window.location = result.data.redirectTo;
 											}
 										};
 									}}
