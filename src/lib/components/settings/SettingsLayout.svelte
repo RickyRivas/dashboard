@@ -1,6 +1,6 @@
 <script>
 	import SettingsNavigation from '$lib/components/SettingsNavigation.svelte';
-	let { content } = $props();
+	let { children } = $props();
 </script>
 
 <section class="settings-layout">
@@ -8,6 +8,6 @@
 		<SettingsNavigation />
 	</div>
 	<div class="container">
-		{@render content()}
+		{@render children()}
 	</div>
 </section>

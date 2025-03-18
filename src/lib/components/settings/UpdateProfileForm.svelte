@@ -36,8 +36,6 @@
 	let prSuccess = $state(false);
 	let prError = $state(false);
 	let prSending = $state(false);
-
-	$inspect(loading, error, success);
 </script>
 
 <form

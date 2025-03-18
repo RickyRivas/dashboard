@@ -1,8 +1,8 @@
 <script lang="ts">
 	// layout
-	import SettingsLayout from '$lib/layouts/SettingsLayout.svelte';
-	import ConnectedProviders from '$lib/layouts/profile/ConnectedProviders.svelte';
-	import AccountDeletionForm from '$lib/layouts/profile/AccountDeletionForm.svelte';
+	import SettingsLayout from '$lib/components/settings/SettingsLayout.svelte';
+	import ConnectedProviders from '$lib/components/settings/ConnectedProviders.svelte';
+	import AccountDeletionForm from '$lib/components/settings/AccountDeletionForm.svelte';
 
 	// components
 
@@ -17,7 +17,9 @@
 
 	// supabase
 	import type { User } from '@supabase/supabase-js';
-	import UpdateProfileForm from '$lib/layouts/profile/UpdateProfileForm.svelte';
+	import UpdateProfileForm from '$lib/components/settings/UpdateProfileForm.svelte';
+	import SettingsCard from '$lib/components/settings/SettingsCard.svelte';
+	import SettingsCardGroup from '$lib/components/settings/SettingsCardGroup.svelte';
 
 	let editingProfile = $state(false);
 	let { data }: { data: PageData } = $props();
@@ -45,59 +47,61 @@
 </script>
 
 <SettingsLayout>
-	{#snippet content()}
-		<h1>All Settings</h1>
-
-		<h2>Personal Information</h2>
-		{#if editingProfile}
-			<UpdateProfileForm {user} {avatar_url} {data} bind:editing={editingProfile} />
-		{:else}
-			<table>
-				<tbody>
-					<tr>
-						<td>Avatar:</td>
-						<td>
-							<div class="small-avatar">
-								<img
-									src={page.data.profile.avatar_url || avatarPlaceholderPath}
-									alt={page.data.profile.full_name || 'placeholder'}
-									width="40"
-									height="40"
-									decoding="async"
-								/>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>Name:</td>
-						<td>{page.data.profile.full_name}</td>
-					</tr>
-					<tr>
-						<td>Email:</td>
-						<td>{user.email}</td>
-					</tr>
-					{#if hasEmailAuthentication}
+	<h1>All Settings</h1>
+	<SettingsCardGroup>
+		<SettingsCard heading="Personal Information">
+			{#if editingProfile}
+				<UpdateProfileForm {user} {avatar_url} {data} bind:editing={editingProfile} />
+			{:else}
+				<table>
+					<tbody>
 						<tr>
-							<td>Password:</td>
-							<td>***</td>
+							<td>Avatar:</td>
+							<td>
+								<div class="small-avatar">
+									<img
+										src={page.data.profile.avatar_url || avatarPlaceholderPath}
+										alt={page.data.profile.full_name || 'placeholder'}
+										width="40"
+										height="40"
+										decoding="async"
+									/>
+								</div>
+							</td>
 						</tr>
-					{/if}
-				</tbody>
-			</table>
-			<button
-				class="btn"
-				onclick={() => {
-					editingProfile = true;
-				}}
-			>
-				Edit Profile
-			</button>
-		{/if}
+						<tr>
+							<td>Name:</td>
+							<td>{page.data.profile.full_name}</td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td>{user.email}</td>
+						</tr>
+						{#if hasEmailAuthentication}
+							<tr>
+								<td>Password:</td>
+								<td>***</td>
+							</tr>
+						{/if}
+					</tbody>
+				</table>
+				<button
+					class="btn"
+					onclick={() => {
+						editingProfile = true;
+					}}
+				>
+					Edit Profile
+				</button>
+			{/if}
+		</SettingsCard>
 
-		<h2>Connected accounts:</h2>
-		<ConnectedProviders {user} />
+		<SettingsCard heading="Connected accounts:">
+			<ConnectedProviders {user} />
+		</SettingsCard>
 
-		<h2>Danger</h2>
-		<AccountDeletionForm />
-	{/snippet}
+		<SettingsCard heading="Danger">
+			<AccountDeletionForm />
+		</SettingsCard>
+	</SettingsCardGroup>
 </SettingsLayout>
