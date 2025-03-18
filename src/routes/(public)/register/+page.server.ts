@@ -2,6 +2,7 @@ import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { validateForm } from "$lib/zod-helper";
 import { registerNewUserSchema } from "$lib/zod-helper";
+import { avatarPlaceholderPath } from "$lib/auth-controller";
 
 export const load: PageServerLoad = async ({ locals: { safeGetSession } }) => {
     const { session } = await safeGetSession();
@@ -35,6 +36,7 @@ export const actions: Actions = {
                 options: {
                     data: {
                         full_name: fullName,
+                        avatar_url: avatarPlaceholderPath
                     },
                     // redirect to after user confirms email
                     emailRedirectTo: `${url.origin}/auth/confirm`

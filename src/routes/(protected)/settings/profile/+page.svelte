@@ -15,7 +15,7 @@
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import { appAvailableProviders } from '$lib/auth-controller';
+	import { appAvailableProviders, avatarPlaceholderPath } from '$lib/auth-controller';
 
 	// supabase
 	import type { User } from '@supabase/supabase-js';
@@ -72,7 +72,8 @@
 	}
 
 	function removeAvatar() {
-		avatar_url = '/avatar-placeholder.jpg';
+		if (avatar_url === avatarPlaceholderPath) return;
+		avatar_url = avatarPlaceholderPath;
 	}
 
 	configureCloudinary({
@@ -114,7 +115,7 @@
 						<td>
 							<div class="small-avatar">
 								<img
-									src={page.data.profile.avatar_url || '/avatar-placeholder.jpg'}
+									src={page.data.profile.avatar_url || avatarPlaceholderPath}
 									alt={page.data.profile.full_name || 'placeholder'}
 									width="40"
 									height="40"
@@ -149,7 +150,7 @@
 					loading = true;
 					return async ({ result }) => {
 						loading = false;
-
+						console.log(result);
 						if (result.type === 'success') {
 							invalidate('supabase:auth');
 							editing = false;
@@ -168,14 +169,21 @@
 				<input type="hidden" name="avatar_url" bind:value={avatar_url} />
 				<div class="small-avatar">
 					<img
-						src={avatar_url || '/avatar-placeholder.jpg'}
+						src={avatar_url || avatarPlaceholderPath}
 						alt={page.data.profile.full_name || ''}
 						width="40"
 						height="40"
 					/>
 				</div>
 				<button onclick={uploadAvatar} type="button" class="btn"> Upload Image</button>
-				<button onclick={removeAvatar} type="button" class="btn"> Remove Image</button>
+				<button
+					onclick={removeAvatar}
+					type="button"
+					class="btn"
+					disabled={avatar_url === avatarPlaceholderPath}
+				>
+					Remove Image</button
+				>
 
 				{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly }, i}
 					<FormInput
