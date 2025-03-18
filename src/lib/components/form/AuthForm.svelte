@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { appAvailableProviders } from '$lib/auth-controller';
 	import { createFormHandler, type InputConfig } from '$lib/form-helpers';
+	import LoadingSpinner from '../LoadingSpinner.svelte';
+	import ButtonSpinner from '../LoadingSpinner.svelte';
 	import ErrorMessage from './ErrorMessage.svelte';
 	import FormInput from './FormInput.svelte';
 
@@ -57,7 +59,13 @@
 		</div>
 	{/if}
 
-	<button class="btn" disabled={loading}>{submitButtonText}</button>
+	<button class="btn" disabled={loading}>
+		{#if loading}
+			<LoadingSpinner dim={44} />
+		{:else}
+			<span>{submitButtonText}</span>
+		{/if}
+	</button>
 </form>
 
 {#if errorMessage}

@@ -33,12 +33,15 @@
 	let { user }: { user: User } = data;
 
 	// providers
+	let unlinkingFromProvider = $state(false);
+	let linkingToProvider = $state(false);
 	const hasEmailAuthentication = user?.identities?.some(
 		(provider) => provider.provider === 'email'
 	);
 
 	// delete account form config
 	import { deleteAccountFormConfig, profileSettingsInputConfigs } from '$lib/form-configs';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	let deleteInputConfigs = $state(deleteAccountFormConfig);
 
 	// profile form
@@ -49,8 +52,8 @@
 	inputConfigs[1].oAuthOnly = !hasEmailAuthentication;
 
 	// send reset password request
-	let sendPasswordRequestState = $state('');
-	let sendPasswordRequestLoading = $state(false);
+	let passwordRequestMessage = $state('');
+	let sendingPasswordRequest = $state(false);
 
 	// cloudinary
 	let uploadWidget;
@@ -150,7 +153,6 @@
 					loading = true;
 					return async ({ result }) => {
 						loading = false;
-						console.log(result);
 						if (result.type === 'success') {
 							invalidate('supabase:auth');
 							editing = false;
@@ -206,18 +208,24 @@
 					<div class="form-control">
 						<label for=""> Password </label>
 						<button class="btn" type="button" onclick={() => resetPasswordForm.requestSubmit()}>
-							Send Password Reset Request
+							{#if sendingPasswordRequest}
+								<LoadingSpinner dim={44} />
+							{:else}
+								<span>Send Password Reset Request</span>
+							{/if}
 						</button>
-						{#if sendPasswordRequestLoading}
-							<span>Sending...</span>
-						{/if}
-						{#if sendPasswordRequestState}
-							<span>{sendPasswordRequestState}</span>
+						{#if passwordRequestMessage}
+							<span>{passwordRequestMessage}</span>
 						{/if}
 					</div>
 				{/if}
-
-				<button class="btn">Save</button>
+				<button class="btn" disabled={loading}>
+					{#if loading}
+						<LoadingSpinner dim={44} />
+					{:else}
+						<span>Save</span>
+					{/if}
+				</button>
 				<button
 					type="button"
 					class="btn"
@@ -262,7 +270,9 @@
 									action="?/linkProvider"
 									method="post"
 									use:enhance={() => {
+										linkingToProvider = true;
 										return async ({ result }) => {
+											linkingToProvider = false;
 											if (result.type === 'success' && result?.data?.redirectTo) {
 												window.location = result.data.redirectTo;
 											}
@@ -270,7 +280,13 @@
 									}}
 								>
 									<input type="hidden" name="provider" value={provider.name} />
-									<button class="btn">Link</button>
+									<button class="btn" disabled={linkingToProvider}>
+										{#if linkingToProvider}
+											<LoadingSpinner dim={44} />
+										{:else}
+											<span>link</span>
+										{/if}
+									</button>
 								</form>
 							{:else}
 								<form
@@ -278,7 +294,9 @@
 									action="?/unlinkProvider"
 									method="post"
 									use:enhance={() => {
+										unlinkingFromProvider = true;
 										return async ({ result }) => {
+											unlinkingFromProvider = false;
 											if (result.type === 'success' && result?.data?.redirectTo) {
 												window.location = result.data.redirectTo;
 											}
@@ -286,7 +304,13 @@
 									}}
 								>
 									<input type="hidden" name="provider" value={provider.name} />
-									<button class="btn">Unlink</button>
+									<button class="btn" disabled={unlinkingFromProvider}>
+										{#if unlinkingFromProvider}
+											<LoadingSpinner dim={44} />
+										{:else}
+											<span>Unlink</span>
+										{/if}
+									</button>
 								</form>
 							{/if}
 						</td>
@@ -318,11 +342,14 @@
 	class="screenreader custom"
 	method="post"
 	use:enhance={() => {
-		sendPasswordRequestLoading = true;
+		sendingPasswordRequest = true;
 		return async ({ result }) => {
-			sendPasswordRequestLoading = false;
-			if (result.status === 200) sendPasswordRequestState = 'Please check your email.';
-			else sendPasswordRequestState = 'Something went wrong.';
+			sendingPasswordRequest = false;
+			if (result.status === 200) passwordRequestMessage = 'Please check your email.';
+			else passwordRequestMessage = 'Something went wrong.';
+			setTimeout(() => {
+				editing = false;
+			}, 3000);
 		};
 	}}
 >
