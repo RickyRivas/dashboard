@@ -1,4 +1,3 @@
-import { goto } from "$app/navigation";
 import type { SubmitFunction } from "@sveltejs/kit";
 
 export interface FormApiError {
@@ -52,30 +51,39 @@ export interface InputConfig {
 export function createFormHandler(
     inputConfigs: InputConfig[],
     setLoading: (isLoading: boolean) => void,
+    setError: (APIError: boolean) => void,
+    setSuccess: (APISuccess: boolean) => void,
     setErrorMessage: (message: string) => void,
 ): SubmitFunction {
     return async function () {
-        // clear errors
+        // clear errors and states
+        setLoading(true)
+        setError(false)
+        setSuccess(false)
         setErrorMessage('')
         inputConfigs.forEach((config) => {
             config.error = '';
         });
 
-        setLoading(true)
-
         return async ({ result }) => {
-            setLoading(false);
+            if (result.type === 'success' && result.status === 200) {
+                setSuccess(true)
+                setError(false)
 
-            if (result.type === 'redirect') {
-                goto(result.location);
-                return
-            }
-
-            if (result.data) {
-                if (result.data.message) {
-                    setErrorMessage(result.data.message)
+                if (result.data) {
+                    // show success/error state for a 1s
+                    setTimeout(() => {
+                        if (result?.data?.redirectTo) {
+                            window.location = result.data.redirectTo;
+                        }
+                        setLoading(false)
+                    }, 1000)
                 }
+            } else {
+                setSuccess(false)
+                setError(true)
 
+                // field errors
                 if (result.data.errors) {
                     result.data.errors.forEach((error) => {
                         const config = inputConfigs.find((config) => config.name === error.field);
@@ -83,9 +91,13 @@ export function createFormHandler(
                     });
                 }
 
-                if (result.status === 200 && result?.data?.redirectTo) {
-                    window.location = result.data.redirectTo;
-                }
+                // error message
+                if (result.data.message) setErrorMessage(result.data.message)
+
+                // show success/error state for a 1s
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000)
             }
         };
     }

@@ -27,11 +27,17 @@
 	inputConfigs[1].oAuthOnly = !hasEmailAuthentication;
 
 	let loading = $state(false);
+	let error = $state(false);
+	let success = $state(false);
 	let updateProfileForm: HTMLFormElement;
 
 	// send reset password request
-	let passwordRequestMessage = $state('');
-	let sendingPasswordRequest = $state(false);
+	let prMessage = $state('');
+	let prSuccess = $state(false);
+	let prError = $state(false);
+	let prSending = $state(false);
+
+	$inspect(loading, error, success);
 </script>
 
 <form
@@ -41,15 +47,34 @@
 	bind:this={updateProfileForm}
 	use:enhance={() => {
 		loading = true;
-		return async ({ result }) => {
-			loading = false;
-			if (result.type === 'success') {
-				invalidate('supabase:auth');
-				editing = false;
-			}
+		success = false;
+		error = false;
+		inputConfigs.forEach((config) => {
+			config.error = '';
+		});
 
-			if (result.data.errors) {
-				inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.errors);
+		return async ({ result }) => {
+			if (result.type === 'success') {
+				success = true;
+				error = false;
+
+				invalidate('supabase:auth');
+
+				setTimeout(() => {
+					editing = false;
+					loading = false;
+				}, 1000);
+			} else {
+				error = true;
+				success = false;
+
+				if (result.data.errors) {
+					inputConfigs = handleAPIErrorsForm(inputConfigs, result.data.errors);
+				}
+
+				setTimeout(() => {
+					loading = false;
+				}, 1000);
 			}
 		};
 	}}
@@ -76,22 +101,29 @@
 		<!-- Password -->
 		<div class="form-control">
 			<label for=""> Password </label>
-			<button class="btn" type="button" onclick={() => resetPasswordForm.requestSubmit()}>
-				{#if sendingPasswordRequest}
-					<LoadingSpinner dim={44} />
+			<button
+				class="btn"
+				type="button"
+				onclick={() => resetPasswordForm.requestSubmit()}
+				disabled={prSending}
+			>
+				{#if prSending}
+					<LoadingSpinner
+						bind:loading={prSending}
+						bind:error={prError}
+						bind:success={prSuccess}
+						dim={44}
+					/>
 				{:else}
 					<span>Send Password Reset Request</span>
 				{/if}
 			</button>
-			{#if passwordRequestMessage}
-				<span>{passwordRequestMessage}</span>
-			{/if}
 		</div>
 	{/if}
 
 	<button class="btn" disabled={loading}>
 		{#if loading}
-			<LoadingSpinner dim={44} />
+			<LoadingSpinner bind:loading bind:error bind:success dim={44} />
 		{:else}
 			<span>Save</span>
 		{/if}
@@ -114,14 +146,24 @@
 	class="screenreader custom"
 	method="post"
 	use:enhance={() => {
-		sendingPasswordRequest = true;
+		prSending = true;
 		return async ({ result }) => {
-			sendingPasswordRequest = false;
-			if (result.status === 200) passwordRequestMessage = 'Please check your email.';
-			else passwordRequestMessage = 'Something went wrong.';
-			setTimeout(() => {
-				editing = false;
-			}, 3000);
+			if (result.type === 'success') {
+				prSuccess = true;
+				prError = false;
+
+				setTimeout(() => {
+					prSending = false;
+					editing = false;
+				}, 1000);
+			} else {
+				prSuccess = false;
+				prError = true;
+
+				setTimeout(() => {
+					prSending = false;
+				}, 1000);
+			}
 		};
 	}}
 >

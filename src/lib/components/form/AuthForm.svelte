@@ -3,12 +3,14 @@
 	import { appAvailableProviders } from '$lib/auth-controller';
 	import { createFormHandler, type InputConfig } from '$lib/form-helpers';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
-	import ButtonSpinner from '../LoadingSpinner.svelte';
 	import ErrorMessage from './ErrorMessage.svelte';
 	import FormInput from './FormInput.svelte';
 
 	let loading = $state(false);
+	let success = $state(false);
+	let error = $state(false);
 	let errorMessage = $state('');
+
 	let {
 		action,
 		inputConfigs = $bindable(),
@@ -28,6 +30,8 @@
 	const formHandler = createFormHandler(
 		inputConfigs,
 		(isLoading) => (loading = isLoading),
+		(APIError) => (error = APIError),
+		(APISuccess) => (success = APISuccess),
 		(message) => (errorMessage = message)
 	);
 
@@ -61,7 +65,7 @@
 
 	<button class="btn" disabled={loading}>
 		{#if loading}
-			<LoadingSpinner dim={44} />
+			<LoadingSpinner dim={44} bind:loading bind:success bind:error />
 		{:else}
 			<span>{submitButtonText}</span>
 		{/if}

@@ -17,7 +17,7 @@ export const actions: Actions = {
                 { redirectTo: `${url.origin}/reset-password` }
             );
 
-            if (error) return fail(400, { message: 'Failed to send reset password email' });
+            if (error) return fail(400, { message: error.message });
             return { success: true, redirectTo: authRedirect }
         } catch (e) {
             return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
