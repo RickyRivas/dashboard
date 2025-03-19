@@ -4,7 +4,6 @@ import { redirect } from '@sveltejs/kit';
 export const GET = async ({ url, locals: { supabase } }) => {
     // if session but no user, layout will detect and redirect here.
     // signs out and redirects back to a 'signed out' UI state.
-    // todo: check on each page load  
     const signout = url.searchParams.get('signout') as string;
     const access_token = url.searchParams.get('access_token') as string;
 

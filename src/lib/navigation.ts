@@ -10,7 +10,7 @@ export interface RouteInfo {
 
 // RouteGroup key and an array of RouteInfos
 export const routes: Record<RouteGroup, RouteInfo[]> = {
-    // Auth routes
+    // Auth routes. also public but different layout
     auth: [
         { path: '/login', name: 'Sign In', iconPath: '', showInNav: true },
         { path: '/register', name: 'Create Account', iconPath: '', showInNav: true },
@@ -22,7 +22,6 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
     // Public routes
     public: [
         { path: '/', name: 'Home', iconPath: '', showInNav: true },
-        { path: '/blog', name: 'Blog', iconPath: '', showInNav: true }
     ],
 
     // Protected routes
