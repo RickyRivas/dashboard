@@ -7,41 +7,37 @@
 	let form;
 </script>
 
-<section>
-	<div class="container">
-		{#if existing}
-			<h2>Account Already Exists</h2>
-			<p>The email <strong>{email}</strong> is already registered with us.</p>
-			<p>
-				If this is your account, please check your inbox for a verification email we just sent.
-				You'll need to verify your email before signing in.
-			</p>
-			<p>If you don't see the email in a few minutes, check your spam folder.</p>
-			<p>
-				Already verified? <a href="/login">Sign in here</a>
-			</p>
-		{:else}
-			<h2>Check your email!</h2>
-			<p>Thanks {name || ''}! We've sent a verification link to <strong>{email}</strong>.</p>
-			<p>
-				Please check your inbox and click the link to verify your account. If you don't see the
-				email in a few minutes, check your spam folder.
-			</p>
-		{/if}
+{#if existing}
+	<h2>Account Already Exists</h2>
+	<p>The email <strong>{email}</strong> is already registered with us.</p>
+	<p>
+		If this is your account, please check your inbox for a verification email we just sent. You'll
+		need to verify your email before signing in.
+	</p>
+	<p>If you don't see the email in a few minutes, check your spam folder.</p>
+	<p>
+		Already verified? <a href="/login">Sign in here</a>
+	</p>
+{:else}
+	<h2>Check your email!</h2>
+	<p>Thanks {name || ''}! We've sent a verification link to <strong>{email}</strong>.</p>
+	<p>
+		Please check your inbox and click the link to verify your account. If you don't see the email in
+		a few minutes, check your spam folder.
+	</p>
+{/if}
 
-		<button
-			class="btn"
-			onclick={() => {
-				form.requestSubmit();
-			}}
-			disabled={resentVerificationEmailSuccess}>Resend Email</button
-		>
+<button
+	class="btn"
+	onclick={() => {
+		form.requestSubmit();
+	}}
+	disabled={resentVerificationEmailSuccess}>Resend Email</button
+>
 
-		{#if resentVerificationEmailSuccess}
-			<p>Email verification has been resent!</p>
-		{/if}
-	</div>
-</section>
+{#if resentVerificationEmailSuccess}
+	<p>Email verification has been resent!</p>
+{/if}
 
 {#if email}
 	<form

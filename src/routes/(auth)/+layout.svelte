@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { type Snippet } from 'svelte';
-	import type { LayoutData } from './$types';
-	type prop = {
-		children: Snippet;
-		data: LayoutData;
-	};
-
-	const { children }: prop = $props();
+	import type { LayoutProps } from './$types';
+	const { children }: LayoutProps = $props();
 </script>
 
-<main id="auth">
-	{@render children()}
+<main>
+	<section id="auth-hero">
+		<div class="auth-content">
+			{@render children()}
+		</div>
+	</section>
 </main>

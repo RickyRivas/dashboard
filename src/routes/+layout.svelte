@@ -1,13 +1,9 @@
 <script lang="ts">
-	// global layout and styles
-	import { onMount, type Snippet } from 'svelte';
+	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
+	import type { LayoutProps } from './$types';
 	import './styles.less';
-	type prop = {
-		children: Snippet;
-	};
-
-	const { children, data }: prop = $props();
+	const { children, data }: LayoutProps = $props();
 	const { supabase, session } = data;
 
 	onMount(() => {
@@ -24,5 +20,21 @@
 		return () => data.subscription.unsubscribe();
 	});
 </script>
+
+<svelte:head>
+	<script>
+		{
+			const theme = localStorage.getItem('sv:theme');
+
+			document.documentElement.classList.add(
+				!theme || theme === 'system'
+					? window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light'
+					: theme
+			);
+		}
+	</script>
+</svelte:head>
 
 {@render children()}

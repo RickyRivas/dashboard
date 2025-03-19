@@ -4,14 +4,10 @@
 	let inputConfigs = $state(forgotPasswordFormConfig);
 </script>
 
-<section>
-	<div class="container">
-		<h1>Forgot password</h1>
-		<AuthForm
-			action="?/passwordResetRequest"
-			submitButtonText="Send Password Reset Link"
-			bind:inputConfigs
-			footerContent="<p>Take me back to <a href='/login'>Login</a>.</p>"
-		/>
-	</div>
-</section>
+<h1>Forgot password</h1>
+<AuthForm
+	action="?/passwordResetRequest"
+	submitButtonText="Send Password Reset Link"
+	bind:inputConfigs
+	footerContent="<p>Take me back to <a href='/login'>Login</a>.</p>"
+/>

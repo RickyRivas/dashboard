@@ -38,7 +38,7 @@
 	let oauthForm;
 </script>
 
-<form method="post" {action} use:enhance={formHandler}>
+<form class="default-styling" method="post" {action} use:enhance={formHandler}>
 	{#each inputConfigs as { name, label, placeholder, required, disabled, type, autocomplete }, i}
 		<FormInput
 			id={name}
@@ -70,43 +70,24 @@
 			<span>{submitButtonText}</span>
 		{/if}
 	</button>
-</form>
 
-{#if errorMessage}
-	<ErrorMessage {errorMessage} />
-{/if}
+	{#if errorMessage}
+		<ErrorMessage {errorMessage} />
+	{/if}
 
-{#if oAuth}
-	<div>or sign in with a provider</div>
-	<div class="oauth-providers">
-		<form
-			action="?/oauthSignin"
-			method="post"
-			bind:this={oauthForm}
-			use:enhance={() => {
-				return async ({ result }) => {
-					if (result.type === 'redirect') {
-						window.location = result.location;
-					}
-				};
-			}}
-		>
+	{#if oAuth}
+		<div class="auth-form-divider">
+			<hr />
+			<span>Or</span>
+			<hr />
+		</div>
+		<div class="auth-providers-group">
 			{#each appAvailableProviders as provider}
-				<label for="provider-{provider.name}">
-					<input
-						type="radio"
-						name="selected-provider"
-						value={provider.name}
-						onchange={() => {
-							oauthForm.requestSubmit();
-						}}
-					/>
-					Sign in with {provider.name}
-				</label>
+				<a class="btn" href="/auth/{provider.name}?signin">Sign in with {provider.name}</a>
 			{/each}
-		</form>
-	</div>
-{/if}
+		</div>
+	{/if}
+</form>
 
 <!-- form footer content-->
 {#if footerContent}

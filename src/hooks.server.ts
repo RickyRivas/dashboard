@@ -1,6 +1,5 @@
 import { PRIVATE_SUPABASE_SERVICE_ROLE } from "$env/static/private";
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { THEMES } from "$lib/themes";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js"
 import type { Handle } from "@sveltejs/kit";
@@ -68,21 +67,4 @@ const auth: Handle = async ({ event, resolve }) => {
     })
 }
 
-const theme: Handle = async ({ event, resolve }) => {
-    const theme = event.cookies.get("theme");
-
-    if (!theme || !Object.values(THEMES).includes(theme)) {
-        return await resolve(event);
-    }
-
-    return await resolve(event, {
-        transformPageChunk: ({ html }) => {
-            return html.replace(
-                'data-theme=""',
-                `data-theme="${theme}"`
-            );
-        },
-    });
-};
-
-export const handle: Handle = sequence(auth, theme)
+export const handle: Handle = sequence(auth)

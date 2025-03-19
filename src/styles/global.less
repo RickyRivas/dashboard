@@ -10,15 +10,18 @@
 
     // text
     --heading: #1A1A1A;
-    --text: #4E4B66;
+    --text: #212121;
     --link: #3A5133;
 
-    // section backgrounds
+    // backgrounds
     --bg: #fff;
     --bg-alternate: #FAF8F7;
+
+    // shadows
+    --box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
-html[data-theme='dark'] {
+:root.dark {
     // colors
     --primary: #9b501c;
 
@@ -30,6 +33,9 @@ html[data-theme='dark'] {
     // section backgrounds
     --bg: #25262c;
     --bg-alternate: #000;
+
+    // shadows
+    --box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
 
@@ -122,16 +128,17 @@ h6 {
     .va(top);
     font-size: 16px;
     line-height: 44px;
-    background-color: @primary;
+    background-color: var(--primary);
     padding: 0 10px;
-    color: #fff;
+    color: var(--text);
     text-decoration: none;
     transition: background-color .33s ease;
+    text-align: center;
 
     &:hover,
     &.active,
     &.open {
-        background-color: @secondary;
+        background-color: var(--secondary);
     }
 
     &:disabled {
@@ -162,63 +169,4 @@ svg {
         object-fit: cover;
         .overlay;
     }
-}
-
-#theme-toggle {
-    .ib;
-    .va(middle);
-    position: relative;
-    @square: (40/20em);
-    width: (@square);
-    height: (@square);
-    border: 0;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    line-height: 0;
-    color: var(--text);
-    background: none;
-    transition: color .33s ease,
-        background-color .33s ease;
-    border-radius: .25em;
-    cursor: pointer;
-    background-color: var(--mainnav-linkbg);
-
-    svg {
-
-        width: (25/20em);
-        height: (25/20em);
-
-        path {
-            transition: opacity .33s ease,
-                transform .33s ease;
-            transform-origin: center;
-        }
-    }
-
-    &.light {
-        .moon {
-            opacity: 1;
-            transform: rotate(0deg);
-        }
-
-        .sun {
-            opacity: 0;
-            transform: rotate(180deg);
-        }
-    }
-
-    &.dark {
-        .moon {
-            opacity: 0;
-            transform: rotate(-180deg);
-        }
-
-        .sun {
-            opacity: 1;
-            transform: rotate(0deg);
-        }
-    }
-
-
 }

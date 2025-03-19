@@ -4,9 +4,5 @@
 	let inputConfigs = $state(resetPasswordFormConfig);
 </script>
 
-<section>
-	<div class="container">
-		<h1>Please reset your password below.</h1>
-		<AuthForm action="?/resetPassword" submitButtonText="Update Password" bind:inputConfigs />
-	</div>
-</section>
+<h1>Please reset your password below.</h1>
+<AuthForm action="?/resetPassword" submitButtonText="Update Password" bind:inputConfigs />

@@ -14,6 +14,7 @@
 </script>
 
 <Navigation navType="public" {routes} />
-<main id="public">
+
+<main>
 	{@render children()}
 </main>

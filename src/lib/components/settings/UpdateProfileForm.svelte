@@ -68,7 +68,7 @@
 
 <form
 	action="?/updateProfile"
-	class="custom"
+	class="default-styling"
 	method="post"
 	bind:this={updateProfileForm}
 	use:enhance={() => {
@@ -118,8 +118,10 @@
 		};
 	}}
 >
-	<input type="hidden" name="avatar_url" bind:value={temp_avatar_url} />
-	<AvatarWidget bind:temp_avatar_url />
+	<div class="form-control">
+		<input type="hidden" name="avatar_url" bind:value={temp_avatar_url} />
+		<AvatarWidget bind:temp_avatar_url />
+	</div>
 
 	{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly }, i}
 		<FormInput

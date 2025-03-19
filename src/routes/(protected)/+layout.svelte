@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { type Snippet } from 'svelte';
-	import type { LayoutData } from './$types';
+	import type { LayoutProps } from './$types';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import { getNavRoutes } from '$lib/navigation.js';
-	type prop = {
-		children: Snippet;
-		data: LayoutData;
-	};
-	const { children }: prop = $props();
+	const { children }: LayoutProps = $props();
 	const routes = getNavRoutes('protected');
 </script>
 
 <Navigation navType="protected" {routes} />
-<main id="protected">
+<main>
 	{@render children()}
 </main>

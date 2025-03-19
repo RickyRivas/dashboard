@@ -150,7 +150,6 @@ export const actions: Actions = {
     },
     unlinkProvider: async ({ request, locals: { supabase, safeGetSession, supabaseServiceRole } }) => {
         try {
-            // we only get this far if the user chooses to 'unlink' from a oauth provider
             const { user } = await safeGetSession()
             if (!user?.id) throw redirect(303, "/login")
 

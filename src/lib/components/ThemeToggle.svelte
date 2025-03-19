@@ -1,41 +1,17 @@
 <script lang="ts">
-	import { THEMES } from '$lib/themes';
-	import { onMount } from 'svelte';
-	let current_theme = $state('');
+	import { theme } from '$lib/theme.svelte';
 
-	onMount(() => {
-		const saved_theme = document.documentElement.getAttribute('data-theme');
-		if (saved_theme && Object.values(THEMES).includes(saved_theme)) {
-			current_theme = saved_theme;
-			return;
-		}
+	function toggle() {
+		theme.current = theme.current === 'light' ? 'dark' : 'light';
+	}
 
-		const preference_is_dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-		const theme = preference_is_dark ? THEMES.DARK : THEMES.LIGHT;
-		set_theme(theme);
+	$effect(() => {
+		document.documentElement.classList.remove('light', 'dark');
+		document.documentElement.classList.add(theme.current);
 	});
-
-	function set_theme(theme: string) {
-		if (!Object.values(THEMES).includes(theme)) return;
-		const one_year = 60 * 60 * 24 * 365;
-		document.cookie = `theme=${theme}; max-age=${one_year}; path=/`;
-		document.documentElement.setAttribute('data-theme', theme);
-		current_theme = theme;
-	}
-
-	function onclick(): void {
-		const theme = current_theme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT;
-		set_theme(theme);
-	}
 </script>
 
-<button
-	id="theme-toggle"
-	{onclick}
-	class={current_theme === 'light' ? 'light' : 'dark'}
-	aria-label="Click to change theme"
->
+<button onclick={toggle} id="theme-toggle" aria-label="Click to change theme">
 	<svg
 		class="theme"
 		aria-hidden="true"
@@ -58,3 +34,63 @@
 		/>
 	</svg>
 </button>
+
+<style lang="less">
+	#theme-toggle {
+		display: inline-block;
+		vertical-align: middle;
+		position: relative;
+		@square: 44px;
+		width: (@square);
+		height: (@square);
+		border: 0;
+		padding: 0;
+		margin: 0;
+		font: inherit;
+		line-height: 0;
+		color: #fff;
+		background: none;
+		transition:
+			color 0.33s ease,
+			background-color 0.33s ease;
+		border-radius: 0.25em;
+		cursor: pointer;
+		background-color: var(--mainnav-linkbg);
+
+		svg {
+			width: (25/20em);
+			height: (25/20em);
+
+			path {
+				transition:
+					opacity 0.33s ease,
+					transform 0.33s ease;
+				transform-origin: center;
+			}
+		}
+	}
+
+	:root #theme-toggle {
+		.moon {
+			opacity: 1;
+			transform: rotate(0deg);
+		}
+
+		.sun {
+			opacity: 0;
+			transform: rotate(180deg);
+		}
+	}
+
+	:root.dark #theme-toggle {
+		.moon {
+			opacity: 0;
+			transform: rotate(-180deg);
+		}
+
+		.sun {
+			opacity: 1;
+			transform: rotate(0deg);
+		}
+	}
+</style>
