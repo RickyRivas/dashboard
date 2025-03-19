@@ -8,6 +8,9 @@ export const actions: Actions = {
             // save profile data
             const { user } = await safeGetSession();
 
+            // track values being updated
+            const updatedValues = {} as { newEmail?: string; newFullName?: string; newAvatarUrl?: string; }
+
             const { data: fetchedUserIdentities, error: fetchedUserIdentitiesError } = await supabase.auth.getUserIdentities()
 
             const hasEmailAuthentication = fetchedUserIdentities?.identities.some(
@@ -48,6 +51,8 @@ export const actions: Actions = {
                     emailRedirectTo: `${url.origin}/auth/confirm`
                 })
 
+                updatedValues.newEmail = email
+
                 if (error) return fail(error.status as number, { errors: [{ field: 'email', message: 'Failed to update email.' }] });
             }
 
@@ -62,10 +67,13 @@ export const actions: Actions = {
                         updated_at: new Date()
                     });
 
+                updatedValues.newFullName = full_name as string
+                updatedValues.newAvatarUrl = avatar_url as string
+
                 if (updateProfileError) return fail(400, { message: 'Failed to update profile.' });
             }
 
-            return { success: true }
+            return { success: true, updatedValues }
         } catch (e) {
             return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }

@@ -1,30 +1,58 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { invalidate } from '$app/navigation';
-	import { profileSettingsInputConfigs } from '$lib/form-configs';
 	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
-	import type { PageData } from '../../../routes/(public)/$types';
 	import AvatarWidget from './AvatarWidget.svelte';
 	import FormInput from '$lib/components/form/FormInput.svelte';
 	import type { User } from '@supabase/supabase-js';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 
 	let {
-		editing = $bindable(),
-		avatar_url,
-		user,
-		data
-	}: { editing: boolean; avatar_url: string; user: User; data: PageData } = $props();
+		editingProfile = $bindable(),
+		avatar_url = $bindable(),
+		full_name = $bindable(),
+		sentEmailVerification = $bindable(),
+		sentNewPasswordRequest = $bindable(),
+		user
+	}: {
+		editingProfile: boolean;
+		avatar_url: string;
+		full_name: string;
+		sentEmailVerification: boolean;
+		sentNewPasswordRequest: boolean;
+		user: User;
+	} = $props();
 
 	let resetPasswordForm: HTMLFormElement;
+
 	const hasEmailAuthentication = user?.identities?.some(
 		(provider) => provider.provider === 'email'
 	);
-	let inputConfigs: InputConfig[] = $state(profileSettingsInputConfigs);
-	inputConfigs[0].value = page.data.profile.full_name;
-	inputConfigs[1].value = user.email as string;
-	inputConfigs[1].oAuthOnly = !hasEmailAuthentication;
+
+	let temp_avatar_url = $state(avatar_url);
+	let inputConfigs: InputConfig[] = $state([
+		{
+			name: 'full_name',
+			label: 'Name',
+			type: 'text',
+			value: full_name,
+			required: true,
+			placeholder: 'Name',
+			disabled: false,
+			error: ''
+		},
+		{
+			name: 'email',
+			label: 'Email',
+			type: 'email',
+			value: user.email as string,
+			required: true,
+			placeholder: 'Email',
+			disabled: true,
+			error: '',
+			oAuthOnly: !hasEmailAuthentication
+		}
+	]);
 
 	let loading = $state(false);
 	let error = $state(false);
@@ -58,8 +86,21 @@
 
 				invalidate('supabase:auth');
 
+				// update values
+				if (result.data?.updatedValues) {
+					const updatedValues = result?.data?.updatedValues as {
+						newEmail?: string;
+						newFullName?: string;
+						newAvatarUrl?: string;
+					};
+
+					if (updatedValues.newAvatarUrl) avatar_url = updatedValues.newAvatarUrl;
+					if (updatedValues.newFullName) full_name = updatedValues.newFullName;
+					if (updatedValues.newEmail) sentEmailVerification = true;
+				}
+
 				setTimeout(() => {
-					editing = false;
+					editingProfile = false;
 					loading = false;
 				}, 1000);
 			} else {
@@ -77,8 +118,9 @@
 		};
 	}}
 >
-	<input type="hidden" name="avatar_url" bind:value={avatar_url} />
-	<AvatarWidget full_name={page.data.profile.full_name} bind:avatar_url />
+	<input type="hidden" name="avatar_url" bind:value={temp_avatar_url} />
+	<AvatarWidget bind:temp_avatar_url />
+
 	{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly }, i}
 		<FormInput
 			id={name}
@@ -131,7 +173,7 @@
 		type="button"
 		class="btn"
 		onclick={() => {
-			editing = false;
+			editingProfile = false;
 		}}
 	>
 		Cancel
@@ -150,9 +192,11 @@
 				prSuccess = true;
 				prError = false;
 
+				sentNewPasswordRequest = true;
+
 				setTimeout(() => {
 					prSending = false;
-					editing = false;
+					editingProfile = false;
 				}, 1000);
 			} else {
 				prSuccess = false;

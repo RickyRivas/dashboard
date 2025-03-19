@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
 	import { navigationRoutes } from '$lib/navigation';

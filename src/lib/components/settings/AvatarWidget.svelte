@@ -4,13 +4,13 @@
 	import { avatarPlaceholderPath } from '$lib/auth-controller';
 	import { onMount } from 'svelte';
 
-	let { avatar_url = $bindable(), full_name }: { avatar_url: string; full_name: string } = $props();
+	let { temp_avatar_url = $bindable() }: { temp_avatar_url: string } = $props();
 
 	let uploadWidget;
 
 	let onUpload = (error, result, widget) => {
 		if (!error && result) {
-			avatar_url = result.info.url;
+			temp_avatar_url = result.info.url;
 		}
 	};
 
@@ -25,8 +25,8 @@
 	}
 
 	function removeAvatar() {
-		if (avatar_url === avatarPlaceholderPath) return;
-		avatar_url = avatarPlaceholderPath;
+		if (temp_avatar_url === avatarPlaceholderPath) return;
+		temp_avatar_url = avatarPlaceholderPath;
 	}
 
 	configureCloudinary({
@@ -51,7 +51,12 @@
 </script>
 
 <div class="small-avatar">
-	<img src={avatar_url || avatarPlaceholderPath} alt={full_name || ''} width="40" height="40" />
+	<img
+		src={temp_avatar_url || avatarPlaceholderPath}
+		alt="avatar placeholder"
+		width="40"
+		height="40"
+	/>
 </div>
 
 <button onclick={uploadAvatar} type="button" class="btn"> Upload Image</button>
@@ -59,7 +64,7 @@
 	onclick={removeAvatar}
 	type="button"
 	class="btn"
-	disabled={avatar_url === avatarPlaceholderPath}
+	disabled={temp_avatar_url === avatarPlaceholderPath}
 >
 	Remove Image</button
 >
