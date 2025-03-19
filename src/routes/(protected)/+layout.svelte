@@ -3,6 +3,8 @@
 	import type { LayoutData } from './$types';
 	import { invalidate } from '$app/navigation';
 	import Navigation from '$lib/components/Navigation.svelte';
+	import { getNavRoutes } from '$lib/navigation.js';
+
 	type prop = {
 		children: Snippet;
 		data: LayoutData;
@@ -10,6 +12,7 @@
 
 	const { children, data }: prop = $props();
 	let { session, supabase } = $derived(data);
+	const routes = getNavRoutes('protected');
 
 	onMount(() => {
 		// Set up auth state listener
@@ -26,7 +29,7 @@
 	});
 </script>
 
-<Navigation navType="protected" />
+<Navigation navType="protected" {routes} />
 <main id="protected">
 	{@render children()}
 </main>

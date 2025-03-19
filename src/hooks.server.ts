@@ -67,5 +67,37 @@ const auth: Handle = async ({ event, resolve }) => {
     })
 }
 
-// chain multiple handle functions together. will add cookie handlers for theme mode as well
-export const handle: Handle = sequence(auth)
+type Theme = 'light' | 'dark';
+
+const theme: Handle = async ({ event, resolve }) => {
+    let theme = event.cookies.get('theme') as Theme || null;
+
+    // Validate theme value and set a default if invalid
+    if (theme !== 'light' && theme !== 'dark') {
+        theme = 'light'; // Default theme
+
+        event.cookies.set('theme', theme, {
+            path: '/',
+            maxAge: 60 * 60 * 24 * 365, // 1 year
+            httpOnly: true, // Prevent JavaScript access for security
+            sameSite: 'lax', // Reasonable CSRF protection
+        });
+    }
+
+    // Make theme available to routes through event.locals
+    event.locals.theme = theme;
+
+    // Process the response with the theme
+    return resolve(event, {
+        transformPageChunk: ({ html }) => {
+            if (html.includes('data-theme=""')) {
+                return html.replace('data-theme=""', `data-theme="${theme}"`);
+            } else if (html.includes('<html')) {
+                return html.replace('<html', `<html data-theme="${theme}"`);
+            }
+            return html;
+        }
+    });
+};
+
+export const handle: Handle = sequence(auth, theme)

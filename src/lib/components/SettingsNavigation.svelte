@@ -1,11 +1,14 @@
-<script>
-	import { settingsRoutes } from '$lib/navigation';
+<script lang="ts">
+	import type { RouteInfo } from '$lib/navigation';
+	let { routes }: { routes: RouteInfo[] } = $props();
 </script>
 
-<ul>
-	{#each settingsRoutes as route}
-		<li>
-			<a href={route.path}>{route.name}</a>
-		</li>
-	{/each}
-</ul>
+<div class="settings-sidebar">
+	<ul>
+		{#each routes as route}
+			<li>
+				<a href={route.path}>{route.name}</a>
+			</li>
+		{/each}
+	</ul>
+</div>

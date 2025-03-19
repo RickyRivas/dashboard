@@ -51,7 +51,7 @@
 			{/if}
 		</SettingsCard>
 
-		<SettingsCard heading="Connected accounts:">
+		<SettingsCard heading="Connected accounts">
 			<ConnectedProviders {user} />
 		</SettingsCard>
 

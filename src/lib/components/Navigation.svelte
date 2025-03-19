@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
-	import { navigationRoutes } from '$lib/navigation';
+	import type { RouteInfo } from '$lib/navigation';
 
 	interface navProps {
 		navType: 'protected' | 'public';
+		routes: RouteInfo[];
 	}
 
 	let isActive = $state(false);
@@ -12,9 +13,7 @@
 	const logout = async () => await page.data.supabase.auth.signOut();
 
 	const session = $derived(page.data.session);
-	let { navType }: navProps = $props();
-	let routes =
-		navType === 'protected' ? navigationRoutes.protectedRoutes : navigationRoutes.publicRoutes;
+	let { navType, routes }: navProps = $props();
 </script>
 
 <header id="main-nav">
