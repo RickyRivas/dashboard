@@ -1,14 +1,30 @@
     #auth-hero {
         height: 100vh;
-        min-height: 600px;
+        padding: 1em 0;
         .flex;
-        .jc(center);
+        .jc(space-between);
         .ai(center);
+        .fdir(column);
+        text-align: center;
+        min-height: 700px;
+
+        @media only screen and (min-width:768px) {
+            min-height: (800/20em);
+        }
+
+        @media only screen and (min-width:1024px) {}
+
+        #logo {
+            .ib;
+            .va(top);
+            width: (125/20em);
+            height: (52/20em);
+            color: var(--text);
+        }
 
         .auth-content {
             width: 90%;
-            max-width: (600/20em);
-            min-height: (600/20em);
+            max-width: (500/20em);
 
             h1 {
                 margin-bottom: 1em;
@@ -58,5 +74,11 @@
                     }
                 }
             }
+        }
+
+        .auth-content-footer {
+            .upp;
+            .fs(14px);
+            .lh(44px);
         }
     }

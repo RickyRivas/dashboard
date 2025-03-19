@@ -7,6 +7,8 @@ form.default-styling {
     gap: 1em;
     background-color: var(--bg-alternate);
     box-shadow: var(--box-shadow);
+    text-align: left;
+    border: 1px solid var(--heading)
 }
 
 .form-control {
@@ -14,9 +16,11 @@ form.default-styling {
     width: 100%;
     position: relative;
     .fs(16px);
-    color: var(--heading);
 
-    label {}
+    label {
+        line-height: 2;
+        color: var(--heading);
+    }
 
     input:not([type='checkbox']):not([type='radio']),
     textarea,
@@ -28,15 +32,14 @@ form.default-styling {
         border: 1px solid rgba(256, 256, 256, 0);
         border-radius: 0px;
         transition: border-color .33s ease, background-color .33s ease, color .33s ease;
-        color: var(--text);
         .lh(44px);
         padding: 0 20px;
         outline: none;
+        color: #212121;
+        background-color: #fff;
     }
 
     input:not([type='checkbox']):not([type='radio']) {
-        background-color: var(--bg);
-
         &.error {
             border-color: red;
             background-color: lightpink;
