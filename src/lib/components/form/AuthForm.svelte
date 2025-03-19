@@ -83,7 +83,21 @@
 		</div>
 		<div class="auth-providers-group">
 			{#each appAvailableProviders as provider}
-				<a class="btn" href="/auth/{provider.name}?signin">Sign in with {provider.name}</a>
+				<a
+					class="btn oauth-button-{provider.name.toLowerCase()}"
+					href="/auth/{provider.name.toLowerCase()}?signin"
+				>
+					<img
+						class="icon"
+						src={provider.iconPath}
+						alt=""
+						width="17"
+						height="16"
+						decoding="async"
+						fetchpriority="low"
+					/>
+					Continue with {provider.name}
+				</a>
 			{/each}
 		</div>
 	{/if}

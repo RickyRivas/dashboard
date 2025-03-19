@@ -10,14 +10,14 @@
 
 <table>
 	<tbody>
-		{#each appAvailableProviders as provider}
+		{#each appAvailableProviders as { name }}
 			<tr>
-				<td style="text-transform: capitalize;">{provider.name}</td>
+				<td>{name}</td>
 				<td>
-					{user.identities?.some((i) => i.provider === provider.name)
+					{user.identities?.some((i) => i.provider === name.toLowerCase())
 						? 'Connected'
 						: 'Not Connected'}
-					{#if !user.identities?.some((i) => i.provider === provider.name)}
+					{#if !user.identities?.some((i) => i.provider === name.toLowerCase())}
 						<form
 							class="custom inline"
 							action="?/linkProvider"
@@ -31,7 +31,7 @@
 								};
 							}}
 						>
-							<input type="hidden" name="provider" value={provider.name} />
+							<input type="hidden" name="provider" value={name.toLowerCase()} />
 							<button class="btn" disabled={linkingToProvider}>
 								{#if linkingToProvider}
 									<LoadingSpinner dim={44} />
@@ -54,7 +54,7 @@
 								};
 							}}
 						>
-							<input type="hidden" name="provider" value={provider.name} />
+							<input type="hidden" name="provider" value={name.toLowerCase()} />
 							<button class="btn" disabled={unlinkingFromProvider}>
 								{#if unlinkingFromProvider}
 									<LoadingSpinner dim={44} />

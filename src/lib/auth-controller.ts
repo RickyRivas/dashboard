@@ -1,6 +1,6 @@
 // providers
 export const appAvailableProviders = [
-    { name: 'google', iconPath: '' },
+    { name: 'Google', iconPath: '/icons/google.svg' },
 ]
 
 // avatar

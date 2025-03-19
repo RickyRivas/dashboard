@@ -125,7 +125,9 @@ h6 {
 // anchors & buttons
 .btn {
     .buttonreset;
-    .ib;
+    .if;
+    .jc(center);
+    .ai(center);
     .va(top);
     font-size: 16px;
     line-height: 44px;
@@ -135,6 +137,16 @@ h6 {
     text-decoration: none;
     transition: background-color .33s ease;
     text-align: center;
+    gap: 1em;
+
+    &.oauth-button-google {
+        background-color: #4285F4;
+    }
+
+    .icon {
+        width: 20px;
+        height: auto;
+    }
 
     &:hover,
     &.active,
