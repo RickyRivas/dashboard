@@ -1,4 +1,5 @@
 import { authRedirect } from "$lib/supabase-auth";
+import type { Provider } from "@supabase/supabase-js";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 
 export const load = async ({ locals: { safeGetSession } }) => {
@@ -38,12 +39,15 @@ export const actions: Actions = {
             return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
     },
-    oauthSignin: async ({ request, locals: { supabase } }) => {
+    oauthSignin: async ({ url, request, locals: { supabase } }) => {
         const formData = await request.formData()
-        const provider = formData.get('selected-provider') as string
+        const provider = formData.get('selected-provider') as Provider
 
         const { data, error } = await supabase.auth.signInWithOAuth({
-            provider
+            provider,
+            options: {
+                redirectTo: `${url.origin}/auth/confirm?next=/app`
+            }
         })
 
         if (error) {

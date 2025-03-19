@@ -117,13 +117,16 @@ export const actions: Actions = {
             return fail(500, { message: 'An unexpected error occurred. Please try again later.' })
         }
     },
-    linkProvider: async ({ request, locals: { supabase } }) => {
+    linkProvider: async ({ url, request, locals: { supabase } }) => {
         try {
             const formData = await request.formData()
             const providerToLinkTo = formData.get('provider') as Provider
 
             const { data, error } = await supabase.auth.linkIdentity({
-                provider: providerToLinkTo
+                provider: providerToLinkTo,
+                options: {
+                    redirectTo: `${url.origin}/auth/confirm?next=/settings/profile`
+                }
             })
 
             if (error) {

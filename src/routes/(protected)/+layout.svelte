@@ -7,7 +7,7 @@
 		children: Snippet;
 		data: LayoutData;
 	};
-	const { children, data }: prop = $props();
+	const { children }: prop = $props();
 	const routes = getNavRoutes('protected');
 </script>
 
