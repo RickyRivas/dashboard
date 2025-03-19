@@ -1,5 +1,6 @@
 import { PRIVATE_SUPABASE_SERVICE_ROLE } from "$env/static/private";
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from "$env/static/public";
+import { THEMES } from "$lib/themes";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js"
 import type { Handle } from "@sveltejs/kit";
@@ -67,36 +68,20 @@ const auth: Handle = async ({ event, resolve }) => {
     })
 }
 
-type Theme = 'light' | 'dark';
-
 const theme: Handle = async ({ event, resolve }) => {
-    let theme = event.cookies.get('theme') as Theme || null;
+    const theme = event.cookies.get("theme");
 
-    // Validate theme value and set a default if invalid
-    if (theme !== 'light' && theme !== 'dark') {
-        theme = 'light'; // Default theme
-
-        event.cookies.set('theme', theme, {
-            path: '/',
-            maxAge: 60 * 60 * 24 * 365, // 1 year
-            httpOnly: true, // Prevent JavaScript access for security
-            sameSite: 'lax', // Reasonable CSRF protection
-        });
+    if (!theme || !Object.values(THEMES).includes(theme)) {
+        return await resolve(event);
     }
 
-    // Make theme available to routes through event.locals
-    event.locals.theme = theme;
-
-    // Process the response with the theme
-    return resolve(event, {
+    return await resolve(event, {
         transformPageChunk: ({ html }) => {
-            if (html.includes('data-theme=""')) {
-                return html.replace('data-theme=""', `data-theme="${theme}"`);
-            } else if (html.includes('<html')) {
-                return html.replace('<html', `<html data-theme="${theme}"`);
-            }
-            return html;
-        }
+            return html.replace(
+                'data-theme=""',
+                `data-theme="${theme}"`
+            );
+        },
     });
 };
 

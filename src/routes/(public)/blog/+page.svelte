@@ -1,1 +1,1 @@
-<h1>Welcome to our blog</h1>
+<h1>Blog</h1>

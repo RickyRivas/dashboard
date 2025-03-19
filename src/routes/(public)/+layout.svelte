@@ -1,7 +1,15 @@
 <script lang="ts">
+	import { type Snippet } from 'svelte';
+	import type { LayoutData } from './$types';
 	import Navigation from '$lib/components/Navigation.svelte';
-	const { children } = $props();
 	import { getNavRoutes } from '$lib/navigation.js';
+
+	type prop = {
+		children: Snippet;
+		data: LayoutData;
+	};
+
+	const { children }: prop = $props();
 	const routes = getNavRoutes('public');
 </script>
 

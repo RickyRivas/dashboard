@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
 	import type { RouteInfo } from '$lib/navigation';
+	import ThemeToggle from './ThemeToggle.svelte';
 
 	interface navProps {
 		navType: 'protected' | 'public';
@@ -56,6 +57,8 @@
 					<a href="/register" class="btn">Register</a>
 				{/if}
 			{/if}
+
+			<ThemeToggle />
 
 			<button
 				id="nav-toggle"
