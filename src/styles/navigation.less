@@ -6,15 +6,15 @@
     left: 0;
     width: 100%;
     z-index: 3000;
-    padding: 0;
-    background: @primary;
+    padding: 1em 0;
+    border-bottom: 1px solid var(--border-color);
 
     #logo {
         .show;
         .lh(0);
         width: (100/20em);
         height: (38/20em);
-        color: #fff;
+        color: var(--text);
     }
 
     &.public-navigation {}
@@ -31,6 +31,7 @@
             .flex;
             .jc(center);
             .ai(center);
+            gap: 1em;
         }
     }
 
@@ -48,7 +49,7 @@
         z-index: 1;
         transition: transform .33s ease;
         transform: translate3d(100%, 0, 0);
-        background-color: @primary;
+        background-color: var(--primary);
 
         @media only screen and (min-width: 768px) {
             width: 50%;
@@ -64,6 +65,7 @@
             padding: 0;
             transform: none;
             .fdir(row);
+            gap: 1em;
 
             li.contact {
                 display: none;
@@ -87,11 +89,11 @@
                 @lh: 30;
 
                 display: block;
-                color: #fff;
+                color: var(--text);
                 text-transform: capitalize;
                 font-size: 16px;
-                line-height: (@lh/@fs);
-                padding: (10em/@fs) (20em/@fs);
+                line-height: (44/@fs);
+                padding: 0 1em;
                 transition: background-color .33s ease;
                 position: relative;
                 border: 0;
@@ -99,12 +101,9 @@
                 text-align: left;
                 width: 100%;
                 text-decoration: none;
+                .rounded(var(--border-radius));
 
-                @media only screen and (min-width: 1024px) {
-                    padding: 0 10px;
-                    line-height: (44/@fs);
-                    font-size: (@fs/20*1em);
-                }
+                @media only screen and (min-width: 1024px) {}
             }
 
             &.active,
@@ -112,7 +111,7 @@
 
                 a[id],
                 button[id] {
-                    background-color: @secondary;
+                    background-color: var(--third);
                 }
             }
 
@@ -145,7 +144,7 @@
         &::before {
             content: '';
             .overlay;
-            background-color: @primary;
+            background-color: var(--primary);
             transition: transform .33s ease,
                 background-color .33s ease,
                 border-radius .33s ease;
@@ -170,18 +169,18 @@
 
         &:hover {
             &::before {
-                background-color: @secondary;
+                background-color: var(--secondary);
             }
         }
 
         &.active {
             &::before {
-                background-color: #fff;
+                background-color: var(--text);
                 transform: rotate(180deg);
             }
 
             span {
-                background-color: @primary;
+                background-color: var(--primary);
             }
 
             span {

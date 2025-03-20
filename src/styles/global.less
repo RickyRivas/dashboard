@@ -8,6 +8,7 @@
     // colors
     --primary: #ba5b38;
     --secondary: #693521;
+    --third: #dedbd1;
 
     // text
     --heading: #1A1A1A;
@@ -15,16 +16,20 @@
     --link: #3A5133;
 
     // backgrounds
-    --bg: #fff;
+    --bg: #faf9f5;
     --bg-alternate: #FAF8F7;
 
     // shadows
     --box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+
+    // borders
+    --border-radius: 1em;
+    --border-color: #ecebe7;
 }
 
 :root.dark {
     // colors
-
+    --third: #1b1917;
 
     // text
     --heading: #fff;
@@ -32,11 +37,12 @@
     --link: #8ead85;
 
     // section backgrounds
-    --bg: #25262c;
+    --bg: #30302e;
     --bg-alternate: #000;
 
     // shadows
     --box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+    --border-color: #353533;
 }
 
 
@@ -79,6 +85,7 @@ h6 {
     text-rendering: auto;
     text-transform: capitalize;
     .bold;
+    margin: 0 0 .5em;
 }
 
 h1 {
@@ -109,11 +116,25 @@ h6 {
     font-size: unit((@h6fs/20), em);
 }
 
+p {
+    margin: 0 0 1.58em;
+    line-height: 1.5;
+}
+
+
 .container {
     display: block;
-    width: calc(100% - 1em);
+    width: 90%;
     max-width: unit((1400/20), em);
     margin: 0 auto;
+}
+
+section.default-styling {
+    padding: 3em 0;
+
+    @media only screen and (min-width:1024px) {
+        // padding: 5em 0;
+    }
 }
 
 .icon {
@@ -132,12 +153,13 @@ h6 {
     font-size: 16px;
     line-height: 44px;
     background-color: var(--primary);
-    padding: 0 10px;
+    padding: 0 1em;
     color: #fff;
     text-decoration: none;
     transition: background-color .33s ease;
     text-align: center;
     gap: 1em;
+    .rounded(var(--border-radius));
 
     &.oauth-button-google {
         background-color: #4285F4;
@@ -174,7 +196,7 @@ svg {
     overflow: hidden;
     position: relative;
     border-radius: 50%;
-    border: 2px solid @primary;
+    border: 2px solid var(--primary);
     .ib;
     .va(top);
 

@@ -7,6 +7,5 @@
 </script>
 
 <Navigation navType="protected" {routes} />
-<main>
-	{@render children()}
-</main>
+
+{@render children()}

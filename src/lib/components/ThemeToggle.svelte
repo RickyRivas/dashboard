@@ -48,7 +48,7 @@
 		margin: 0;
 		font: inherit;
 		line-height: 0;
-		color: #fff;
+		color: var(--text);
 		background: none;
 		transition:
 			color 0.33s ease,

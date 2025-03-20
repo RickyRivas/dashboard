@@ -15,6 +15,8 @@
 
 	const session = $derived(page.data.session);
 	let { navType, routes }: navProps = $props();
+
+	let currentPagePath = $derived(page.url.pathname);
 </script>
 
 <header id="main-nav">
@@ -25,7 +27,7 @@
 			<nav>
 				<ul class:active={isActive}>
 					{#each routes as route}
-						<li>
+						<li class:active={currentPagePath.startsWith(route.path)}>
 							<a id={route.name.toLowerCase()} href={route.path}>{route.name}</a>
 						</li>
 					{/each}
@@ -53,7 +55,6 @@
 					<a href="/app" class="btn">Dashboard</a>
 				{:else}
 					<a href="/login" class="btn">Log In</a>
-					<span class="divider">|</span>
 					<a href="/register" class="btn">Register</a>
 				{/if}
 			{/if}

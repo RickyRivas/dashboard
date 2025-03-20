@@ -1,12 +1,9 @@
 <script>
 	import SettingsCard from '$lib/components/settings/SettingsCard.svelte';
-	import SettingsLayout from '$lib/components/settings/SettingsLayout.svelte';
 </script>
 
-<SettingsLayout>
+<SettingsCard heading="Billing Settings">
 	{#snippet children()}
-		<SettingsCard heading="Billing Settings">
-			{#snippet children()}{/snippet}
-		</SettingsCard>
+		<h2>Stripe Info</h2>
 	{/snippet}
-</SettingsLayout>
+</SettingsCard>

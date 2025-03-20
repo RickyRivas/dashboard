@@ -1,6 +1,5 @@
 <script lang="ts">
 	// components
-	import SettingsLayout from '$lib/components/settings/SettingsLayout.svelte';
 	import ConnectedProviders from '$lib/components/settings/ConnectedProviders.svelte';
 	import AccountDeletionForm from '$lib/components/settings/AccountDeletionForm.svelte';
 	import UpdateProfileForm from '$lib/components/settings/UpdateProfileForm.svelte';
@@ -26,37 +25,35 @@
 	let sentNewPasswordRequest = $state(false);
 </script>
 
-<SettingsLayout>
-	<h1>All Settings</h1>
-	<SettingsCardGroup>
-		<SettingsCard heading="Personal Information">
-			{#if editingProfile}
-				<UpdateProfileForm
-					{user}
-					bind:avatar_url
-					bind:full_name
-					bind:editingProfile
-					bind:sentEmailVerification
-					bind:sentNewPasswordRequest
-				/>
-			{:else}
-				<ProfileInfo
-					{user}
-					bind:avatar_url
-					bind:full_name
-					bind:editingProfile
-					bind:sentEmailVerification
-					bind:sentNewPasswordRequest
-				/>
-			{/if}
-		</SettingsCard>
+<h1>All Settings</h1>
+<SettingsCardGroup>
+	<SettingsCard heading="Personal Information">
+		{#if editingProfile}
+			<UpdateProfileForm
+				{user}
+				bind:avatar_url
+				bind:full_name
+				bind:editingProfile
+				bind:sentEmailVerification
+				bind:sentNewPasswordRequest
+			/>
+		{:else}
+			<ProfileInfo
+				{user}
+				bind:avatar_url
+				bind:full_name
+				bind:editingProfile
+				bind:sentEmailVerification
+				bind:sentNewPasswordRequest
+			/>
+		{/if}
+	</SettingsCard>
 
-		<SettingsCard heading="Connected accounts">
-			<ConnectedProviders {user} />
-		</SettingsCard>
+	<SettingsCard heading="Connected accounts">
+		<ConnectedProviders {user} />
+	</SettingsCard>
 
-		<SettingsCard heading="Danger">
-			<AccountDeletionForm />
-		</SettingsCard>
-	</SettingsCardGroup>
-</SettingsLayout>
+	<SettingsCard heading="Danger">
+		<AccountDeletionForm />
+	</SettingsCard>
+</SettingsCardGroup>

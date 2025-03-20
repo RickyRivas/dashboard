@@ -5,10 +5,16 @@ form.default-styling {
     width: 100%;
     padding: 1em;
     gap: 1em;
-    background-color: var(--bg-alternate);
+    background-color: var(--bg);
     box-shadow: var(--box-shadow);
     text-align: left;
-    border: 1px solid var(--heading)
+    border: 1px solid var(--border-color);
+    .rounded(var(--border-radius));
+}
+
+form.inline {
+    .ib;
+    .va(top);
 }
 
 .form-control {
@@ -30,10 +36,10 @@ form.default-styling {
         .show;
         width: 100%;
         border: 1px solid rgba(256, 256, 256, 0);
-        border-radius: 0px;
+        .rounded(var(--border-radius));
         transition: border-color .33s ease, background-color .33s ease, color .33s ease;
         .lh(44px);
-        padding: 0 20px;
+        padding: 0 1em;
         outline: none;
         color: #212121;
         background-color: #fff;

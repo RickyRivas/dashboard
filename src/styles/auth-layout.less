@@ -6,7 +6,7 @@
         .ai(center);
         .fdir(column);
         text-align: center;
-        min-height: 700px;
+        min-height: 675px;
 
         @media only screen and (min-width:768px) {
             min-height: (800/20em);
@@ -62,6 +62,7 @@
                 p {
                     .show;
                     color: var(--text);
+                    margin: 0;
 
                     a {
                         color: inherit;
@@ -76,9 +77,14 @@
             }
         }
 
+        .verify-email-content {
+            text-align: left
+        }
+
         .auth-content-footer {
             .upp;
             .fs(14px);
             .lh(44px);
+            margin: 0;
         }
     }

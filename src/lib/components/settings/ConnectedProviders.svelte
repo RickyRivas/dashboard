@@ -14,9 +14,11 @@
 			<tr>
 				<td>{name}</td>
 				<td>
-					{user.identities?.some((i) => i.provider === name.toLowerCase())
-						? 'Connected'
-						: 'Not Connected'}
+					<span>
+						{user.identities?.some((i) => i.provider === name.toLowerCase())
+							? 'Connected'
+							: 'Not Connected'}
+					</span>
 					{#if !user.identities?.some((i) => i.provider === name.toLowerCase())}
 						<form
 							class="custom inline"
@@ -36,7 +38,7 @@
 								{#if linkingToProvider}
 									<LoadingSpinner dim={44} />
 								{:else}
-									<span>link</span>
+									<span>Link</span>
 								{/if}
 							</button>
 						</form>
