@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
-	import type { RouteInfo } from '$lib/navigation';
+	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
+	import BuildTracker from '$lib/app-components/BuildTracker.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	interface navProps {
@@ -17,6 +18,7 @@
 	let { navType, routes }: navProps = $props();
 
 	let currentPagePath = $derived(page.url.pathname);
+	// let protectedRoute = $derived(findRouteInfo(currentPagePath)?.group === 'protected');
 </script>
 
 <header id="main-nav">
@@ -24,6 +26,10 @@
 		<a id="logo" href="/"> <Logo /> </a>
 
 		<div class="mod">
+			{#if navType === 'protected'}
+				<BuildTracker />
+			{/if}
+
 			<nav>
 				<ul class:active={isActive}>
 					{#each routes as route}

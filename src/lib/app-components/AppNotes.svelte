@@ -64,7 +64,6 @@
 	.editor-wrapper {
 		height: 400px;
 		margin-bottom: 80px; /* Space for toolbar */
-		z-index: 3002;
 		position: relative;
 		display: block;
 		font-size: 16px;
