@@ -3,6 +3,6 @@
 	let { children }: { children: Snippet } = $props();
 </script>
 
-<div class="settings-card-group">
+<div class="card-group">
 	{@render children()}
 </div>

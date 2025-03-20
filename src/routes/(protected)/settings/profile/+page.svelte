@@ -3,8 +3,8 @@
 	import ConnectedProviders from '$lib/components/settings/ConnectedProviders.svelte';
 	import AccountDeletionForm from '$lib/components/settings/AccountDeletionForm.svelte';
 	import UpdateProfileForm from '$lib/components/settings/UpdateProfileForm.svelte';
-	import SettingsCard from '$lib/components/settings/SettingsCard.svelte';
-	import SettingsCardGroup from '$lib/components/settings/SettingsCardGroup.svelte';
+	import Card from '$lib/components/Card.svelte';
+	import CardGroup from '$lib/components/CardGroup.svelte';
 	import ProfileInfo from '$lib/components/settings/ProfileInfo.svelte';
 
 	// svelte imports
@@ -26,8 +26,8 @@
 </script>
 
 <h1>Profile Settings</h1>
-<SettingsCardGroup>
-	<SettingsCard heading="Personal Information">
+<CardGroup>
+	<Card heading="Personal Information">
 		{#if editingProfile}
 			<UpdateProfileForm
 				{user}
@@ -47,13 +47,13 @@
 				bind:sentNewPasswordRequest
 			/>
 		{/if}
-	</SettingsCard>
+	</Card>
 
-	<SettingsCard heading="Connected accounts">
+	<Card heading="Connected accounts">
 		<ConnectedProviders {user} />
-	</SettingsCard>
+	</Card>
 
-	<SettingsCard heading="Danger">
+	<Card heading="Danger">
 		<AccountDeletionForm />
-	</SettingsCard>
-</SettingsCardGroup>
+	</Card>
+</CardGroup>

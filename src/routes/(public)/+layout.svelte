@@ -16,5 +16,9 @@
 <Navigation navType="public" {routes} />
 
 <main>
-	{@render children()}
+	<section class="default-styling">
+		<div class="container">
+			{@render children()}
+		</div>
+	</section>
 </main>

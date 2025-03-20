@@ -2,7 +2,7 @@
 	let { routes, parentRoute, currentPagePath = $bindable() } = $props();
 </script>
 
-<div class="settings-sidebar">
+<div class="sidebar">
 	<ul>
 		{#if parentRoute}
 			<li class:active={currentPagePath === parentRoute.path}>

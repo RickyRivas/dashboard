@@ -1,8 +1,11 @@
 <script>
-	import SettingsCard from '$lib/components/settings/SettingsCard.svelte';
+	import Card from '$lib/components/Card.svelte';
+	import CardGroup from '$lib/components/CardGroup.svelte';
 </script>
 
 <h1>Billing Settings</h1>
-<SettingsCard heading="Invoices">
-	{#snippet children()}{/snippet}
-</SettingsCard>
+<CardGroup>
+	<Card heading="Invoices">
+		{#snippet children()}{/snippet}
+	</Card>
+</CardGroup>
