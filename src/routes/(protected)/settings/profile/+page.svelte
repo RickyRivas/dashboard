@@ -25,7 +25,7 @@
 	let sentNewPasswordRequest = $state(false);
 </script>
 
-<h1>All Settings</h1>
+<h1>Profile Settings</h1>
 <SettingsCardGroup>
 	<SettingsCard heading="Personal Information">
 		{#if editingProfile}

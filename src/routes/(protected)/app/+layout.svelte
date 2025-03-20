@@ -4,8 +4,8 @@
 	import { getNavRoutes, type RouteInfo } from '$lib/navigation';
 	import type { LayoutProps } from '../$types';
 	const { children }: LayoutProps = $props();
-	const parentRoute = getNavRoutes('protected')[1];
-	const settingsRoutes = getNavRoutes('protected')[1].children as RouteInfo[];
+	const parentRoute = getNavRoutes('protected')[0];
+	const appRoutes = getNavRoutes('protected')[0].children as RouteInfo[];
 	let currentPagePath = $derived(page.url.pathname);
 </script>
 
@@ -13,7 +13,7 @@
 <main>
 	<section class="settings-layout default-styling">
 		<div class="container sidebar-content-layout">
-			<Sidebar {parentRoute} routes={settingsRoutes} {currentPagePath} />
+			<Sidebar {parentRoute} routes={appRoutes} {currentPagePath} />
 			<div class="settings-content">
 				{@render children()}
 			</div>

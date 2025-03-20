@@ -26,7 +26,12 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
 
     // Protected routes
     protected: [
-        { path: '/app', name: 'App', iconPath: '', showInNav: true },
+        {
+            path: '/app', name: 'App', iconPath: '', showInNav: true,
+            children: [
+                { path: '/app/snippets', name: 'Snippets', iconPath: '', showInNav: true },
+            ]
+        },
         {
             path: '/settings', name: 'Settings', iconPath: '', showInNav: true,
             children: [
