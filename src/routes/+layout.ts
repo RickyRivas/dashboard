@@ -85,9 +85,8 @@ export const load: LayoutLoad = async ({ url, data, depends, fetch }) => {
             return { session, supabase, user, profile: tempProfileData, amr: null }
         }
 
-        const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
 
-        return { session, supabase, user, profile, amr: aal?.currentAuthenticationMethods, theme: data.theme };
+        return { session, supabase, user, profile, theme: data.theme };
     }
 
     // if public route

@@ -11,39 +11,6 @@ let table = 'code_snippets'
 let notesTable = 'editor_contents'
 const masterNoteId = 'b1533fd2-2dda-4e65-9033-46c4ccd85ee1'
 
-let trackerTable = 'build_tracker'
-let trackerTableId = '0d2e6583-7989-46d5-bb44-2a40881718fc'
-
-export async function getBuildTrackerInfo() {
-    const { data, error } = await supabase
-        .from(trackerTable)
-        .select('*')
-        .single()
-
-    if (error) return fail(400, { message: error.message })
-
-    if (!data) return fail(400, { message: 'No data.' })
-
-    return { success: true, data }
-}
-
-export async function setBuildTrackerInfo(info) {
-    const { data, error } = await supabase
-        .from(trackerTable)
-        .upsert({
-            id: trackerTableId,
-            account: info.account,
-            spec_url: info.spec_url,
-            temp_pw: info.temp_pw,
-        })
-
-    if (error) return fail(400, { message: error.message })
-
-    return {
-        success: true
-    }
-}
-
 export async function getNotesFromSB() {
     const { data, error } = await supabase
         .from(notesTable)

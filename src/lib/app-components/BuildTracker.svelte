@@ -1,73 +1,99 @@
-<script>
+<script lang="ts">
+	import { page } from '$app/state';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { getBuildTrackerInfo, setBuildTrackerInfo } from '$lib/supabase-db';
 	import { onMount } from 'svelte';
 
 	let open = $state(false);
 	let trackingBuild = $state(false);
 	let spec_url = $state('');
-	let temp_pw = $state('');
 	let account = $state('');
+
+	let trackerTable = 'build_tracker';
+	let trackerTableId = '0d2e6583-7989-46d5-bb44-2a40881718fc';
 
 	let loading = $state(false);
 	let success = $state(false);
 	let error = $state(false);
 
-	async function resetTrackingInfo() {
-		loading = true;
-		const result = await setBuildTrackerInfo({
-			account: '',
-			spec_url: '',
-			temp_pw
+	let disableTracker = $state(false);
+
+	async function setTracker(account: string, spec_url: string) {
+		const { data, error } = await page.data.supabase.from(trackerTable).upsert({
+			id: trackerTableId,
+			account,
+			spec_url
 		});
 
-		if (result.success) {
-			success = true;
-			error = false;
-			account = '';
-			spec_url = '';
-
-			setTimeout(() => {
-				open = false;
-				loading = false;
-				trackingBuild = false;
-			}, 1000);
-		}
+		return { data, error };
 	}
 
-	async function setNewTracker() {
-		if (!account || !spec_url) {
-			open = false;
+	async function resetTrackingInfo() {
+		loading = true;
+		success = false;
+		error = false;
+
+		const updateTracker = await setTracker('', '');
+
+		if (updateTracker.error) {
+			error = true;
+			success = false;
+			loading = false;
 			return;
 		}
 
-		loading = true;
-		const result = await setBuildTrackerInfo({ spec_url, temp_pw, account });
+		error = false;
+		success = true;
 
-		if (result.success) {
-			success = true;
-			error = false;
-			setTimeout(() => {
-				trackingBuild = true;
-				loading = false;
-			}, 1000);
+		setTimeout(() => {
+			account = '';
+			spec_url = '';
+			loading = false;
+			trackingBuild = false;
+		}, 1000);
+	}
+
+	async function onsubmit(e: SubmitEvent) {
+		e.preventDefault();
+		loading = true;
+		success = false;
+		error = false;
+
+		const updateTracker = await setTracker(account, spec_url);
+
+		if (updateTracker.error) {
+			error = true;
+			success = false;
+			loading = false;
+			return;
 		}
+
+		error = false;
+		success = true;
+
+		setTimeout(() => {
+			loading = false;
+			trackingBuild = true;
+		}, 1000);
 	}
 
 	onMount(async () => {
-		const result = await getBuildTrackerInfo();
-		account = result.data.account;
-		spec_url = result.data.spec_url;
-		temp_pw = result.data.temp_pw;
+		const { data, error } = await page.data.supabase.from(trackerTable).select('*').single();
+		if (data && data.account && data.spec_url) {
+			account = data.account;
+			spec_url = data.spec_url;
+			trackingBuild = true;
+		}
 
-		if (account && spec_url) trackingBuild = true;
+		if (error) disableTracker = true;
 	});
 </script>
 
 <div id="build-tracker" class:open>
 	<button
 		class="btn"
+		disabled={disableTracker}
 		onclick={() => {
+			if (disableTracker) return;
 			open = !open;
 		}}
 	>
@@ -81,14 +107,6 @@
 
 		{#if trackingBuild}
 			<div class="build-tracker-btn-group">
-				{#if temp_pw}
-					<button
-						class="btn"
-						onclick={() => {
-							navigator.clipboard.writeText(temp_pw);
-						}}>Copy Temp PW</button
-					>
-				{/if}
 				<button
 					class="btn"
 					onclick={() => {
@@ -123,39 +141,27 @@
 				</button>
 			</div>
 		{:else}
-			{#if temp_pw}
-				<button
-					class="btn"
-					onclick={() => {
-						navigator.clipboard.writeText(temp_pw);
-					}}>Copy Temp PW</button
-				>
-			{/if}
-			<div class="form-control">
-				<label>
-					Account
-					<input type="text" bind:value={account} />
-				</label>
-			</div>
-			<div class="form-control">
-				<label>
-					Spec URL
-					<input type="text" bind:value={spec_url} />
-				</label>
-			</div>
-			<div class="form-control">
-				<label>
-					Temp PW
-					<input type="text" bind:value={temp_pw} />
-				</label>
-			</div>
-			<button class="btn" onclick={setNewTracker}>
-				{#if loading}
-					<LoadingSpinner bind:loading bind:success bind:error dim={44} />
-				{:else}
-					<span>Track</span>
-				{/if}
-			</button>
+			<form {onsubmit}>
+				<div class="form-control">
+					<label>
+						Account
+						<input type="text" bind:value={account} required />
+					</label>
+				</div>
+				<div class="form-control">
+					<label>
+						Spec URL
+						<input type="text" bind:value={spec_url} required />
+					</label>
+				</div>
+				<button class="btn">
+					{#if loading}
+						<LoadingSpinner bind:loading bind:success bind:error dim={44} />
+					{:else}
+						<span>Track</span>
+					{/if}
+				</button>
+			</form>
 		{/if}
 	</div>
 </div>
@@ -173,6 +179,7 @@
 			border-radius: var(--border-radius);
 			padding: 1em;
 			border: 1px solid var(--border-color);
+			box-shadow: var(--box-shadow);
 			// hidden
 			transition: opacity 0.33s ease;
 			opacity: 0;

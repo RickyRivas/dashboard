@@ -21,6 +21,7 @@
 	});
 </script>
 
+<!-- theme -->
 <svelte:head>
 	<script>
 		{
