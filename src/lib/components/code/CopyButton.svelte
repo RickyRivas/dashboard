@@ -5,7 +5,6 @@
 	import beautify from 'js-beautify';
 	import 'prismjs/components/prism-javascript';
 	import 'prismjs/components/prism-css';
-	import type { CodeSnippetType } from '$lib/types';
 
 	const formatOpts = {
 		inline: [''],
@@ -22,7 +21,7 @@
 		snippet,
 		lang,
 		text = 'Copy'
-	}: { snippet: CodeSnippetType; lang: string; text: string } = $props();
+	}: { snippet: string; lang: string; text: string } = $props();
 	let copyBtn: HTMLButtonElement;
 
 	const beautifyFunctions = {

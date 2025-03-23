@@ -48,3 +48,15 @@ export function groupByCategory(codeAssets: CodeAsset[]) {
 
     return groupedSnippets
 }
+
+export function extractCategoriesAndCounts(categories) {
+    const counts = categories.reduce((acc, item) => {
+        // reassigning obj key 'category' to a count. setting count at 0 and upping it by 1
+        acc[item.category] = (acc[item.category] || 0) + 1
+        return acc
+    }, {})
+
+    return Object.entries(counts).map(([category, count]) => (
+        { category, count }
+    ))
+}

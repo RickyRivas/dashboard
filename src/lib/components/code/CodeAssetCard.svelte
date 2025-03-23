@@ -23,5 +23,5 @@
 <li class="codeAsset-card">
 	<span>{codeAsset.title}</span>
 	<button class="btn" onclick={() => onViewSnippet(codeAsset)}>View</button>
-	<CopyButton codeAsset={data?.value} lang={data?.lang} text="Copy" />
+	<CopyButton snippet={data!.value} lang={data!.lang} text="Copy" />
 </li>

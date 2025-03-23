@@ -30,6 +30,8 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
             path: '/app', name: 'App', iconPath: '', showInNav: true,
             children: [
                 { path: '/app/snippets', name: 'Snippets', iconPath: '', showInNav: true },
+                { path: '/app/sections', name: 'Sections', iconPath: '', showInNav: true },
+                { path: '/app/components', name: 'Components', iconPath: '', showInNav: true },
             ]
         },
         {
