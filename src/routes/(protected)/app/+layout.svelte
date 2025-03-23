@@ -9,14 +9,9 @@
 	let currentPagePath = $derived(page.url.pathname);
 </script>
 
-<!-- all settings layout-->
-<main>
-	<section class="settings-layout default-styling">
-		<div class="container sidebar-content-layout">
-			<Sidebar {parentRoute} routes={appRoutes} {currentPagePath} />
-			<div class="settings-content">
-				{@render children()}
-			</div>
-		</div>
-	</section>
+<main class="sidebar-content-layout">
+	<Sidebar {parentRoute} routes={appRoutes} {currentPagePath} />
+	<div id="content">
+		{@render children()}
+	</div>
 </main>

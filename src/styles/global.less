@@ -234,8 +234,31 @@ svg {
     }
 }
 
+main.sidebar-content-layout {
+    display: flex;
+    margin: 0 auto;
+    gap: 1em;
+    .fdir(column);
+    .ai(flex-start);
+    width: 90%;
+    max-width: unit((1400/20), em);
+
+    @media only screen and (min-width:1024px) {
+        .fdir(row);
+    }
+
+    #content {
+        width: 100%;
+
+        @media only screen and (min-width:1024px) {
+            width: calc(100% - 15em - 1em);
+        }
+    }
+}
+
 .sidebar {
     width: 100%;
+    padding: 3em 0;
 
     @media only screen and (min-width:1024px) {
         width: (300/20em);
