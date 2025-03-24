@@ -37,6 +37,7 @@
 		"@codemirror/theme-one-dark": "^6.1.2",
 		"@supabase/ssr": "^0.5.2",
 		"@supabase/supabase-js": "^2.47.16",
+		"image-size": "^2.0.1",
 		"js-beautify": "^1.15.4",
 		"less": "^4.2.2",
 		"moment": "^2.30.1",

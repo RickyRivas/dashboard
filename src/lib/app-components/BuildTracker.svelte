@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import { buildTrackerState } from '$lib/tracker-state.svelte';
 	import { onMount } from 'svelte';
 
 	let open = $state(false);
@@ -49,6 +50,7 @@
 			spec_url = '';
 			loading = false;
 			trackingBuild = false;
+			buildTrackerState.resetBuildTracker();
 		}, 1000);
 	}
 
@@ -69,6 +71,7 @@
 
 		error = false;
 		success = true;
+		buildTrackerState.setBuildTracker(account);
 
 		setTimeout(() => {
 			loading = false;
@@ -82,6 +85,7 @@
 			account = data.account;
 			spec_url = data.spec_url;
 			trackingBuild = true;
+			buildTrackerState.setBuildTracker(account);
 		}
 
 		if (error) disableTracker = true;

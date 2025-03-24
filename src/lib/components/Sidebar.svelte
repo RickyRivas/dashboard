@@ -1,10 +1,10 @@
 <script>
-	let { routes, parentRoute, currentPagePath = $bindable(), catsAndCounts } = $props();
+	let { routes, parentRoute, currentPagePath = $bindable(), catsAndCounts = null } = $props();
 </script>
 
 <aside id="sidebar">
 	<!-- Top Level -->
-	<div>
+	<!-- <div>
 		<h2>Navigation</h2>
 		<ul>
 			{#if parentRoute}
@@ -13,11 +13,11 @@
 				</li>
 			{/if}
 		</ul>
-	</div>
+	</div> -->
 
 	<!-- Sub Navigation -->
 	<div>
-		<h2>Sub Navigation</h2>
+		<!-- <h2>Sub Navigation</h2> -->
 		<ul>
 			{#each routes as route}
 				<li class:active={currentPagePath.startsWith(route.path)}>
@@ -28,8 +28,8 @@
 	</div>
 
 	<!-- categories and their counts (optional) -->
-	<div>
-		{#if catsAndCounts}
+	{#if catsAndCounts}
+		<div>
 			<h2>Categories</h2>
 			<ul>
 				{#each catsAndCounts as catAndCount}
@@ -42,6 +42,6 @@
 					</li>
 				{/each}
 			</ul>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </aside>
