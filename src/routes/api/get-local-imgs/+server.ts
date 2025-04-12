@@ -39,7 +39,8 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
                     urlPath,
                     size: formatBytes(stats.size),
                     lastModified: stats.mtime,
-                    children
+                    children,
+                    parentFolder: entryPath
                 };
             } else {
                 // It's a file, get additional file info
@@ -125,8 +126,10 @@ export async function POST({ request }) {
         extractImages(fileTree);
 
         return json({
-            fileTree,
-            images: allImages
+            imagesDirectory: {
+                type: 'directory',
+                children: fileTree
+            }
         })
 
     } catch (error) {

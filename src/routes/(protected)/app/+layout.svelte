@@ -11,7 +11,7 @@
 <main>
 	<aside id="sidebar">
 		<div class="container">
-			<h2>Navigation</h2>
+			<h2>Sub Navigation</h2>
 			<ul>
 				{#each routes as route}
 					<li class:active={currentPagePath.startsWith(route.path)}>
