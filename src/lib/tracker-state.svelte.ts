@@ -6,7 +6,6 @@ export class BuildTrackerState {
     // cart methods
     setBuildTracker(account: string) {
         this.buildTracker.account = account
-
     }
 
     resetBuildTracker() {

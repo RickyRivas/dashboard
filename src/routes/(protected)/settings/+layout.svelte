@@ -1,17 +1,25 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import { getNavRoutes, type RouteInfo } from '$lib/navigation';
+	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
 	import type { LayoutProps } from '../$types';
 	const { children }: LayoutProps = $props();
-	const parentRoute = getNavRoutes('protected')[1];
-	const settingsRoutes = getNavRoutes('protected')[1].children as RouteInfo[];
+
 	let currentPagePath = $derived(page.url.pathname);
+	let routes = $derived(findRouteInfo('/settings')?.route.children as RouteInfo[]);
 </script>
 
-<main class="sidebar-content-layout">
-	<Sidebar {parentRoute} routes={settingsRoutes} {currentPagePath} />
-	<div id="content">
-		{@render children()}
-	</div>
+<main>
+	<aside id="sidebar">
+		<div class="container">
+			<h2>Navigation</h2>
+			<ul>
+				{#each routes as route}
+					<li class:active={currentPagePath.startsWith(route.path)}>
+						<a class="btn" href={route.path}>{route.name}</a>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	</aside>
+	{@render children()}
 </main>

@@ -1,4 +1,4 @@
-import type { PageServerLoad } from "../$types";
+import { json } from "@sveltejs/kit";
 import path from 'node:path';
 import imageSize from 'image-size';
 import { promises as fs } from "node:fs";
@@ -90,12 +90,16 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
     }
 }
 
-export const load: PageServerLoad = async () => {
-    // fetch all images in /images folder
-    const build = 'manne-sidni2';
+export async function POST({ request }) {
+    const { account } = await request.json()
+
+    if (!account) {
+        return new Response(JSON.stringify({ error: 'Invalid Credentials' }), { status: 400 });
+    }
+
     const mampPath = '/Applications/MAMP/www';
     const localHostPath = 'http://localhost:8888';
-    const currentBuildPath = path.join(mampPath, build, 'www', 'assets', 'images');
+    const currentBuildPath = path.join(mampPath, account, 'www', 'assets', 'images');
 
     try {
         // Get all files and directories recursively
@@ -120,14 +124,12 @@ export const load: PageServerLoad = async () => {
 
         extractImages(fileTree);
 
-        return {
+        return json({
             fileTree,
             images: allImages
-        };
+        })
+
     } catch (error) {
-        return {
-            fileTree: [],
-            images: []
-        };
+        return new Response(JSON.stringify({ error: 'Failed to process images' }), { status: 500 });
     }
 }

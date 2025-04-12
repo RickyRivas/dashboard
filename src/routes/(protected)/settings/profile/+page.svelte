@@ -25,37 +25,39 @@
 	let sentNewPasswordRequest = $state(false);
 </script>
 
-<section class="default-styling">
-	<h1>Profile Settings</h1>
-	<CardGroup>
-		<Card heading="Personal Information">
-			{#if editingProfile}
-				<UpdateProfileForm
-					{user}
-					bind:avatar_url
-					bind:full_name
-					bind:editingProfile
-					bind:sentEmailVerification
-					bind:sentNewPasswordRequest
-				/>
-			{:else}
-				<ProfileInfo
-					{user}
-					bind:avatar_url
-					bind:full_name
-					bind:editingProfile
-					bind:sentEmailVerification
-					bind:sentNewPasswordRequest
-				/>
-			{/if}
-		</Card>
+<section>
+	<div class="container">
+		<h1>Profile Settings</h1>
+		<CardGroup>
+			<Card heading="Personal Information">
+				{#if editingProfile}
+					<UpdateProfileForm
+						{user}
+						bind:avatar_url
+						bind:full_name
+						bind:editingProfile
+						bind:sentEmailVerification
+						bind:sentNewPasswordRequest
+					/>
+				{:else}
+					<ProfileInfo
+						{user}
+						bind:avatar_url
+						bind:full_name
+						bind:editingProfile
+						bind:sentEmailVerification
+						bind:sentNewPasswordRequest
+					/>
+				{/if}
+			</Card>
 
-		<Card heading="Connected accounts">
-			<ConnectedProviders {user} />
-		</Card>
+			<Card heading="Connected accounts">
+				<ConnectedProviders {user} />
+			</Card>
 
-		<Card heading="Danger">
-			<AccountDeletionForm />
-		</Card>
-	</CardGroup>
+			<Card heading="Danger">
+				<AccountDeletionForm />
+			</Card>
+		</CardGroup>
+	</div>
 </section>

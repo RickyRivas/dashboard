@@ -1,3 +1,5 @@
-<section class="default-styling">
-	<h1>All Settings</h1>
+<section>
+	<div class="container">
+		<h1>All Settings</h1>
+	</div>
 </section>

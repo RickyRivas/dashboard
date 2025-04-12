@@ -129,14 +129,6 @@ p {
     margin: 0 auto;
 }
 
-section.default-styling {
-    padding: 3em 0;
-
-    @media only screen and (min-width:1024px) {
-        // padding: 5em 0;
-    }
-}
-
 .icon {
     width: 100%;
     height: auto;
@@ -206,7 +198,6 @@ svg {
     }
 }
 
-
 .card-group {
     .flex;
     .fdir(column);
@@ -234,73 +225,6 @@ svg {
     }
 }
 
-main.sidebar-content-layout {
-    display: flex;
-    margin: 0 auto;
-    gap: 1em;
-    .fdir(column);
-    .ai(flex-start);
-    width: 90%;
-    max-width: unit((1400/20), em);
-
-    @media only screen and (min-width:1024px) {
-        .fdir(row);
-    }
-
-    #content {
-        width: 100%;
-
-        @media only screen and (min-width:1024px) {
-            width: calc(100% - 10em - 1em);
-        }
-    }
-}
-
-#sidebar {
-    width: 100%;
-    padding: 3em 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-
-    @media only screen and (min-width:1024px) {
-        width: (200/20em);
-    }
-
-    ul {
-        list-style: none;
-        .flex;
-        .fdir(column);
-        gap: 1em;
-
-        li {
-            a {
-                .show;
-                .fs(14px);
-                .lh(44px);
-                text-decoration: none;
-                padding: 0 1em;
-                border: 1px solid var(--box-shadow);
-                color: var(--text);
-                background: none;
-                transition: background-color .33s ease;
-                .rounded(var(--border-radius));
-
-                &:hover,
-                &:focus {
-                    .bc(var(--third));
-                }
-            }
-
-            &.active {
-                a {
-                    .bc(var(--third));
-                }
-            }
-        }
-    }
-}
-
 .code-asset-links {
     display: grid;
     gap: 1em;
@@ -311,7 +235,7 @@ main.sidebar-content-layout {
     }
 
     @media only screen and (min-width:1024px) {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .code-asset-link {
@@ -329,6 +253,25 @@ main.sidebar-content-layout {
 
             &.placeholder {
                 padding: 1em;
+            }
+        }
+    }
+}
+
+#sidebar {
+    padding: 3em 0;
+
+    ul {
+        list-style: none;
+        .flex;
+        gap: 1em;
+
+        li {
+            &.active {
+                a {
+
+                    background-color: var(--secondary);
+                }
             }
         }
     }

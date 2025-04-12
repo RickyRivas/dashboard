@@ -14,26 +14,24 @@
 	});
 </script>
 
-<main>
+<section>
 	<div class="container">
-		<section class="default-styling">
-			<h2>{codeAsset.title}</h2>
-			<p class="description">{codeAsset.description || 'No description.'}</p>
-			<ToggleFavorite id={codeAsset.id} favorite={codeAsset.favorite} />
-			<div class="thumbnail" class:placeholder={!codeAsset.thumbnailurl}>
-				{#if codeAsset.thumbnailurl}
-					<CldImage width="300" height="300" src={codeAsset.thumbnailurl} alt="" crop="pad" />
-				{:else}
-					<Logo />
-				{/if}
-			</div>
-			<CodeDisplayPanel {codeAsset} />
-			<p class="time">Created: {moment(codeAsset.created_at).format('MMMM D, YYYY [at] h:mm A')}</p>
-			<p class="time">Updated: {moment(codeAsset.updated_at).format('MMMM D, YYYY [at] h:mm A')}</p>
-			<a class="btn" href={`/app/sections/${category}`}>Go back</a>
-		</section>
+		<h2>{codeAsset.title}</h2>
+		<p class="description">{codeAsset.description || 'No description.'}</p>
+		<ToggleFavorite id={codeAsset.id} favorite={codeAsset.favorite} />
+		<div class="thumbnail" class:placeholder={!codeAsset.thumbnailurl}>
+			{#if codeAsset.thumbnailurl}
+				<CldImage width="300" height="300" src={codeAsset.thumbnailurl} alt="" crop="pad" />
+			{:else}
+				<Logo />
+			{/if}
+		</div>
+		<CodeDisplayPanel {codeAsset} />
+		<p class="time">Created: {moment(codeAsset.created_at).format('MMMM D, YYYY [at] h:mm A')}</p>
+		<p class="time">Updated: {moment(codeAsset.updated_at).format('MMMM D, YYYY [at] h:mm A')}</p>
+		<a class="btn" href={`/app/sections/${category}`}>Go back</a>
 	</div>
-</main>
+</section>
 
 <style lang="less">
 	.description {

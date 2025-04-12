@@ -1,4 +1,5 @@
 export type RouteGroup = 'auth' | 'public' | 'protected';
+import { buildTrackerState } from "./tracker-state.svelte";
 
 export interface RouteInfo {
     path: string;
