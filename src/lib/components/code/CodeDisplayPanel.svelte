@@ -103,6 +103,7 @@
 	<div class="code">
 		<pre>{@html formattedCode}</pre>
 	</div>
+	<a href="/app/manager?code_asset_id={codeAsset.id}" class="btn">Edit</a>
 </div>
 
 <style lang="less">

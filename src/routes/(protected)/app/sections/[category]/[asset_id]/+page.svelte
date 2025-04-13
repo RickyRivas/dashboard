@@ -31,6 +31,7 @@
 		<p class="time">Created: {moment(codeAsset.created_at).format('MMMM D, YYYY [at] h:mm A')}</p>
 		<p class="time">Updated: {moment(codeAsset.updated_at).format('MMMM D, YYYY [at] h:mm A')}</p>
 		<a class="btn" href={`/app/sections/${category}`}>Go back</a>
+		<a class="btn" href={`/app/manager?code_asset_id=${codeAsset.id}`}>Edit code asset</a>
 	</div>
 </section>
 

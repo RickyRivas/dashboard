@@ -142,8 +142,8 @@
 		</fieldset>
 	{:else if type === 'checkbox'}
 		<label>
-			{label}{required ? '*' : ''}
 			<input type="checkbox" {name} bind:checked={value} />
+			{label}{required ? '*' : ''}
 		</label>
 	{:else}
 		<!-- everything else -->

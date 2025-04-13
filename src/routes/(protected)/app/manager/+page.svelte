@@ -3,71 +3,13 @@
 	import FormInput from '$lib/components/form/FormInput.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { handleAPIErrorsForm, type InputConfig } from '$lib/form-helpers';
+	import type { PageProps } from './$types';
 
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { css } from '@codemirror/lang-css';
 	import { oneDark } from '@codemirror/theme-one-dark';
-
-	let typingValue = $state('');
-	let values = $state({
-		html: '',
-		css: '',
-		javascript: ''
-	});
-
-	let props: CodeMirror['$$prop_def'] = $state({
-		basic: true,
-		useTab: true,
-		editable: true,
-		lineWrapping: false,
-		readonly: false,
-		tabSize: 2,
-		placeholder: null,
-		lang: html(),
-		theme: null,
-		nodebounce: false
-	});
-
-	const languages = ['html', 'css', 'javascript'];
-	let language = $state('html');
-
-	const themes = ['default', 'onedark'];
-	let theme = 'default';
-
-	function on_language_change(language): void {
-		switch (language) {
-			case 'html':
-				props.lang = html({ matchClosingTags: true });
-				typingValue = values.html;
-				break;
-			case 'css':
-				props.lang = css();
-				typingValue = values.css;
-				break;
-			case 'javascript':
-				props.lang = javascript();
-				typingValue = values.javascript;
-				break;
-		}
-	}
-
-	function on_theme_change(): void {
-		switch (theme) {
-			case 'default':
-				props.theme = null;
-				break;
-			case 'onedark':
-				props.theme = oneDark;
-				break;
-		}
-	}
-
-	let loading = $state(false);
-	let error = $state(false);
-	let success = $state(false);
-	let managerForm;
 
 	let inputConfigs: InputConfig[] = $state([
 		{
@@ -112,7 +54,7 @@
 			error: ''
 		},
 		{
-			name: 'thumbnail-url',
+			name: 'thumbnailurl',
 			label: 'Thumbnail Url',
 			type: 'text',
 			value: '',
@@ -123,7 +65,7 @@
 			cloudinary: true
 		},
 		{
-			name: 'build-time',
+			name: 'buildtime',
 			label: 'Build Time',
 			type: 'text',
 			value: '',
@@ -143,11 +85,95 @@
 			error: ''
 		}
 	]);
+
+	let props: CodeMirror['$$prop_def'] = $state({
+		basic: true,
+		useTab: true,
+		editable: true,
+		lineWrapping: false,
+		readonly: false,
+		tabSize: 2,
+		placeholder: null,
+		lang: html(),
+		theme: null,
+		nodebounce: false
+	});
+
+	// if editing code asset
+	let { data }: PageProps = $props();
+	let editingCodeAsset = $state(false);
+	let createdAt = $state('');
+	let updatedAt = $state('');
+	const { codeAsset } = data;
+
+	if (codeAsset) editingCodeAsset = true;
+
+	// editor
+	let typingValue = $state(editingCodeAsset ? codeAsset.html : '');
+	let values = $state({
+		html: editingCodeAsset ? codeAsset.html : '',
+		css: editingCodeAsset ? codeAsset.css : '',
+		javascript: editingCodeAsset ? codeAsset.javascript : ''
+	});
+
+	if (codeAsset) {
+		// input configs
+		for (const [key, value] of Object.entries(data.codeAsset)) {
+			const formInput = inputConfigs.find((i) => i.name === key);
+			if (formInput) formInput.value = value;
+		}
+	}
+
+	const languages = ['html', 'css', 'javascript'];
+	let language = $state('html');
+
+	const themes = ['default', 'onedark'];
+	let theme = 'default';
+
+	function on_language_change(language): void {
+		switch (language) {
+			case 'html':
+				props.lang = html({ matchClosingTags: true });
+				typingValue = values.html;
+				break;
+			case 'css':
+				props.lang = css();
+				typingValue = values.css;
+				break;
+			case 'javascript':
+				props.lang = javascript();
+				typingValue = values.javascript;
+				break;
+		}
+	}
+
+	function on_theme_change(): void {
+		switch (theme) {
+			case 'default':
+				props.theme = null;
+				break;
+			case 'onedark':
+				props.theme = oneDark;
+				break;
+		}
+	}
+
+	// form ui state
+	let loading = $state(false);
+	let error = $state(false);
+	let success = $state(false);
+	let managerForm;
+
+	// delete form ui state
+	let deleteFormLoading = $state(false);
+	let deleteFormError = $state(false);
+	let deleteFormSuccess = $state(false);
+	let deleteForm;
 </script>
 
 <section>
 	<div class="container">
-		<h2>Library Manager</h2>
+		<h2>Library Manager {editingCodeAsset ? '- editing mode' : ''}</h2>
 
 		<form
 			method="post"
@@ -167,9 +193,16 @@
 						success = true;
 						error = false;
 
-						setTimeout(() => {
-							loading = false;
-						}, 1000);
+						if (result.data) {
+							// show success/error state for a 1s
+							setTimeout(() => {
+								if (result?.data?.redirectTo) {
+									window.location = result.data.redirectTo;
+								}
+
+								loading = false;
+							}, 1000);
+						}
 					} else {
 						error = true;
 						success = false;
@@ -233,6 +266,10 @@
 				/>
 			</div>
 
+			{#if editingCodeAsset}
+				<input type="hidden" name="code-asset-id" value={codeAsset.id} />
+			{/if}
+
 			<button class="btn" disabled={loading}>
 				{#if loading}
 					<LoadingSpinner bind:loading bind:error bind:success dim={44} />
@@ -241,5 +278,65 @@
 				{/if}
 			</button>
 		</form>
+
+		{#if editingCodeAsset}
+			{#if createdAt}
+				<p>Code asset created: {createdAt}</p>
+			{/if}
+			{#if updatedAt}
+				<p>Last updated: {updatedAt}</p>
+			{/if}
+
+			<form
+				method="post"
+				action="?/delete"
+				bind:this={managerForm}
+				use:enhance={() => {
+					deleteFormLoading = true;
+					deleteFormSuccess = false;
+					deleteFormError = false;
+
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							deleteFormSuccess = true;
+							deleteFormError = false;
+
+							if (result.data) {
+								setTimeout(() => {
+									if (result?.data?.redirectTo) {
+										window.location = result.data.redirectTo;
+									}
+
+									deleteFormLoading = false;
+								}, 1000);
+							}
+						} else {
+							deleteFormError = true;
+							deleteFormSuccess = false;
+
+							setTimeout(() => {
+								deleteFormLoading = false;
+							}, 1000);
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="type" value={codeAsset.type} />
+				<input type="hidden" name="category" value={codeAsset.category} />
+				<input type="hidden" name="code-asset-id" value={codeAsset.id} />
+				<button class="btn error" disabled={deleteFormLoading}>
+					{#if deleteFormLoading}
+						<LoadingSpinner
+							bind:loading={deleteFormLoading}
+							bind:error={deleteFormError}
+							bind:success={deleteFormSuccess}
+							dim={44}
+						/>
+					{:else}
+						<span>Delete Code Asset</span>
+					{/if}
+				</button>
+			</form>
+		{/if}
 	</div>
 </section>
