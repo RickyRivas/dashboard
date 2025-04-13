@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { PUBLIC_CLOUDINARY_CLOUD_NAME } from '$env/static/public';
 	import Logo from '$lib/Logo.svelte';
 	import type { CodeAsset } from '$lib/types';
 	let { href, codeAsset }: { href: string; codeAsset: CodeAsset } = $props();
 
 	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 	configureCloudinary({
-		cloudName: 'detngn1i8'
+		cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME
 	});
 </script>
 

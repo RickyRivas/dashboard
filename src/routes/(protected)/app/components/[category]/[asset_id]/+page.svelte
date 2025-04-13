@@ -5,12 +5,13 @@
 	import type { PageProps } from './$types';
 	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 	import CodeDisplayPanel from '$lib/components/code/CodeDisplayPanel.svelte';
+	import { PUBLIC_CLOUDINARY_CLOUD_NAME } from '$env/static/public';
 
 	let { data }: PageProps = $props();
 	const { codeAsset, category } = data;
 
 	configureCloudinary({
-		cloudName: 'detngn1i8'
+		cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME
 	});
 </script>
 
