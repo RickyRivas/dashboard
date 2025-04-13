@@ -10,8 +10,9 @@
 		required: boolean;
 		error: string | null;
 		disabled: boolean;
+		options?: string[];
 		oauthUserDisable?: boolean;
-		autocomplete:
+		autocomplete?:
 			| 'off'
 			| 'on'
 			// Sign-in/credentials
@@ -54,6 +55,7 @@
 		type = 'text',
 		placeholder = '',
 		required = false,
+		options = [],
 		error = $bindable(null),
 		disabled = $bindable(false),
 		autocomplete = undefined,
@@ -72,41 +74,67 @@
 </script>
 
 <div class="form-control">
-	{#if label}
-		<label for={id} class:required>
-			{label}
-			{oauthUserDisable ? '- Change Email through your provider.' : ''}
-		</label>
-	{/if}
-	<!-- oauthUserDisable is for fields that users signed in with a provider cant change. -->
-	{#if oauthUserDisable}
-		<input
-			{id}
-			{type}
-			{name}
-			{placeholder}
-			{required}
-			disabled={true}
-			{value}
-			{autocomplete}
-			bind:this={inputElement}
-			class:error
-		/>
+	<!-- radio/checkboxes -->
+	{#if type === 'radio' || type === 'checkbox'}
+		<fieldset>
+			<legend>{label}{required ? '*' : ''}</legend>
+			<div class="form-radio-group">
+				{#each options as option}
+					<label>
+						<input
+							type="radio"
+							name="type"
+							bind:group={value}
+							value={option}
+							onchange={(e) => {
+								value = e.target.value;
+							}}
+						/>
+						{option}
+					</label>
+				{/each}
+			</div>
+		</fieldset>
 	{:else}
-		<input
-			{id}
-			{type}
-			{name}
-			{placeholder}
-			{required}
-			{disabled}
-			{value}
-			{autocomplete}
-			bind:this={inputElement}
-			class:error
-			oninput={handleInput}
-		/>
+		<!-- everything else -->
+		{#if label}
+			<label for={id} class:required>
+				{label}
+				{oauthUserDisable ? '- Change Email through your provider.' : ''}
+			</label>
+		{/if}
+
+		<!-- oauthUserDisable is for fields that users signed in with a provider cant change. -->
+		{#if oauthUserDisable}
+			<input
+				{id}
+				{type}
+				{name}
+				{placeholder}
+				{required}
+				disabled={true}
+				{value}
+				{autocomplete}
+				bind:this={inputElement}
+				class:error
+			/>
+		{:else}
+			<input
+				{id}
+				{type}
+				{name}
+				{placeholder}
+				{required}
+				{disabled}
+				{value}
+				{autocomplete}
+				bind:this={inputElement}
+				class:error
+				oninput={handleInput}
+			/>
+		{/if}
 	{/if}
+
 	{#if error}
 		<ErrorMessage errorMessage={error} />
 	{/if}
