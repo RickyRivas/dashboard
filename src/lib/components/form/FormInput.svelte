@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
+	import { onMount } from 'svelte';
+	import { PUBLIC_CLOUDINARY_CLOUD_NAME, PUBLIC_CLOUDINARY_PRESET } from '$env/static/public';
+
 	import ErrorMessage from './ErrorMessage.svelte';
 
 	interface Prop {
@@ -12,6 +16,7 @@
 		disabled: boolean;
 		options?: string[];
 		oauthUserDisable?: boolean;
+		cloudinary?: boolean;
 		autocomplete?:
 			| 'off'
 			| 'on'
@@ -60,6 +65,7 @@
 		disabled = $bindable(false),
 		autocomplete = undefined,
 		oauthUserDisable = false,
+		cloudinary = false,
 		id = `input-${Math.random().toString(36).substr(2, 9)}`
 	}: Prop = $props();
 
@@ -71,6 +77,45 @@
 		const target = event.target as HTMLInputElement;
 		value = target.value;
 	}
+
+	// cloudinary (for uploads)
+	let uploadWidget;
+
+	let onUpload = (error, result, widget) => {
+		if (!error && result) {
+			value = result.info.url;
+		}
+	};
+
+	function cldCallback(error, result) {
+		if (error || result.event === 'success') {
+			onUpload && onUpload(error, result, uploadWidget);
+		}
+	}
+
+	function uploadThumbnail() {
+		if (uploadWidget) uploadWidget.open();
+	}
+
+	configureCloudinary({
+		cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME
+	});
+
+	onMount(() => {
+		function onIdle() {
+			if (!uploadWidget) {
+				uploadWidget = window.cloudinary.createUploadWidget(
+					{
+						cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME,
+						uploadPreset: PUBLIC_CLOUDINARY_PRESET
+					},
+					cldCallback
+				);
+			}
+		}
+
+		'requestIdleCallback' in window ? requestIdleCallback(onIdle) : setTimeout(onIdle, 1);
+	});
 </script>
 
 <div class="form-control">
@@ -137,6 +182,12 @@
 				class:error
 				oninput={handleInput}
 			/>
+		{/if}
+
+		{#if cloudinary}
+			<button onclick={uploadThumbnail} type="button" class="btn cloudinary-upload-btn">
+				Upload Image</button
+			>
 		{/if}
 	{/if}
 

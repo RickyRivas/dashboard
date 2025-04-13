@@ -119,7 +119,8 @@
 			required: false,
 			placeholder: 'Thumbnail Url',
 			disabled: true,
-			error: ''
+			error: '',
+			cloudinary: true
 		},
 		{
 			name: 'build-time',
@@ -184,7 +185,7 @@
 				};
 			}}
 		>
-			{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly, options }, i}
+			{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly, options, cloudinary }, i}
 				<FormInput
 					id={name}
 					{name}
@@ -193,6 +194,7 @@
 					{required}
 					{type}
 					{options}
+					{cloudinary}
 					bind:value={inputConfigs[i].value}
 					bind:disabled={loading}
 					bind:error={inputConfigs[i].error}

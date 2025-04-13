@@ -1,8 +1,9 @@
 <script lang="ts">
 	// cloudinary
-	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 	import { avatarPlaceholderPath } from '$lib/auth-controller';
+	import { CldImage, configureCloudinary } from 'svelte-cloudinary';
 	import { onMount } from 'svelte';
+	import { PUBLIC_CLOUDINARY_CLOUD_NAME, PUBLIC_CLOUDINARY_PRESET } from '$env/static/public';
 
 	let { temp_avatar_url = $bindable() }: { temp_avatar_url: string } = $props();
 
@@ -30,7 +31,7 @@
 	}
 
 	configureCloudinary({
-		cloudName: 'detngn1i8'
+		cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME
 	});
 
 	onMount(() => {
@@ -38,8 +39,8 @@
 			if (!uploadWidget) {
 				uploadWidget = window.cloudinary.createUploadWidget(
 					{
-						cloudName: 'detngn1i8',
-						uploadPreset: 'Snippets'
+						cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME,
+						uploadPreset: PUBLIC_CLOUDINARY_PRESET
 					},
 					cldCallback
 				);
