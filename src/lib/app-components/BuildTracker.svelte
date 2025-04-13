@@ -94,6 +94,7 @@
 
 <div id="build-tracker" class:open>
 	<button
+		class:active={open}
 		class="btn"
 		disabled={disableTracker}
 		onclick={() => {
@@ -188,6 +189,9 @@
 			transition: opacity 0.33s ease;
 			opacity: 0;
 			pointer-events: none;
+			@media only screen and (max-width: 1023px) {
+				min-width: auto;
+			}
 		}
 		.form-control {
 			margin-bottom: 1em;
@@ -199,10 +203,6 @@
 		}
 
 		&.open {
-			> button {
-				outline: 5px solid blue;
-			}
-
 			.build-tracker-dropdown {
 				opacity: 1;
 				pointer-events: all;

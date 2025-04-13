@@ -61,7 +61,8 @@ export const actions: Actions = {
                 .select()
 
             if (error) return fail(400, { message: 'Error adding new code asset.', errors: [] })
-            return { success: true, redirectTo: `/app/${type}s/${category}/${data[0].id}` }
+            // snippets doesnt have any child pages. 
+            return { success: true, redirectTo: type === 'snippet' ? `/app/${type}s` : `/app/${type}s/${category}/${data[0].id}` }
         }
     },
     delete: async ({ request }) => {

@@ -26,22 +26,27 @@
 		<a id="logo" href="/"> <Logo /> </a>
 
 		<div class="mod">
-			{#if navType === 'protected'}
-				<BuildTracker />
-			{/if}
-
 			<nav>
 				<ul class:active={isActive}>
+					{#if navType === 'protected'}
+						<li>
+							<BuildTracker />
+						</li>
+					{/if}
 					{#each routes as route}
 						<li class:active={currentPagePath.startsWith(route.path)}>
 							<a id={route.name.toLowerCase()} href={route.path}>{route.name}</a>
 						</li>
 					{/each}
+					{#if navType === 'protected'}
+						<li>
+							<button onclick={logout} class="btn">Logout</button>
+						</li>
+					{/if}
 				</ul>
 			</nav>
 
 			{#if navType === 'protected'}
-				<button onclick={logout} class="btn">Logout</button>
 				{#if page.data.profile}
 					{#if page.data.profile.avatar_url}
 						<div class="small-avatar">

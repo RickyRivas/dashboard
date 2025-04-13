@@ -11,6 +11,7 @@
 	<p>{codeAsset.description || 'No description.'}</p>
 	<ToggleFavorite id={codeAsset.id} favorite={codeAsset.favorite} />
 	<CodeDisplayPanel {codeAsset} />
+	<a href="/app/manager?code_asset_id={codeAsset.id}" class="btn">Edit</a>
 </div>
 
 <style lang="less">
