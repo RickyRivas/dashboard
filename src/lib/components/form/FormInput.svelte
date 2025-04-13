@@ -75,7 +75,7 @@
 
 <div class="form-control">
 	<!-- radio/checkboxes -->
-	{#if type === 'radio' || type === 'checkbox'}
+	{#if type === 'radio'}
 		<fieldset>
 			<legend>{label}{required ? '*' : ''}</legend>
 			<div class="form-radio-group">
@@ -83,7 +83,7 @@
 					<label>
 						<input
 							type="radio"
-							name="type"
+							{name}
 							bind:group={value}
 							value={option}
 							onchange={(e) => {
@@ -95,6 +95,11 @@
 				{/each}
 			</div>
 		</fieldset>
+	{:else if type === 'checkbox'}
+		<label>
+			{label}{required ? '*' : ''}
+			<input type="checkbox" {name} bind:checked={value} />
+		</label>
 	{:else}
 		<!-- everything else -->
 		{#if label}

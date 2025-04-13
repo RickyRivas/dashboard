@@ -134,9 +134,8 @@
 		{
 			name: 'favorite',
 			label: 'Favorite',
-			type: 'radio',
-			options: ['false', 'true'],
-			value: 'false',
+			type: 'checkbox',
+			value: false,
 			required: false,
 			placeholder: '',
 			disabled: true,
