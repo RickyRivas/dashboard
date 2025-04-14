@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CodeAssetCard from '$lib/components/code/CodeAssetCard.svelte';
+	import SnippetCard from '$lib/components/code/SnippetCard.svelte';
 	import CodeTabViewer from '$lib/components/code/CodeTabViewer.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 
@@ -22,24 +22,25 @@
 
 		{#if favorites.length > 0}
 			<h2>Favorite {assetType}</h2>
-			{#each favorites as codeAsset}
-				<CodeAssetCard
-					{codeAsset}
-					onViewSnippet={() => {
-						currentlySelectedCodeAsset = codeAsset;
-						showModal = true;
-					}}
-				/>
-			{/each}
+			<ul class="code-asset-snippet-group">
+				{#each favorites as codeAsset}
+					<SnippetCard
+						{codeAsset}
+						onViewSnippet={() => {
+							currentlySelectedCodeAsset = codeAsset;
+							showModal = true;
+						}}
+					/>
+				{/each}
+			</ul>
 		{/if}
 
-		<h2>All {assetType}</h2>
 		{#if codeAssetsGroups.length > 0}
 			{#each codeAssetsGroups as group}
 				<h2>{group.category}</h2>
-				<ul>
+				<ul class="code-asset-snippet-group">
 					{#each group.codeAssets as codeAsset}
-						<CodeAssetCard
+						<SnippetCard
 							{codeAsset}
 							onViewSnippet={() => {
 								currentlySelectedCodeAsset = codeAsset;

@@ -375,3 +375,145 @@ svg {
     gap: 1em;
     list-style: none;
 }
+
+.code-asset-snippet-group {
+    display: grid;
+    width: 100%;
+    .ai(flex-start);
+    justify-content: center;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 1em;
+    margin-bottom: 1em;
+
+    @media only screen and (min-width:666px) {
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+    @media only screen and (min-width:768px) {}
+
+    @media only screen and (min-width:1024px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .snippet-card {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        width: 100%;
+        display: block;
+        text-align: left;
+        overflow: hidden;
+
+        &.favorite {
+            border: 2px solid #f59e0b; // Amber/gold border
+            background-color: #fffbeb; // Light amber background
+            color: #212121;
+
+            h3 {
+                color: #212121;
+            }
+        }
+
+        .header,
+        .footer {
+            padding: .75em;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+
+            span {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 1;
+            }
+        }
+
+        h3 {
+            white-space: nowrap;
+            font-size: 18px;
+            margin: 0 0 0.5em;
+        }
+
+        p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+
+        .display-code {
+            background-color: #202938;
+            position: relative;
+
+            pre {
+                height: 100%;
+            }
+
+            .code-btn {
+                margin: 0;
+                padding: 1em;
+                border: none;
+                background: none;
+                border-radius: 0px;
+                font: inherit;
+                font-size: 16px;
+                line-height: 1.2;
+                width: 100%;
+                height: 100%;
+                min-height: (100/20em);
+                max-height: (100/20em);
+                transition: max-height 0.33s ease-in-out;
+                text-align: left;
+                overflow: auto;
+                color: #fff;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #000;
+                    opacity: 0.75;
+                    z-index: 1;
+                    height: 100%;
+                    width: 100%;
+                    transition: opacity 0.33s ease-in-out;
+                }
+
+                &.active {
+                    max-height: (200/20em);
+
+                    &::before {
+                        opacity: 0;
+                    }
+                }
+
+            }
+
+            .btns {
+                position: absolute;
+                top: .5em;
+                right: .5em;
+                z-index: 2;
+
+                .btn {
+                    background: none;
+                    padding: 0;
+                    width: 24px;
+                    height: 24px;
+                }
+
+                .copy-btn {
+                    transition: color .33s ease;
+
+                    &.success {
+                        color: green;
+                    }
+                }
+            }
+        }
+    }
+}

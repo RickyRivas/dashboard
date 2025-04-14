@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	let { id, favorite = false }: { id: string; favorite: boolean } = $props();
+	let { id, favorite = false, dim = 44 }: { id: string; favorite: boolean; dim: number } = $props();
 	let table = 'code_snippets';
 
 	async function toggleFavorite(id: string) {
@@ -33,7 +33,12 @@
 	}
 </script>
 
-<label class="star-label" for="component-fav-toggle-{id}">
+<label
+	class="star-label"
+	for="component-fav-toggle-{id}"
+	style:width={dim + 'px'}
+	style:height={dim + 'px'}
+>
 	<!-- {field.label} -->
 	<input
 		type="checkbox"
@@ -63,6 +68,9 @@
 
 <style lang="less">
 	.star-label {
+		display: inline-block;
+		vertical-align: top;
+
 		input[type='checkbox'] {
 			display: none;
 
@@ -73,9 +81,10 @@
 	}
 
 	.star-icon {
-		width: 2em;
+		width: 100%;
+		height: auto;
 		display: inline-block;
-		vertical-align: middle;
+		vertical-align: top;
 
 		path {
 			transition:
