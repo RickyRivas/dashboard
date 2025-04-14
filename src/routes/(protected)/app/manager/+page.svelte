@@ -173,7 +173,7 @@
 
 <section>
 	<div class="container">
-		<h2>Library Manager {editingCodeAsset ? '- editing mode' : ''}</h2>
+		<h1>Library Manager {editingCodeAsset ? '- editing mode' : ''}</h1>
 
 		<form
 			method="post"

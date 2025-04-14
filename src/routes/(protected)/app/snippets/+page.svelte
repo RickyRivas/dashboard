@@ -1,70 +1,38 @@
 <script lang="ts">
 	import SnippetCard from '$lib/components/code/SnippetCard.svelte';
-	import CodeTabViewer from '$lib/components/code/CodeTabViewer.svelte';
-	import Modal from '$lib/components/ui/Modal.svelte';
-
 	import { extractFavorites, groupByCategory } from '$lib/utils';
-	import type { CodeAsset } from '$lib/types';
 	import type { PageProps } from './$types';
+	import CardGroup from '$lib/components/CardGroup.svelte';
+	import Card from '$lib/components/Card.svelte';
 
 	let { data }: PageProps = $props();
 	const codeAssetsGroups = groupByCategory(data.codeAssets);
 	const favorites = extractFavorites(data.codeAssets) || [];
-
-	let assetType = 'Snippets';
-	let currentlySelectedCodeAsset: CodeAsset | null = $state(null);
-	let showModal = $state(false);
 </script>
 
 <section>
 	<div class="container">
-		<h1>{assetType}</h1>
+		<h1>Snippets</h1>
+		<CardGroup>
+			<Card heading="Favorites">
+				{#if favorites.length > 0}
+					<ul class="code-asset-snippet-group">
+						{#each favorites as codeAsset}
+							<SnippetCard {codeAsset} />
+						{/each}
+					</ul>
+				{/if}
+			</Card>
 
-		{#if favorites.length > 0}
-			<h2>Favorite {assetType}</h2>
-			<ul class="code-asset-snippet-group">
-				{#each favorites as codeAsset}
-					<SnippetCard
-						{codeAsset}
-						onViewSnippet={() => {
-							currentlySelectedCodeAsset = codeAsset;
-							showModal = true;
-						}}
-					/>
-				{/each}
-			</ul>
-		{/if}
-
-		{#if codeAssetsGroups.length > 0}
 			{#each codeAssetsGroups as group}
-				<h2>{group.category}</h2>
-				<ul class="code-asset-snippet-group">
-					{#each group.codeAssets as codeAsset}
-						<SnippetCard
-							{codeAsset}
-							onViewSnippet={() => {
-								currentlySelectedCodeAsset = codeAsset;
-								showModal = true;
-							}}
-						/>
-					{/each}
-				</ul>
+				<Card heading={group.category}>
+					<ul class="code-asset-snippet-group">
+						{#each group.codeAssets as codeAsset}
+							<SnippetCard {codeAsset} />
+						{/each}
+					</ul>
+				</Card>
 			{/each}
-		{:else}
-			<p>No {assetType}.</p>
-		{/if}
+		</CardGroup>
 	</div>
 </section>
-
-{#if showModal}
-	<Modal
-		closeModal={() => {
-			currentlySelectedCodeAsset = null;
-			showModal = false;
-		}}
-	>
-		{#snippet modalContent()}
-			<CodeTabViewer codeAsset={currentlySelectedCodeAsset} />
-		{/snippet}
-	</Modal>
-{/if}

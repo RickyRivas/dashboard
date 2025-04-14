@@ -9,17 +9,19 @@
 </script>
 
 <main>
-	<aside id="sidebar">
+	<section>
 		<div class="container">
-			<h2>Sub Navigation</h2>
-			<ul>
-				{#each routes as route}
-					<li class:active={currentPagePath.startsWith(route.path)}>
-						<a class="btn" href={route.path}>{route.name}</a>
-					</li>
-				{/each}
-			</ul>
+			<div id="subnav">
+				<h2>Sub Navigation</h2>
+				<ul>
+					{#each routes as route}
+						<li class:active={currentPagePath.startsWith(route.path)}>
+							<a class="btn" href={route.path}>{route.name}</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
 		</div>
-	</aside>
+	</section>
 	{@render children()}
 </main>

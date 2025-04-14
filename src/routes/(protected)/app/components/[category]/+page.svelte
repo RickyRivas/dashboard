@@ -3,8 +3,9 @@
 	import type { PageProps } from './$types';
 	import CodeAssetLink from '$lib/components/code/CodeAssetLink.svelte';
 	import { page } from '$app/state';
+	import Card from '$lib/components/Card.svelte';
+	import CardGroup from '$lib/components/CardGroup.svelte';
 
-	let assetType = 'Components';
 	let { data }: PageProps = $props();
 	const catsAndCounts = data.catsAndCounts;
 	const codeAssetsGroups = $derived(groupByCategory(data.codeAssets));
@@ -12,40 +13,37 @@
 
 <section>
 	<div class="container">
-		<h2>Categories</h2>
-		<ul class="categories-list">
-			{#each catsAndCounts as { category, count }}
-				<li>
-					<a
-						class="btn"
-						class:active={page.url.pathname.startsWith(`/app/components/${category}`)}
-						href="/app/components/{category}">{category} ({count})</a
-					>
-				</li>
-			{:else}
-				<p>No categories</p>
-			{/each}
-		</ul>
-	</div>
-</section>
-
-<section>
-	<div class="container">
-		<h2>All {assetType}</h2>
-		{#if codeAssetsGroups.length > 0}
-			{#each codeAssetsGroups as group}
-				<h2>{group.category}</h2>
-				<ul class="code-asset-links">
-					{#each group.codeAssets as codeAsset}
-						<CodeAssetLink
-							href={`/app/components/${codeAsset.category}/${codeAsset.id}`}
-							{codeAsset}
-						/>
+		<CardGroup>
+			<Card heading="Categories">
+				<ul class="categories-list">
+					{#each catsAndCounts as { category, count }}
+						<li>
+							<a
+								class="btn"
+								class:active={page.url.pathname.startsWith(`/app/components/${category}`)}
+								href="/app/components/{category}">{category} ({count})</a
+							>
+						</li>
+					{:else}
+						<p>No categories</p>
 					{/each}
 				</ul>
+			</Card>
+
+			<h1>Components</h1>
+
+			{#each codeAssetsGroups as group}
+				<Card heading={group.category}>
+					<ul class="code-asset-links">
+						{#each group.codeAssets as codeAsset}
+							<CodeAssetLink
+								href={`/app/components/${codeAsset.category}/${codeAsset.id}`}
+								{codeAsset}
+							/>
+						{/each}
+					</ul>
+				</Card>
 			{/each}
-		{:else}
-			<p>No {assetType}.</p>
-		{/if}
+		</CardGroup>
 	</div>
 </section>
