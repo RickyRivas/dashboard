@@ -17,7 +17,7 @@
 	});
 </script>
 
-<section>
+<section id="full-page-code-asset">
 	<div class="container">
 		<CardGroup>
 			<Card heading={codeAsset.title}>
@@ -43,32 +43,3 @@
 		</CardGroup>
 	</div>
 </section>
-
-<style lang="less">
-	.description {
-		margin-bottom: 1em;
-	}
-	.thumbnail {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		aspect-ratio: ~'1 / 1';
-		background-color: var(--bg);
-		color: var(--text);
-		border: 1px solid var(--border-color);
-		max-width: (300/20em);
-		margin-bottom: 1em;
-		margin-top: 1em;
-
-		&.placeholder {
-			padding: 1em;
-		}
-	}
-
-	p.time {
-		line-height: 3;
-		margin: 0;
-		font-size: 16px;
-	}
-</style>

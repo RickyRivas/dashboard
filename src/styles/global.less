@@ -527,3 +527,40 @@ svg {
         }
     }
 }
+
+#full-page-code-asset {
+    .description {
+        margin-bottom: 1em;
+    }
+
+    .thumbnail {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        // aspect-ratio: ~'1 / 1';
+        background-color: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border-color);
+        margin-bottom: 1em;
+        margin-top: 1em;
+
+        @media only screen and (min-width:666px) {
+            max-width: 300px;
+        }
+
+        @media only screen and (min-width:768px) {}
+
+        @media only screen and (min-width:1024px) {}
+
+        &.placeholder {
+            padding: 1em;
+        }
+    }
+
+    p.time {
+        line-height: 3;
+        margin: 0;
+        font-size: 16px;
+    }
+}

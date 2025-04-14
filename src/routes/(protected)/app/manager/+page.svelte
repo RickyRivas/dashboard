@@ -10,6 +10,18 @@
 	import { html } from '@codemirror/lang-html';
 	import { css } from '@codemirror/lang-css';
 	import { oneDark } from '@codemirror/theme-one-dark';
+	import beautify from 'js-beautify';
+
+	const formatOpts = {
+		inline: [''],
+		wrap_line_length: 100,
+		indent_size: 2,
+		preserve_newlines: true,
+		indent_inner_html: true,
+		// Ensure HTML comments and images are on new lines
+		unformatted: [''],
+		content_unformatted: ['']
+	};
 
 	let inputConfigs: InputConfig[] = $state([
 		{
@@ -109,11 +121,11 @@
 	if (codeAsset) editingCodeAsset = true;
 
 	// editor
-	let typingValue = $state(editingCodeAsset ? codeAsset.html : '');
+	let typingValue = $state(editingCodeAsset ? beautify.html(codeAsset.html, formatOpts) : '');
 	let values = $state({
-		html: editingCodeAsset ? codeAsset.html : '',
-		css: editingCodeAsset ? codeAsset.css : '',
-		javascript: editingCodeAsset ? codeAsset.javascript : ''
+		html: editingCodeAsset ? beautify.html(codeAsset.html, formatOpts) : '',
+		css: editingCodeAsset ? beautify.css(codeAsset.css, formatOpts) : '',
+		javascript: editingCodeAsset ? beautify(codeAsset.javascript, formatOpts) : ''
 	});
 
 	if (codeAsset) {

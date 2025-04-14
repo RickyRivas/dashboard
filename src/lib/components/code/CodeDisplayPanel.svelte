@@ -1,18 +1,30 @@
 <script lang="ts">
+	// imports
 	import type { CodeAsset } from '$lib/types';
 
-	// imports
-	import { onMount } from 'svelte';
-
-	// highlighting & formatting
-	import Prism from 'prismjs';
 	import beautify from 'js-beautify';
 	import 'prismjs/components/prism-javascript';
 	import 'prismjs/components/prism-css';
 	import 'prismjs/components/prism-markup';
 
-	let { codeAsset }: { codeAsset: CodeAsset } = $props();
-	let copyBtn: HTMLButtonElement;
+	import CodeMirror from 'svelte-codemirror-editor';
+	import { javascript } from '@codemirror/lang-javascript';
+	import { html } from '@codemirror/lang-html';
+	import { css } from '@codemirror/lang-css';
+	import { oneDark } from '@codemirror/theme-one-dark';
+
+	let props: CodeMirror['$$prop_def'] = $state({
+		basic: true,
+		useTab: true,
+		editable: false,
+		lineWrapping: false,
+		readonly: false,
+		tabSize: 2,
+		placeholder: null,
+		lang: html(),
+		theme: null,
+		nodebounce: false
+	});
 
 	const formatOpts = {
 		inline: [''],
@@ -25,119 +37,90 @@
 		content_unformatted: ['']
 	};
 
-	const codeToDisplay = {
-		html: codeAsset.html || '',
-		css: codeAsset.css || '',
-		javascript: codeAsset.javascript || ''
-	};
+	let { codeAsset }: { codeAsset: CodeAsset } = $props();
+	let copyBtn: HTMLButtonElement;
 
-	const beautifyFunctions = {
-		html: beautify.html,
-		css: beautify.css,
-		js: beautify.javascript
-	};
+	// editor
+	let typingValue = $state(beautify.html(codeAsset.html, formatOpts));
+	let values = $state({
+		html: beautify.html(codeAsset.html, formatOpts),
+		css: beautify.css(codeAsset.css, formatOpts),
+		javascript: beautify(codeAsset.javascript, formatOpts)
+	});
 
-	const prismLanguages = {
-		html: Prism.languages.markup,
-		css: Prism.languages.css,
-		js: Prism.languages.javascript
-	};
+	const languages = ['html', 'css', 'javascript'];
+	let language = $state('html');
 
-	let formattedCode = $state();
-	let activeIndex = $state() as number;
-	let selectedTech = $state(Object.entries(codeToDisplay)[0]);
-
-	function formatAndHighlightCode(index: number, code: string, tech: 'html' | 'css' | 'js') {
-		activeIndex = index;
-
-		const beautifyFunction = beautifyFunctions[tech] || ((x) => x);
-		const language = prismLanguages[tech] || Prism.languages.markup;
-
-		selectedTech = Object.entries(codeToDisplay)[index];
-
-		if (!code) {
-			formattedCode = `<pre>${tech} snippet not included.</pre>`;
-		} else {
-			formattedCode = Prism.highlight(beautifyFunction(code, formatOpts), language, tech);
+	function on_language_change(language): void {
+		switch (language) {
+			case 'html':
+				props.lang = html({ matchClosingTags: true });
+				typingValue = values.html;
+				break;
+			case 'css':
+				props.lang = css();
+				typingValue = values.css;
+				break;
+			case 'javascript':
+				props.lang = javascript();
+				typingValue = values.javascript;
+				break;
 		}
 	}
+
+	let success = $state(false);
 
 	function copy() {
-		const beautifyFunction = beautifyFunctions[selectedTech[0]] || ((x) => x);
-		navigator.clipboard.writeText(beautifyFunction(selectedTech[1], formatOpts));
-		copyBtn.classList.add('success');
-		console.log('copied!');
+		navigator.clipboard.writeText(typingValue);
+		success = true;
 
 		setTimeout(() => {
-			copyBtn.classList.remove('success');
+			success = false;
 		}, 1000);
 	}
-
-	onMount(() => {
-		// find first available tech and set that as active tab
-		let i = 0;
-		for (const [lang, code] of Object.entries(codeToDisplay)) {
-			if (code) formatAndHighlightCode(i, codeToDisplay[lang], lang);
-			i++;
-		}
-	});
 </script>
 
 <div class="code-display-container">
-	<div class="panel">
-		<button class="btn" onclick={copy} bind:this={copyBtn}>Copy {selectedTech[0]}</button>
-
-		<div class="tabs">
-			{#each Object.entries(codeToDisplay) as [tech, snippet], i}
-				<button
-					class="btn"
-					onclick={() => formatAndHighlightCode(i, snippet, tech)}
-					class:viewing={i === activeIndex}
-					disabled={i === activeIndex || !snippet}
-				>
-					{tech}
-				</button>
-			{/each}
-		</div>
+	<button class="btn" onclick={copy} class:success>Copy {language.toUpperCase()}</button>
+	<div class="tabs">
+		{#each languages as lang}
+			<button
+				class="btn"
+				type="button"
+				class:active={language === lang}
+				onclick={() => {
+					language = lang;
+					on_language_change(lang);
+				}}
+			>
+				{lang.toUpperCase()}
+			</button>
+		{/each}
 	</div>
-	<div class="code">
-		<pre>{@html formattedCode}</pre>
+	<div class="form-control">
+		<CodeMirror
+			bind:value={typingValue}
+			on:change={(e) => {
+				values[language] = e.detail;
+			}}
+			class="manager-code-editor"
+			{...props}
+		/>
 	</div>
 </div>
 
 <style lang="less">
 	.code-display-container {
 		display: flex;
+		align-items: flex-start;
 		flex-direction: column;
 		gap: 1em;
-		.panel {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
+
 		.tabs {
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
 			gap: 1em;
-
-			button {
-				text-transform: capitalize;
-			}
-			button.viewing {
-				outline: 3px solid var(--primary);
-			}
-		}
-		.code {
-			background-color: #212121;
-			padding: 1em;
-			font-size: 16px;
-			border: 1px solid var(--border-color);
-			color: #fff;
-			border: none;
-			border-radius: 0px;
-			height: 300px;
-			overflow: auto;
 		}
 	}
 </style>

@@ -60,18 +60,17 @@
 	<div bind:this={editorContainer} />
 </div>
 
-<style>
+<style lang="less">
 	.editor-wrapper {
 		height: 400px;
 		margin-bottom: 80px; /* Space for toolbar */
 		position: relative;
 		display: block;
-		font-size: 16px;
 	}
 
 	p {
 		margin: 0;
-		font-size: 14px;
+		font-size: 16px;
 	}
 
 	.green-text {
