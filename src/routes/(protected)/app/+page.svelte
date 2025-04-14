@@ -145,13 +145,13 @@
 					<div class="form-control">
 						<label>
 							Title
-							<input type="text" name="title" />
+							<input type="text" name="title" required />
 						</label>
 					</div>
 					<div class="form-control">
 						<label>
 							Description
-							<input type="text" name="description" />
+							<input type="text" name="description" required />
 						</label>
 					</div>
 

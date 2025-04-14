@@ -13,10 +13,7 @@
 
 	onMount(async () => {
 		const account = buildTrackerState.buildTracker.account;
-		if (!account) {
-			console.log('no');
-			return;
-		}
+		if (!account) return;
 
 		const response = await fetch('/api/get-local-imgs', {
 			method: 'post',

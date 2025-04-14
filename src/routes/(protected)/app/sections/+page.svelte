@@ -1,13 +1,33 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import CodeAssetLink from '$lib/components/code/CodeAssetLink.svelte';
 	import { groupByCategory } from '$lib/utils';
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 
 	let assetType = 'Sections';
-	const { codeAssets } = data;
-	const codeAssetsGroups = groupByCategory(codeAssets);
+	const catsAndCounts = data.catsAndCounts;
+	const codeAssetsGroups = $derived(groupByCategory(data.codeAssets));
 </script>
+
+<section>
+	<div class="container">
+		<h2>Categories</h2>
+		<ul class="categories-list">
+			{#each catsAndCounts as { category, count }}
+				<li>
+					<a
+						class="btn"
+						class:active={page.url.pathname.startsWith(`/app/sections/${category}`)}
+						href="/app/sections/{category}">{category} ({count})</a
+					>
+				</li>
+			{:else}
+				<p>No categories</p>
+			{/each}
+		</ul>
+	</div>
+</section>
 
 <section>
 	<div class="container">

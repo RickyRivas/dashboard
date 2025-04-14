@@ -2,11 +2,32 @@
 	import { groupByCategory } from '$lib/utils';
 	import type { PageProps } from './$types';
 	import CodeAssetLink from '$lib/components/code/CodeAssetLink.svelte';
+	import { page } from '$app/state';
 
 	let assetType = 'Components';
 	let { data }: PageProps = $props();
+	const catsAndCounts = data.catsAndCounts;
 	const codeAssetsGroups = $derived(groupByCategory(data.codeAssets));
 </script>
+
+<section>
+	<div class="container">
+		<h2>Categories</h2>
+		<ul class="categories-list">
+			{#each catsAndCounts as { category, count }}
+				<li>
+					<a
+						class="btn"
+						class:active={page.url.pathname.startsWith(`/app/components/${category}`)}
+						href="/app/components/{category}">{category} ({count})</a
+					>
+				</li>
+			{:else}
+				<p>No categories</p>
+			{/each}
+		</ul>
+	</div>
+</section>
 
 <section>
 	<div class="container">

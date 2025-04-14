@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
         .from('checklist')
         .select('*')
         .eq('user_id', id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
     if (error) {
         console.error('Error fetching checklists:', error);
