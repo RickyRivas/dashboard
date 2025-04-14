@@ -43,6 +43,21 @@
 							<button onclick={logout} class="btn">Logout</button>
 						</li>
 					{/if}
+
+					{#if navType === 'public'}
+						{#if session}
+							<li>
+								<a href="/app" class="btn">Dashboard</a>
+							</li>
+						{:else}
+							<li>
+								<a href="/login" class="btn">Log In</a>
+							</li>
+							<li>
+								<a href="/register" class="btn">Register</a>
+							</li>
+						{/if}
+					{/if}
 				</ul>
 			</nav>
 
@@ -58,15 +73,6 @@
 							/>
 						</div>
 					{/if}
-				{/if}
-			{/if}
-
-			{#if navType === 'public'}
-				{#if session}
-					<a href="/app" class="btn">Dashboard</a>
-				{:else}
-					<a href="/login" class="btn">Log In</a>
-					<a href="/register" class="btn">Register</a>
 				{/if}
 			{/if}
 

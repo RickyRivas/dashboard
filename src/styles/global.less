@@ -302,3 +302,70 @@ svg {
     right: 2px;
     line-height: 42px;
 }
+
+#checklist {
+    .flex;
+    .fdir(column);
+    list-style: none;
+    gap: 1em;
+    margin-bottom: 1em;
+
+
+    li {
+        padding: 1em;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        color: #212121;
+        position: relative;
+
+        .checklist-delete-form {
+            position: absolute;
+            top: 1em;
+            right: 1em;
+        }
+
+        h3 {
+            color: #212121;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 1em;
+        }
+
+        // Status styles with both border and background colors
+        &[data-status='pending'] {
+            border: 2px solid #9061F9; // Medium purple border
+            background-color: #F3EAFF; // Light purple background
+        }
+
+        &[data-status='in_progress'] {
+            border: 2px solid #3B82F6; // Blue border
+            background-color: #EBF5FF; // Light blue background
+        }
+
+        &[data-status='completed'] {
+            border: 2px solid #10B981; // Green border
+            background-color: #ECFDF5; // Light green background
+
+            h3 {
+                text-decoration: line-through;
+            }
+        }
+
+        &[data-status='blocked'] {
+            border: 2px solid #EF4444; // Red border
+            background-color: #FEF2F2; // Light red background
+        }
+
+        &[data-status='deferred'] {
+            border: 2px solid #F59E0B; // Amber/Yellow border
+            background-color: #FFFBEB; // Light yellow background
+        }
+
+        &[data-status='canceled'] {
+            border: 2px solid #6B7280; // Gray border
+            background-color: #F3F4F6; // Light gray background
+        }
+    }
+}
