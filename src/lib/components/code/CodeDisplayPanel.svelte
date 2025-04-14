@@ -3,9 +3,6 @@
 	import type { CodeAsset } from '$lib/types';
 
 	import beautify from 'js-beautify';
-	import 'prismjs/components/prism-javascript';
-	import 'prismjs/components/prism-css';
-	import 'prismjs/components/prism-markup';
 
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
@@ -38,7 +35,6 @@
 	};
 
 	let { codeAsset }: { codeAsset: CodeAsset } = $props();
-	let copyBtn: HTMLButtonElement;
 
 	// editor
 	let typingValue = $state(beautify.html(codeAsset.html, formatOpts));
