@@ -104,8 +104,6 @@ export const actions: Actions = {
         const formData = await request.formData();
         const entryId = formData.get('id') as string;
 
-        console.log(entryId)
-
         if (!entryId) {
             return fail(400, { message: 'Missing time entry ID' });
         }
