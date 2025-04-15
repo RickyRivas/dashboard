@@ -93,16 +93,14 @@
 			</button>
 		{/each}
 	</div>
-	<div class="form-control">
-		<CodeMirror
-			bind:value={typingValue}
-			on:change={(e) => {
-				values[language] = e.detail;
-			}}
-			class="manager-code-editor"
-			{...props}
-		/>
-	</div>
+	<CodeMirror
+		bind:value={typingValue}
+		on:change={(e) => {
+			values[language] = e.detail;
+		}}
+		class="manager-code-editor"
+		{...props}
+	/>
 </div>
 
 <style lang="less">
