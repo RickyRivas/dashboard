@@ -17,6 +17,7 @@
 		options?: string[];
 		oauthUserDisable?: boolean;
 		cloudinary?: boolean;
+		step?: string | undefined;
 		autocomplete?:
 			| 'off'
 			| 'on'
@@ -66,6 +67,7 @@
 		autocomplete = undefined,
 		oauthUserDisable = false,
 		cloudinary = false,
+		step = undefined,
 		id = `input-${Math.random().toString(36).substr(2, 9)}`
 	}: Prop = $props();
 
@@ -145,6 +147,16 @@
 			<input type="checkbox" {name} bind:checked={value} />
 			{label}{required ? '*' : ''}
 		</label>
+	{:else if type === 'select'}
+		<label>
+			{label}
+			<select {name} bind:value>
+				<option value="">Please select an option</option>
+				{#each options as option}
+					<option value={option}>{option}</option>
+				{/each}
+			</select>
+		</label>
 	{:else}
 		<!-- everything else -->
 		{#if label}
@@ -165,6 +177,7 @@
 				disabled={true}
 				{value}
 				{autocomplete}
+				{step}
 				bind:this={inputElement}
 				class:error
 			/>
@@ -178,6 +191,7 @@
 				{disabled}
 				{value}
 				{autocomplete}
+				{step}
 				bind:this={inputElement}
 				class:error
 				oninput={handleInput}
