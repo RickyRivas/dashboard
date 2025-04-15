@@ -20,7 +20,7 @@
 	const beautifyFunctions = {
 		html: beautify.html,
 		css: beautify.css,
-		javascript: beautify.javascript
+		javascript: beautify
 	};
 
 	const prismLanguages = {

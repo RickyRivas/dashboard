@@ -50,7 +50,7 @@ export const actions: Actions = {
                 .eq('id', assetId)
                 .select()
             if (error) return fail(400, { message: 'Error updating new code asset.', errors: [] })
-            return { success: true, redirectTo: `/app/${type}s/${category}/${assetId}` }
+            return { success: true, redirectTo: type === 'snippet' ? `/app/${type}s` : `/app/${type}s/${category}/${assetId}` }
         } else {
             // new code asset
             const { data, error } = await supabase
