@@ -178,82 +178,85 @@
 	<div class="container">
 		<CardGroup>
 			<Card heading="Timesheet">
-				<table>
-					<thead>
-						<tr>
-							<th>Project</th>
-							<th>Customer</th>
-							<th>Date</th>
-							<th>Task</th>
-							<th>Status</th>
-							<th>Time Spent</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each timeEntries as entry (entry.id)}
-							<tr transition:fly={{ x: 100 }}>
-								<td>{entry.project_name}</td>
-								<td>{entry.client_contact}</td>
-								<td>{entry.date}</td>
-								<td>{entry.task_category}</td>
-								<td>
-									<form
-										id="status-form-{entry.id}"
-										action="?/updateStatus"
-										method="post"
-										use:enhance={() => {
-											return async ({ result }) => {
-												if (result.type === 'success') {
-													document
-														.querySelector(`#status-form-${entry.id} select`)
-														.setAttribute('data-status', result.data.newStatus.toLowerCase());
-												}
-											};
-										}}
-									>
-										<div class="form-control">
-											<input type="hidden" name="entry-id" value={entry.id} />
-											<select
-												name="status"
-												data-status={entry.status.toLowerCase()}
-												value={entry.status}
-												onchange={(e) => {
-													e.target.parentElement.parentElement.requestSubmit();
-												}}
-											>
-												{#each ['Pending', 'Approved', 'Billed', 'Paid'] as option}
-													<option value={option}>{option}</option>
-												{/each}
-											</select>
-										</div>
-									</form>
-								</td>
-								<td>{entry.hours_spent}</td>
-								<td>
-									<form
-										action="?/deleteTimeEntry"
-										method="post"
-										use:enhance={() => {
-											return async ({ result }) => {
-												if (result.type === 'success') {
-													const removedEntryId = result.data.removedEntryId;
-													const index = timeEntries.findIndex(
-														(entry) => entry.id === removedEntryId
-													);
-													timeEntries.splice(index, 1);
-												}
-											};
-										}}
-									>
-										<input type="hidden" name="id" value={entry.id} />
-										<button class="btn error">Delete</button>
-									</form>
-								</td>
+				<div class="timesheet">
+					<table>
+						<thead>
+							<tr>
+								<th>Project</th>
+								<th>Customer</th>
+								<th>Date</th>
+								<th>Task</th>
+								<th>Status</th>
+								<th>Time Spent</th>
+								<th></th>
 							</tr>
-						{/each}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{#each timeEntries as entry (entry.id)}
+								<tr transition:fly={{ x: 100 }}>
+									<td>{entry.project_name}</td>
+									<td>{entry.client_contact}</td>
+									<td>{entry.date}</td>
+									<td>{entry.task_category}</td>
+									<td>
+										<form
+											class="status-form"
+											id="status-form-{entry.id}"
+											action="?/updateStatus"
+											method="post"
+											use:enhance={() => {
+												return async ({ result }) => {
+													if (result.type === 'success') {
+														document
+															.querySelector(`#status-form-${entry.id} select`)
+															.setAttribute('data-status', result.data.newStatus.toLowerCase());
+													}
+												};
+											}}
+										>
+											<div class="form-control">
+												<input type="hidden" name="entry-id" value={entry.id} />
+												<select
+													name="status"
+													data-status={entry.status.toLowerCase()}
+													value={entry.status}
+													onchange={(e) => {
+														e.target.parentElement.parentElement.requestSubmit();
+													}}
+												>
+													{#each ['Pending', 'Approved', 'Billed', 'Paid'] as option}
+														<option value={option}>{option}</option>
+													{/each}
+												</select>
+											</div>
+										</form>
+									</td>
+									<td>{entry.hours_spent}</td>
+									<td>
+										<form
+											action="?/deleteTimeEntry"
+											method="post"
+											use:enhance={() => {
+												return async ({ result }) => {
+													if (result.type === 'success') {
+														const removedEntryId = result.data.removedEntryId;
+														const index = timeEntries.findIndex(
+															(entry) => entry.id === removedEntryId
+														);
+														timeEntries.splice(index, 1);
+													}
+												};
+											}}
+										>
+											<input type="hidden" name="id" value={entry.id} />
+											<button class="btn error">Delete</button>
+										</form>
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</div>
 			</Card>
 
 			<form
@@ -315,9 +318,3 @@
 		</CardGroup>
 	</div>
 </section>
-
-<style lang="less">
-	table {
-		text-align: left;
-	}
-</style>
