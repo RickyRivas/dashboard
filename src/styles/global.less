@@ -316,7 +316,7 @@ svg {
 #checklist {
     display: grid;
     list-style: none;
-    gap: .5em;
+    gap: .75em;
     margin-bottom: 1em;
 
     @media only screen and (min-width:666px) {}
@@ -350,9 +350,9 @@ svg {
                 &+label {
                     .ib;
                     .va(top);
-                    width: (20/20em);
-                    height: (20/20em);
-                    .rounded((5/20em));
+                    width: 20px;
+                    height: 20px;
+                    .rounded(5px);
                     border: 1px solid var(--text);
                     background-color: #000;
                     transition: border-color .33s ease,
@@ -390,7 +390,7 @@ svg {
             @lh: 20; //line-height
             @fs: 16; //font-size
             line-height: (@lh/@fs);
-            .fs(~'clamp( 12px,'(@fs/20em) ~','(@fs*1px) ~')');
+            .fs(~'clamp( 16px,'(@fs/20em) ~','(@fs*1px) ~')');
             margin: 0;
         }
 

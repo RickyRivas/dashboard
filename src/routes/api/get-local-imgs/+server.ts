@@ -60,7 +60,7 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
                         const buffer = await fs.readFile(entryPath);
                         dimensions = imageSize(buffer);
                     } catch (err) {
-                        console.warn(`Could not get dimensions for ${entryPath}`, err);
+                        // console.warn(`Could not get dimensions for ${entryPath}`, err);
                     }
                 }
 
@@ -83,8 +83,28 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
         // Wait for all entries to be processed
         const entriesResults = await Promise.all(entriesPromises);
 
-        // Filter out null entries (hidden files)
-        return entriesResults.filter(entry => entry !== null);
+        const priorityFolderNames = ['images', 'uploads', 'spotlight']
+
+        // Filter out null entries (hidden files) & sort
+        return entriesResults
+            .filter(entry => entry !== null)
+            // show files & then directories
+            .sort((a, b) => {
+                // If types are different, files come before directories
+                if (a.type !== b.type) {
+                    return a.type === 'directory' ? 1 : -1;
+                }
+                // If both are directories, check if either is a priority folder
+                else if (a.type === 'directory' && b.type === 'directory') {
+                    const aIsPriority = priorityFolderNames.includes(a.name);
+                    const bIsPriority = priorityFolderNames.includes(b.name);
+
+                    if (aIsPriority && !bIsPriority) return -1;
+                    if (!aIsPriority && bIsPriority) return 1;
+                }
+                // Default to alphabetical sorting
+                return a.name.localeCompare(b.name);
+            });
     } catch (error) {
         console.error(`Error processing directory ${dirPath}:`, error);
         return [];
