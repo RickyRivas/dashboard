@@ -29,12 +29,14 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
         {
             path: '/app', name: 'App', iconPath: '', showInNav: true,
             children: [
-                { path: '/app/manager', name: 'Manager', iconPath: '', showInNav: true },
+                { path: '/app/', name: 'App Home', iconPath: '', showInNav: true },
                 { path: '/app/snippets', name: 'Snippets', iconPath: '', showInNav: true },
                 { path: '/app/sections', name: 'Sections', iconPath: '', showInNav: true },
                 { path: '/app/components', name: 'Components', iconPath: '', showInNav: true },
+                { path: '/app/testing', name: 'Testing', iconPath: '', showInNav: true },
                 { path: '/app/image-builder', name: 'Image Builder', iconPath: '', showInNav: true },
                 { path: '/app/billable', name: 'Billable', iconPath: '', showInNav: true },
+                { path: '/app/manager', name: 'Manager', iconPath: '', showInNav: true },
             ]
         },
         {

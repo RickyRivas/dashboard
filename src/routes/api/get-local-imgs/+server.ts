@@ -100,7 +100,7 @@ export async function POST({ request }) {
 
     const mampPath = '/Applications/MAMP/www';
     const localHostPath = 'http://localhost:8888';
-    const currentBuildPath = path.join(mampPath, account, 'www', 'assets', 'images');
+    const currentBuildPath = path.join(mampPath, account, 'www', 'assets');
 
     try {
         // Get all files and directories recursively

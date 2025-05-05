@@ -72,7 +72,7 @@ main {
 /* ===============================================
 	h family || hfam 
 =============================================== */
-@h2fs: 23;
+@h2fs: 26;
 @h3fs: 22;
 @h4fs: 21;
 @h5fs: 20;
@@ -316,38 +316,103 @@ svg {
 #checklist {
     display: grid;
     list-style: none;
-    gap: 1em;
+    gap: .5em;
     margin-bottom: 1em;
 
     @media only screen and (min-width:666px) {}
 
 
     @media only screen and (min-width:768px) {
-        grid-template-columns: repeat(2, 1fr);
+        // grid-template-columns: repeat(2, 1fr);
+        max-width: (600/20em);
     }
 
     @media only screen and (min-width:1024px) {}
 
     li {
-        padding: 1em;
+        padding: .5em;
         border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        color: #212121;
+        border-radius: calc(var(--border-radius) / 2);
+        color: var(--text);
         position: relative;
+        .flex;
+        .ai(flex-start);
+        gap: .5em;
 
-        .checklist-delete-form {
-            position: absolute;
-            top: 1em;
-            right: 1em;
+        .update-status-form {
+            .ib;
+            .va(top);
+            .lh(0);
+
+            input {
+                .hide;
+
+                &+label {
+                    .ib;
+                    .va(top);
+                    width: (20/20em);
+                    height: (20/20em);
+                    .rounded((5/20em));
+                    border: 1px solid var(--text);
+                    background-color: #000;
+                    transition: border-color .33s ease,
+                        background-color .33s ease;
+
+                    svg {
+                        display: block;
+                        transition: color 0.33s ease;
+
+                        path {
+                            stroke-dashoffset: 31;
+                            stroke-dasharray: 31;
+                            transition: stroke-dashoffset 0.33s ease;
+                        }
+                    }
+
+                    &:hover,
+                    &:focus {
+                        border-color: #10B981;
+                    }
+                }
+
+                &:checked+label {
+                    background-color: #10B981;
+                    border-color: #10B981;
+
+                    svg path {
+                        stroke-dashoffset: 0;
+                    }
+                }
+            }
         }
 
         h3 {
-            color: #212121;
+            @lh: 20; //line-height
+            @fs: 16; //font-size
+            line-height: (@lh/@fs);
+            .fs(~'clamp( 12px,'(@fs/20em) ~','(@fs*1px) ~')');
+            margin: 0;
         }
 
-        p {
-            font-size: 16px;
-            margin-bottom: 1em;
+        .checklist-delete-form {
+            .ib;
+            .va(top);
+            .lh(0);
+
+            button {
+                @lh: 18; //line-height
+                @fs: 12; //font-size
+                .ib;
+                .va(top);
+
+                line-height: (@lh/@fs);
+                .fs(~'clamp( 12px,'(@fs/20em) ~','(@fs*1px) ~')');
+                border: 1px solid #EF4444;
+                .rounded((5/20em));
+                padding: 0 .25em;
+                background: #FEF2F2;
+                color: #212121;
+            }
         }
 
         // Status styles with both border and background colors
@@ -422,6 +487,7 @@ svg {
         display: block;
         text-align: left;
         overflow: hidden;
+        transition: border-color .33s ease-in-out;
 
         &.favorite {
             border: 2px solid #f59e0b; // Amber/gold border
@@ -533,6 +599,26 @@ svg {
                 }
             }
         }
+
+        &.minimize {
+            button {
+                .buttonreset;
+                line-height: 44px;
+                width: 100%;
+                .upp;
+                transition: color .33s ease-in-out,
+                    background-color .33s ease-in-out;
+            }
+
+            &.success {
+                border-color: green;
+
+                button {
+                    color: #fff;
+                    background-color: #10B981;
+                }
+            }
+        }
     }
 }
 
@@ -587,6 +673,29 @@ svg {
 
         td {
             padding-right: 1em;
+        }
+    }
+}
+
+.editable-section {
+    .code-panels {
+        .flex;
+        margin-bottom: 1em;
+
+        .code-panel {
+            width: 100%;
+            overflow: hidden;
+
+            .codemirror-instance {
+                font-size: 16px;
+                overflow: auto;
+                border: 1px solid var(--text);
+                height: 300px;
+            }
+
+            &:nth-child(1) .codemirror-instance {
+                border-right: none;
+            }
         }
     }
 }

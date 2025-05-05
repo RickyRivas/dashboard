@@ -18,7 +18,7 @@
 				{#if favorites.length > 0}
 					<ul class="code-asset-snippet-group">
 						{#each favorites as codeAsset}
-							<SnippetCard {codeAsset} />
+							<SnippetCard {codeAsset} minimize={true} />
 						{/each}
 					</ul>
 				{/if}

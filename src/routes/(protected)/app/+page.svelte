@@ -30,13 +30,40 @@
 						{#each checklist as item (item.id)}
 							<li
 								id="checklist-item-{item.id}"
-								data-status={item.status}
+								class:checked={item.checked}
 								transition:fly={{ x: 100 }}
 							>
-								<h3>{item.title}</h3>
-								{#if item.description}
-									<p>{item.description}</p>
-								{/if}
+								<form
+									class="update-status-form"
+									action="?/updateStatus"
+									method="post"
+									use:enhance={() => {
+										return async ({ result }) => {
+											if (result.type === 'success') {
+												const parent = document.querySelector(
+													`ul#checklist li#checklist-item-${item.id}`
+												);
+												parent.setAttribute('data-status', result.data.checked);
+											}
+										};
+									}}
+								>
+									<input type="hidden" name="item-id" value={item.id} />
+									<input
+										type="checkbox"
+										name="checked"
+										id="checklist-item-{item.id}-checkbox"
+										bind:checked={item.checked}
+										onchange={(e) => {
+											e.target.parentElement.requestSubmit();
+										}}
+									/>
+									<label for="checklist-item-{item.id}-checkbox">
+										<svg width="25" height="25" viewBox="0 0 25 25" fill="none">
+											<path d="M2 12.5L8.5625 20L23 5" stroke="currentcolor" />
+										</svg>
+									</label>
+								</form>
 								<form
 									class="checklist-delete-form"
 									action="?/deleteItem"
@@ -52,38 +79,9 @@
 									}}
 								>
 									<input type="hidden" name="id" value={item.id} />
-									<button class="btn error">Delete</button>
+									<button aria-label="delete checklist item"> Delete </button>
 								</form>
-								<form
-									action="?/updateStatus"
-									method="post"
-									use:enhance={() => {
-										return async ({ result }) => {
-											if (result.type === 'success') {
-												const parent = document.querySelector(
-													`ul#checklist li#checklist-item-${item.id}`
-												);
-												parent.setAttribute('data-status', result.data.newStatus);
-											}
-										};
-									}}
-								>
-									<input type="hidden" name="item-id" value={item.id} />
-									<div class="form-control">
-										<select
-											name="status"
-											value={item.status}
-											onchange={(e) => {
-												e.target.parentElement.parentElement.requestSubmit();
-											}}
-										>
-											<option value="">Please select an option</option>
-											{#each ['pending', 'in_progress', 'completed', 'blocked', 'deferred', 'canceled'] as status}
-												<option value={status}>{status}</option>
-											{/each}
-										</select>
-									</div>
-								</form>
+								<h3>{item.title}</h3>
 							</li>
 						{:else}
 							<p>No items.</p>
@@ -99,13 +97,13 @@
 							if (result.type === 'success') {
 								checklist = checklist.map((item) => ({
 									...item,
-									status: 'pending'
+									checked: false
 								}));
 							}
 						};
 					}}
 				>
-					<button class="btn">Reset Status'</button>
+					<button class="btn">Reset Checklist</button>
 				</form>
 			</Card>
 

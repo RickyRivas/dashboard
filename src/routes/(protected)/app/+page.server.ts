@@ -23,20 +23,20 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
     };
 }
 
-
 export const actions: Actions = {
     updateStatus: async ({ request, locals: { safeGetSession, supabase } }) => {
         const { session } = await safeGetSession();
         const { id } = session?.user
 
         const formData = await request.formData()
-        const status = formData.get('status') as string
+        // const status = formData.get('status') as string
+        const checked = formData.get('checked') as string
         const itemId = formData.get('item-id') as string
 
         const { error } = await supabase
             .from('checklist')
             .update({
-                status,
+                checked,
                 updated_at: new Date().toISOString()
             })
             .eq('id', itemId)
@@ -46,7 +46,7 @@ export const actions: Actions = {
             return fail(500, { message: 'Failed to update status' });
         }
 
-        return { success: true, newStatus: status };
+        return { success: true, checked };
     },
     addItem: async ({ request, locals: { safeGetSession, supabase } }) => {
         const { session } = await safeGetSession();
@@ -117,7 +117,7 @@ export const actions: Actions = {
             const { error } = await supabase
                 .from('checklist')
                 .update({
-                    status: 'pending',
+                    checked: false,
                     updated_at: new Date().toISOString()
                 })
                 .eq('user_id', id);
@@ -127,7 +127,7 @@ export const actions: Actions = {
                 return fail(500, { message: 'Failed to reset items' });
             }
 
-            return { success: true, message: 'All items have been reset to pending status' };
+            return { success: true, message: 'checklist resetted.' };
 
         } catch (error) {
             console.error('Error resetting items:', error);
