@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
 	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
-	import BuildTracker from '$lib/app-components/BuildTracker.svelte';
+	import BuildTracker from '$lib/widgets/BuildTracker.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	interface navProps {

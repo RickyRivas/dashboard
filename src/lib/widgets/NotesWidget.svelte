@@ -48,6 +48,7 @@
 	});
 </script>
 
+<h2>App Notes</h2>
 {#if lastUpdated}
 	<p>
 		Last Saved: {moment(lastUpdated).format('MMMM D, YYYY [at] h:mm A')}.
