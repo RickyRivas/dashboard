@@ -3,18 +3,16 @@
 	import type { PageProps } from './$types';
 	import CodeAssetLink from '$lib/components/code/CodeAssetLink.svelte';
 	import { page } from '$app/state';
-	import Card from '$lib/components/Card.svelte';
-	import CardGroup from '$lib/components/CardGroup.svelte';
-
 	let { data }: PageProps = $props();
 	const catsAndCounts = data.catsAndCounts;
 	const codeAssetsGroups = $derived(groupByCategory(data.codeAssets));
 </script>
 
-<section>
+<section class="sidebar-content-layout">
 	<div class="container">
-		<CardGroup>
-			<Card heading="Categories">
+		<aside>
+			<h2>Categories</h2>
+			<div class="overflow-container">
 				<ul class="categories-list">
 					{#each catsAndCounts as { category, count }}
 						<li>
@@ -28,22 +26,23 @@
 						<p>No categories</p>
 					{/each}
 				</ul>
-			</Card>
+			</div>
+		</aside>
 
+		<div class="content">
 			<h1>Components</h1>
 
 			{#each codeAssetsGroups as group}
-				<Card heading={group.category}>
-					<ul class="code-asset-links">
-						{#each group.codeAssets as codeAsset}
-							<CodeAssetLink
-								href={`/app/components/${codeAsset.category}/${codeAsset.id}`}
-								{codeAsset}
-							/>
-						{/each}
-					</ul>
-				</Card>
+				<ul class="code-asset-links">
+					{#each group.codeAssets as codeAsset}
+						<CodeAssetLink
+							href={`/app/components/${codeAsset.category}/${codeAsset.id}`}
+							{codeAsset}
+						/>
+					{/each}
+				</ul>
+				<hr />
 			{/each}
-		</CardGroup>
+		</div>
 	</div>
 </section>

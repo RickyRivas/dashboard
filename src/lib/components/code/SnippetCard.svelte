@@ -82,7 +82,7 @@
 
 {#if minimize}
 	<li class="snippet-card" class:success class:favorite={codeAsset.favorite} class:minimize>
-		<button onclick={copy} aria-label="copy code snippet">{codeAsset.title}</button>
+		<button class="btn" onclick={copy} aria-label="copy code snippet">{codeAsset.title}</button>
 	</li>
 {:else}
 	<li class="snippet-card" class:favorite={codeAsset.favorite} class:minimize>

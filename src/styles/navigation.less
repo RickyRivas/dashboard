@@ -9,12 +9,30 @@
     padding: 1em 0;
     border-bottom: 1px solid var(--border-color);
 
-    #logo {
-        .show;
-        .lh(0);
-        width: (100/20em);
-        height: (38/20em);
-        color: var(--text);
+    @media only screen and (min-width:1024px) {
+        position: fixed;
+        background: var(--bg);
+    }
+
+    .logo-flag {
+        .if;
+        .jc(center);
+        .ai(center);
+        .va(top);
+        gap: 1em;
+
+        #logo {
+            .show;
+            .lh(0);
+            width: (100/20em);
+            height: (38/20em);
+            color: var(--text);
+        }
+
+        .flag {
+            .show;
+            width: (50/20em);
+        }
     }
 
     &.public-navigation {}
@@ -111,7 +129,7 @@
 
                 a[id],
                 button[id] {
-                    background-color: var(--third);
+                    background-color: var(--bg-alternate);
                 }
             }
 

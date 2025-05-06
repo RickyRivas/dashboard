@@ -178,7 +178,6 @@
 
 <style lang="less">
 	.imgs-builder-grid {
-		margin-left: 1em;
 		list-style: none;
 		display: grid;
 		gap: 1em;
@@ -202,12 +201,15 @@
 		text-transform: uppercase;
 		line-height: 1.2;
 		padding-top: 1.75em;
+		border: none;
+
 		svg {
 			position: absolute;
 			top: 0;
 			left: 0;
 			z-index: -1;
-			color: var(--primary);
+			color: var(--secondary);
+			width: 100%;
 		}
 
 		&:disabled {

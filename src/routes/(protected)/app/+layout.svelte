@@ -16,9 +16,21 @@
 				<h2>Sub Navigation</h2>
 				<ul>
 					{#each routes as route}
-						<li class:active={currentPagePath.startsWith(route.path)}>
-							<a class="btn" href={route.path}>{route.name}</a>
-						</li>
+						{#if route.path === '/app'}
+							<li class:active={currentPagePath === route.path}>
+								<a class="btn" class:active={currentPagePath === route.path} href={route.path}>
+									{route.name}
+								</a>
+							</li>
+						{:else}
+							<li class:active={currentPagePath.startsWith(route.path)}>
+								<a
+									class="btn"
+									class:active={currentPagePath.startsWith(route.path)}
+									href={route.path}>{route.name}</a
+								>
+							</li>
+						{/if}
 					{/each}
 				</ul>
 			</div>

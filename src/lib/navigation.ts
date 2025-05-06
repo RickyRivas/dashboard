@@ -29,7 +29,7 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
         {
             path: '/app', name: 'App', iconPath: '', showInNav: true,
             children: [
-                { path: '/app/', name: 'App Home', iconPath: '', showInNav: true },
+                { path: '/app', name: 'App Home', iconPath: '', showInNav: true },
                 { path: '/app/snippets', name: 'Snippets', iconPath: '', showInNav: true },
                 { path: '/app/sections', name: 'Sections', iconPath: '', showInNav: true },
                 { path: '/app/components', name: 'Components', iconPath: '', showInNav: true },
@@ -41,6 +41,7 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
         {
             path: '/settings', name: 'Settings', iconPath: '', showInNav: true,
             children: [
+                { path: '/settings', name: 'Settings Home', iconPath: '', showInNav: true },
                 { path: '/settings/profile', name: 'Profile', iconPath: '', showInNav: true },
                 { path: '/settings/billing', name: 'Billing', iconPath: '', showInNav: true },
             ]
