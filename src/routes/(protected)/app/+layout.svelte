@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import type { LayoutProps } from '../$types';
 	const { children }: LayoutProps = $props();
 	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
+	import PageLoader from '$lib/PageLoader.svelte';
 
 	let currentPagePath = $derived(page.url.pathname);
 	let routes = $derived(findRouteInfo('/app')?.route.children as RouteInfo[]);

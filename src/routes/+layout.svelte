@@ -3,6 +3,8 @@
 	import { invalidate } from '$app/navigation';
 	import type { LayoutProps } from './$types';
 	import './styles.less';
+	import PageLoader from '$lib/PageLoader.svelte';
+	import { navigating } from '$app/state';
 	const { children, data }: LayoutProps = $props();
 	const { supabase, session } = data;
 
@@ -38,4 +40,8 @@
 	</script>
 </svelte:head>
 
-{@render children()}
+{#if navigating.to}
+	<PageLoader />
+{:else}
+	{@render children()}
+{/if}

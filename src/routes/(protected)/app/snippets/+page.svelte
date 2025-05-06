@@ -4,6 +4,7 @@
 	import type { PageProps } from './$types';
 	import CardGroup from '$lib/components/CardGroup.svelte';
 	import Card from '$lib/components/Card.svelte';
+	import { navigating } from '$app/state';
 
 	let { data }: PageProps = $props();
 	const codeAssetsGroups = groupByCategory(data.codeAssets);
