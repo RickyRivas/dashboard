@@ -18,11 +18,11 @@
 		{/if}
 
 		<div class="widget-grid">
-			<div class="widget-grid__item" style:padding="0">
-				<SlideshowWidget />
-			</div>
 			<div class="widget-grid__item">
 				<NotesWidget />
+			</div>
+			<div class="widget-grid__item" style:padding="0">
+				<SlideshowWidget />
 			</div>
 			<div class="widget-grid__item">
 				<ChecklistWidget {checklist} />
