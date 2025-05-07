@@ -23,14 +23,13 @@
 		if (!error && result) {
 			swiper.autoplay.stop();
 
-			console.log(result);
 			// Get the public ID of the uploaded file
 			const publicId = result.info.public_id;
 
 			// Create the transformed URL for 450x450 crop
 			const transformedUrl = `https://res.cloudinary.com/${PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_450,h_450/${publicId}`;
 
-			// destroy slideshow and reinit with new resource
+			// create new slide, its children, attach event listeners and append to slideshow
 			const newSwiperSlide = document.createElement('div') as HTMLDivElement;
 			newSwiperSlide.className = 'swiper-slide';
 			newSwiperSlide.dataset.publicId = publicId;
@@ -65,10 +64,9 @@
 	}
 
 	async function deleteResource(e: Event) {
-		// stop slideshow
 		swiper.autoplay.stop();
 
-		// get publicId
+		// use public id to delete resource via endpoint
 		const publicId = e.target.parentElement.parentElement.dataset.publicId;
 
 		const response = await fetch('/api/cloudinary-delete', {
@@ -81,7 +79,7 @@
 
 		const data = await response.json();
 
-		// remove slide and restart slideshow
+		// remove slide using current slide and restart slideshow
 		if (data.success) {
 			swiper.removeSlide(swiper.activeIndex);
 			swiper.autoplay.start();
