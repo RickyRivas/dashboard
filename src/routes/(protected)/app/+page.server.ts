@@ -5,21 +5,15 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
     const { session } = await safeGetSession();
     const { id } = session?.user
 
-    const { data: checklist, error } = await supabase
+    // 1. grab checklist for cl widget
+    const { data, error } = await supabase
         .from('checklist')
         .select('*')
         .eq('user_id', id)
         .order('created_at', { ascending: true });
 
-    if (error) {
-        console.error('Error fetching checklists:', error);
-        return {
-            checklist: []
-        };
-    }
-
     return {
-        checklist
+        checklist: error ? [] : data
     };
 }
 
