@@ -79,7 +79,7 @@
 
 		const data = await response.json();
 
-		// remove slide using current slide and restart slideshow
+		// remove slide using current slide's index and restart slideshow
 		if (data.success) {
 			swiper.removeSlide(swiper.activeIndex);
 			swiper.autoplay.start();
