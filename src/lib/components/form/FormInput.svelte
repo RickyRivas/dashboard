@@ -157,6 +157,11 @@
 				{/each}
 			</select>
 		</label>
+	{:else if type === 'textarea'}
+		<label>
+			{label}
+			<textarea {name} bind:value></textarea>
+		</label>
 	{:else}
 		<!-- everything else -->
 		{#if label}

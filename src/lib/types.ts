@@ -29,3 +29,73 @@ export type FileItem = {
     // Add this property for directories
     children?: FileItem[];
 };
+
+export type SiteContacts = {
+    // Primary key and foreign key
+    id: string;              // UUID
+    site_id: string;         // UUID, references sites(id)
+
+    // Primary contact info
+    primary_contact_name: string | null;
+    primary_phone: string | null;
+    primary_email: string | null;
+
+    // Secondary contact info
+    secondary_contact_name: string | null;
+    secondary_phone: string | null;
+    secondary_email: string | null;
+
+    // Business info
+    business_address: string | null;
+    business_phone: string | null;
+    business_email: string | null;
+
+    preferred_contact_method?: 'primary_phone' | 'primary_email' | 'secondary_phone' | 'secondary_email' | 'business_phone' | 'business_email' | null;
+
+    // Timestamps
+    created_at: string;      // ISO date string
+    updated_at: string;      // ISO date string
+};
+
+export type Site = {
+    id: string;
+    user_id: string;
+    site_name: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type SiteInformation = {
+    // Primary key and foreign key
+    id: string;                                    // UUID
+    site_id: string;                               // UUID, references sites(id)
+
+    // Domain information
+    domain_name: string | null;
+
+    // Project dates
+    start_date: string | null;                     // ISO date string (YYYY-MM-DD)
+    estimated_end_date: string | null;             // ISO date string
+    launch_date: string | null;                    // ISO date string
+
+    // Status tracking
+    website_status: 'planning' | 'in_development' | 'review' | 'staging' | 'launched' | 'maintenance' | 'archived' | null;
+
+    // URLs and links
+    spec_url: string | null;
+    build_link: string | null;
+    proof_link: string | null;
+
+    // Additional useful fields
+    hosting_provider: string | null;
+    cms_platform: string | null;
+    analytics_id: string | null;
+
+    // Notes
+    project_notes: string | null;
+
+    // Timestamps
+    created_at: string;                            // ISO date-time string
+    updated_at: string;                            // ISO date-time string
+};
+
