@@ -24,6 +24,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .single()
 
+    // TODO
     if (siteContactsError) {
         console.error('error fetching contacts table:', siteContactsError)
     }
@@ -35,12 +36,25 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .single()
 
+    // TODO
     if (siteInformationError) {
         console.error('error fetching information table:', siteInformationError)
     }
 
+    // 4. site checklist
+    const { data: site_checklist, error: siteChecklistError } = await supabase
+        .from('site_process_checklist')
+        .select('*')
+        .eq('site_id', siteid)
+        .single()
+
+    // TODO
+    if (siteChecklistError) {
+        console.error('error fetching checklist table:', siteChecklistError)
+    }
+
     return {
-        site, site_contacts, site_information
+        site, site_contacts, site_information, site_checklist
     };
 };
 
@@ -111,7 +125,6 @@ export const actions: Actions = {
             return fail(400, { message: 'Unauthorized' });
         }
 
-        // Use the neat Object.fromEntries trick you like
         const formData = await request.formData();
         const data = Object.fromEntries([...formData]);
 
@@ -161,5 +174,26 @@ export const actions: Actions = {
             success: true,
             message: 'Site information saved successfully',
         };
+    },
+    updateChecklistItem: async ({ request, params, locals: { supabase } }) => {
+        const { siteid } = params;
+
+        const formData = await request.formData();
+        const data = Object.fromEntries([...formData]);
+
+        if (data) data.updated_at = new Date().toISOString()
+
+        const { data: checklistItemUpdated, error } = await supabase
+            .from('site_process_checklist')
+            .update(data)
+            .eq('site_id', siteid);
+
+        if (error) {
+            console.error(error.message)
+            return fail(500, { message: 'Failed to update status' });
+        }
+
+        return { success: true }
+
     }
 }

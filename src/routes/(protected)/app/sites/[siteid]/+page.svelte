@@ -1,14 +1,22 @@
 <script lang="ts">
 	import ContactsForm from '$lib/components/sites/ContactsForm.svelte';
 	import InformationForm from '$lib/components/sites/InformationForm.svelte';
-	import type { Site, SiteContacts, SiteInformation } from '$lib/types';
+	import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
+	import type { Site, SiteContacts, SiteInformation, SiteProcessChecklist } from '$lib/types';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
+
 	const {
 		site,
 		site_contacts,
-		site_information
-	}: { site: Site; site_contacts: SiteContacts; site_information: SiteInformation } = data;
+		site_information,
+		site_checklist
+	}: {
+		site: Site;
+		site_contacts: SiteContacts;
+		site_information: SiteInformation;
+		site_checklist: SiteProcessChecklist;
+	} = data;
 </script>
 
 <section>
@@ -18,9 +26,11 @@
 		<h3>Contact Info:</h3>
 		<ContactsForm {site_contacts} />
 		<hr />
-		<h4>Site Information:</h4>
+		<h3>Site Information:</h3>
 		<InformationForm {site_information} />
 		<hr />
+		<h3>Site Checklist</h3>
+		<SiteChecklist {site_checklist} />
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>
 </section>

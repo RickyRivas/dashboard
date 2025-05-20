@@ -99,3 +99,35 @@ export type SiteInformation = {
     updated_at: string;                            // ISO date-time string
 };
 
+// Status type for checklist items
+type ProcessStatus = 'not_started' | 'in_progress' | 'completed' | 'blocked' | 'not_applicable';
+
+// Full process checklist type
+export type SiteProcessChecklist = {
+    id: string;
+    site_id: string;
+
+    // Status for each step
+    client_questionnaires_status: ProcessStatus;
+    design_consultation_status: ProcessStatus;
+    design_reveal_status: ProcessStatus;
+    design_approval_status: ProcessStatus;
+    website_build_status: ProcessStatus;
+    technical_qa_status: ProcessStatus;
+    design_qa_status: ProcessStatus;
+    dns_seo_setup_status: ProcessStatus;
+    copywriting_status: ProcessStatus;
+    proofreading_status: ProcessStatus;
+    launch_status: ProcessStatus;
+
+    // Timestamps
+    created_at: string;
+    updated_at: string;
+};
+
+// Type for updating a single process step
+export type ProcessStepUpdate = {
+    status: ProcessStatus;
+    notes?: string | null;
+    date?: string | null;
+};

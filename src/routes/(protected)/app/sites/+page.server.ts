@@ -47,7 +47,7 @@ export const actions: Actions = {
             return { success: true, site, errorMessage: `Error creating site contact record: ${contactError}` };
         }
 
-        // grab site information
+        // 3. create site information table
         const { error: informationError } = await supabase
             .from('site_information')
             .insert([
@@ -58,6 +58,19 @@ export const actions: Actions = {
 
         if (informationError) {
             return { success: true, site, errorMessage: `Error creating site information record: ${contactError}` };
+        }
+
+        // 4. create site checklist table
+        const { error: checklistError } = await supabase
+            .from('site_process_checklist')
+            .insert([
+                {
+                    site_id: site.id
+                }
+            ]);
+
+        if (informationError) {
+            return { success: true, site, errorMessage: `Error creating site checklist record: ${checklistError}` };
         }
 
         return { success: true }
