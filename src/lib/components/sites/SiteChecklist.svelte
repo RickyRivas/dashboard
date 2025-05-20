@@ -3,7 +3,6 @@
 	import { createFormHandler, type InputConfig } from '$lib/form-helpers';
 	import type { SiteProcessChecklist } from '$lib/types';
 	import ErrorMessage from '../form/ErrorMessage.svelte';
-	import FormInput from '../form/FormInput.svelte';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
 
 	let loading = $state(false);
@@ -17,67 +16,67 @@
 		{
 			name: 'client_questionnaires',
 			label: 'New Client Questionnaires',
-			dbRow: 'client_questionnaires_status',
+			dbCol: 'client_questionnaires_status',
 			value: ''
 		},
 		{
 			name: 'design_consultation',
 			label: 'Design Consultation',
-			dbRow: 'design_consultation_status',
+			dbCol: 'design_consultation_status',
 			value: ''
 		},
 		{
 			name: 'design_reveal',
 			label: 'Design Reveal',
-			dbRow: 'design_reveal_status',
+			dbCol: 'design_reveal_status',
 			value: ''
 		},
 		{
 			name: 'design_approval',
 			label: 'Design Approval',
-			dbRow: 'design_approval_status',
+			dbCol: 'design_approval_status',
 			value: ''
 		},
 		{
 			name: 'website_build',
 			label: 'Website Build',
-			dbRow: 'website_build_status',
+			dbCol: 'website_build_status',
 			value: ''
 		},
 		{
 			name: 'technical_qa',
 			label: 'Technical QA',
-			dbRow: 'technical_qa_status',
+			dbCol: 'technical_qa_status',
 			value: ''
 		},
 		{
 			name: 'design_qa',
 			label: 'Design QA',
-			dbRow: 'design_qa_status',
+			dbCol: 'design_qa_status',
 			value: ''
 		},
 		{
 			name: 'dns_seo_setup',
 			label: 'Connect to DNS, SEO, Favicons, generate sitemap',
-			dbRow: 'dns_seo_setup_status',
+			dbCol: 'dns_seo_setup_status',
 			value: ''
 		},
 		{
 			name: 'copywriting',
 			label: 'Copywriting',
-			dbRow: 'copywriting_status',
+			dbCol: 'copywriting_status',
 			value: ''
 		},
 		{
 			name: 'proofreading',
 			label: 'Proofreading',
-			dbRow: 'proofreading_status',
+			dbCol: 'proofreading_status',
 			value: ''
 		},
 		{
 			name: 'launch',
 			label: 'Launch',
-			dbRow: 'launch_status',
+			dbCol: 'launch_status',
 			value: ''
 		}
 	]);
@@ -87,7 +86,7 @@
 	// prefill
 	if (site_checklist) {
 		for (const [key, value] of Object.entries(site_checklist)) {
-			const item = checklistItems.find((i) => i.dbRow === key);
+			const item = checklistItems.find((i) => i.dbCol === key);
 			if (item) item.value = value;
 		}
 	}
@@ -109,7 +108,7 @@
 					<label>
 						{item.label}
 						<select
-							name={item.dbRow}
+							name={item.dbCol}
 							bind:value={item.value}
 							onchange={(e) => {
 								const target = e.target as HTMLSelectElement;
