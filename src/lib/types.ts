@@ -108,17 +108,26 @@ export type SiteProcessChecklist = {
     site_id: string;
 
     // Status for each step
-    client_questionnaires_status: ProcessStatus;
+    opportunity_status: ProcessStatus;
+    contract_signing_status: ProcessStatus;
+    questionnaire_status: ProcessStatus;
+    payment_status: ProcessStatus;
     design_consultation_status: ProcessStatus;
     design_reveal_status: ProcessStatus;
     design_approval_status: ProcessStatus;
-    website_build_status: ProcessStatus;
-    technical_qa_status: ProcessStatus;
+    design_to_code_status: ProcessStatus;
     design_qa_status: ProcessStatus;
-    dns_seo_setup_status: ProcessStatus;
+    favicon_status: ProcessStatus;
+    sitemap_status: ProcessStatus;
+    meta_tags_status: ProcessStatus;
+    google_analytics_status: ProcessStatus;
+    connect_domain_status: ProcessStatus;
     copywriting_status: ProcessStatus;
     proofreading_status: ProcessStatus;
+    submit_google_console_status: ProcessStatus;
+    technical_qa_status: ProcessStatus;
     launch_status: ProcessStatus;
+    final_payment_status: ProcessStatus;
 
     // Timestamps
     created_at: string;

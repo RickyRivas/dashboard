@@ -14,9 +14,27 @@
 
 	let checklistItems = $state([
 		{
-			name: 'client_questionnaires',
-			label: 'New Client Questionnaires',
-			dbCol: 'client_questionnaires_status',
+			name: 'opportunity',
+			label: 'Opportunity',
+			dbCol: 'opportunity_status',
+			value: ''
+		},
+		{
+			name: 'contract_signing',
+			label: 'Contract Signing',
+			dbCol: 'contract_signing_status',
+			value: ''
+		},
+		{
+			name: 'questionnaire',
+			label: 'Questionnaire',
+			dbCol: 'questionnaire_status',
+			value: ''
+		},
+		{
+			name: 'payment',
+			label: 'Payment',
+			dbCol: 'payment_status',
 			value: ''
 		},
 		{
@@ -38,15 +56,9 @@
 			value: ''
 		},
 		{
-			name: 'website_build',
-			label: 'Website Build',
-			dbCol: 'website_build_status',
-			value: ''
-		},
-		{
-			name: 'technical_qa',
-			label: 'Technical QA',
-			dbCol: 'technical_qa_status',
+			name: 'design_to_code',
+			label: 'Design To Code',
+			dbCol: 'design_to_code_status',
 			value: ''
 		},
 		{
@@ -56,9 +68,33 @@
 			value: ''
 		},
 		{
-			name: 'dns_seo_setup',
-			label: 'Connect to DNS, SEO, Favicons, generate sitemap',
-			dbCol: 'dns_seo_setup_status',
+			name: 'favicon',
+			label: 'Favicon',
+			dbCol: 'favicon_status',
+			value: ''
+		},
+		{
+			name: 'sitemap',
+			label: 'Sitemap',
+			dbCol: 'sitemap_status',
+			value: ''
+		},
+		{
+			name: 'meta_tags',
+			label: 'Meta tags, title tag, and OG images',
+			dbCol: 'meta_tags_status',
+			value: ''
+		},
+		{
+			name: 'google_analytics',
+			label: 'Google Analytics',
+			dbCol: 'google_analytics_status',
+			value: ''
+		},
+		{
+			name: 'connect_domain',
+			label: 'Connect Domain',
+			dbCol: 'connect_domain_status',
 			value: ''
 		},
 		{
@@ -74,9 +110,27 @@
 			value: ''
 		},
 		{
+			name: 'submit_google_console',
+			label: 'Submit Website to Google Console',
+			dbCol: 'submit_google_console_status',
+			value: ''
+		},
+		{
+			name: 'technical_qa',
+			label: 'Technical QA',
+			dbCol: 'technical_qa_status',
+			value: ''
+		},
+		{
 			name: 'launch',
 			label: 'Launch',
 			dbCol: 'launch_status',
+			value: ''
+		},
+		{
+			name: 'final_payment',
+			label: 'Final Payment',
+			dbCol: 'final_payment_status',
 			value: ''
 		}
 	]);
