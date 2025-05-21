@@ -23,14 +23,31 @@
 	<div class="container">
 		<h2>Account: {site.site_name}</h2>
 		<hr />
+
 		<h3>Contact Info:</h3>
-		<ContactsForm {site_contacts} />
+		{#if site_contacts}
+			<ContactsForm {site_contacts} />
+		{:else}
+			<p>Site contacts unavailable.</p>
+		{/if}
 		<hr />
+
 		<h3>Site Information:</h3>
-		<InformationForm {site_information} />
+		{#if site_information}
+			<InformationForm {site_information} />
+		{:else}
+			<p>Site information unavailable.</p>
+		{/if}
 		<hr />
+
 		<h3>Site Checklist</h3>
-		<SiteChecklist {site_checklist} />
+		{#if site_checklist}
+			<SiteChecklist {site_checklist} />
+		{:else}
+			<p>Site checklist unavailable.</p>
+		{/if}
+		<hr />
+
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>
 </section>
