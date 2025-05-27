@@ -140,3 +140,36 @@ export type ProcessStepUpdate = {
     notes?: string | null;
     date?: string | null;
 };
+
+export type SitePage = {
+    id: string;
+    site_id: string;
+    parent_id: string | null; // null for top-level pages
+
+    // Core content
+    title: string;
+    slug: string;
+    content: any; // JSONB content structure
+
+    // Metadata
+    meta_title: string | null;
+    meta_description: string | null;
+    featured_image: string | null;
+
+    // Status and organization
+    is_published: boolean;
+    is_homepage: boolean;
+    page_type: string;
+    template: string | null;
+    display_order: number;
+
+    // Timestamps
+    created_at: string;
+    updated_at: string;
+    published_at: string | null;
+
+    // Virtual properties (not stored, computed in queries)
+    children?: SitePage[];
+    level?: number;
+    full_path?: string; // e.g., "/about/team/john-doe"
+};

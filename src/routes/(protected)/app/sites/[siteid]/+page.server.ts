@@ -2,6 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
+import type { Site, SitePage } from "$lib/types";
 
 const redirectPath = '/app/sites'
 
@@ -17,7 +18,19 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 
     if (error) throw redirect(303, redirectPath)
 
-    // 2. site contacts table
+    // 2. grab pages
+    const { data: site_pages, error: sitePagesError } = await supabase
+        .from('site_pages')
+        .select('*')
+        .eq('site_id', siteid)
+        .order('display_order', { ascending: true })
+
+    // TODO
+    if (sitePagesError) {
+        console.error('error fetching pages:', sitePagesError.message)
+    }
+
+    // 3. site contacts table
     const { data: site_contacts, error: siteContactsError } = await supabase
         .from('site_contacts')
         .select('*')
@@ -29,7 +42,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         console.error('error fetching contacts table:', siteContactsError)
     }
 
-    // 3. site information table
+    // 4. site information table
     const { data: site_information, error: siteInformationError } = await supabase
         .from('site_information')
         .select('*')
@@ -41,7 +54,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         console.error('error fetching information table:', siteInformationError)
     }
 
-    // 4. site checklist
+    // 5. site checklist
     const { data: site_checklist, error: siteChecklistError } = await supabase
         .from('site_process_checklist')
         .select('*')
@@ -54,11 +67,35 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
     }
 
     return {
-        site, site_contacts, site_information, site_checklist
+        site, site_pages: site_pages as SitePage[], site_contacts, site_information, site_checklist
     };
 };
 
 export const actions: Actions = {
+    addNewPage: async ({ request, params, locals: { supabase, safeGetSession } }) => {
+        const { siteid } = params;
+        const { user } = await safeGetSession();
+        const formData = await request.formData();
+        const data = Object.fromEntries([...formData]);
+
+        const newPage = {
+            site_id: siteid,
+            title: data.title as string,
+            slug: data.slug as string
+        }
+
+        const { data: sitePages, error: sitePagesError } = await supabase
+            .from('site_pages')
+            .insert(newPage)
+            .select()
+            .single()
+
+        console.log(sitePages, sitePagesError)
+
+        if (sitePagesError) return fail(400, { message: `Error creating site page: ${sitePagesError.message}` });
+
+        return { success: true, sitePages }
+    },
     updateContacts: async ({ request, params, locals: { supabase, safeGetSession } }) => {
         const { siteid } = params;
         const { user } = await safeGetSession();

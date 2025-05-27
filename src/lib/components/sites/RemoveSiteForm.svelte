@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
 
-	let { site, sites = $bindable() } = $props();
+	let { site, removeSite } = $props();
 
 	// form ui state
 	let loading = $state(false);
@@ -33,9 +33,9 @@
 				success = true;
 				error = false;
 
-				const removedItemid = +result.data.removedItemid;
-				const index = sites.findIndex((item) => item.id === removedItemid);
-				sites.splice(index, 1);
+				// passed down function
+				const removedItemid = result?.data?.removedItemid;
+				removeSite(removedItemid);
 
 				setTimeout(() => {
 					loading = false;

@@ -32,9 +32,26 @@ export const actions: Actions = {
             .select()
             .single()
 
-        if (siteError) return fail(400, { message: `Error creating site: ${siteError}` });
+        if (siteError) return fail(400, { message: `Error creating site: ${siteError.message}` });
 
-        // 2. create an associated site contacts table
+        // 2. create a home page.
+        const { data: sitePages, error: sitePagesError } = await supabase
+            .from('site_pages')
+            .insert([
+                {
+                    site_id: site.id,
+                    title: 'home',
+                    slug: 'home',
+                    is_homepage: true
+                }
+            ])
+            .select()
+            .single()
+
+        if (sitePagesError) return fail(400, { message: `Error creating site page: ${sitePagesError.message}` });
+
+
+        // 3. create an associated site contacts table
         const { error: contactError } = await supabase
             .from('site_contacts')
             .insert([
@@ -44,10 +61,10 @@ export const actions: Actions = {
             ]);
 
         if (contactError) {
-            return { success: true, site, errorMessage: `Error creating site contact record: ${contactError}` };
+            return { success: true, site, errorMessage: `Error creating site contact record: ${contactError.message}` };
         }
 
-        // 3. create site information table
+        // 4. create site information table
         const { error: informationError } = await supabase
             .from('site_information')
             .insert([
@@ -57,10 +74,10 @@ export const actions: Actions = {
             ]);
 
         if (informationError) {
-            return { success: true, site, errorMessage: `Error creating site information record: ${contactError}` };
+            return { success: true, site, errorMessage: `Error creating site information record: ${contactError.message}` };
         }
 
-        // 4. create site checklist table
+        // 5. create site checklist table
         const { error: checklistError } = await supabase
             .from('site_process_checklist')
             .insert([
@@ -70,7 +87,7 @@ export const actions: Actions = {
             ]);
 
         if (informationError) {
-            return { success: true, site, errorMessage: `Error creating site checklist record: ${checklistError}` };
+            return { success: true, site, errorMessage: `Error creating site checklist record: ${checklistError?.message}` };
         }
 
         return { success: true, redirectTo: `/app/sites/${site.id}` }

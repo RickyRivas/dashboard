@@ -10,7 +10,7 @@
 	<div class="container">
 		<h1>Sites</h1>
 		{#if sites.length}
-			<SitesList {sites} />
+			<SitesList bind:sites />
 		{:else}
 			<p>No sites. Go make some sales!!!</p>
 		{/if}
