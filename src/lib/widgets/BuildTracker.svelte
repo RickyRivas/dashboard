@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { page } from '$app/state';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { buildTrackerState } from '$lib/tracker-state.svelte';
@@ -209,4 +209,4 @@
 			}
 		}
 	}
-</style>
+</style> -->

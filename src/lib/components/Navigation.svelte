@@ -18,6 +18,7 @@
 	let { navType, routes }: navProps = $props();
 
 	let currentPagePath = $derived(page.url.pathname);
+
 	// let protectedRoute = $derived(findRouteInfo(currentPagePath)?.group === 'protected');
 </script>
 

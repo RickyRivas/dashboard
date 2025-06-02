@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import ErrorMessage from '$lib/components/form/ErrorMessage.svelte';
-	import FormInput from '$lib/components/form/FormInput.svelte';
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import Form from '$lib/components/form/Form.svelte';
 	import ContactsForm from '$lib/components/sites/ContactsForm.svelte';
 	import InformationForm from '$lib/components/sites/InformationForm.svelte';
 	import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
-	import SiteGuides from '$lib/components/sites/SiteGuides.svelte';
-	import { createFormHandler, type InputConfig } from '$lib/form-helpers';
+	import { handleTriggerUpdate } from '$lib/form-helpers';
+	import { addPageFormConfig } from '$lib/forms/add-page';
+
 	import type {
 		Site,
 		SiteContacts,
@@ -32,43 +30,10 @@
 		site_checklist: SiteProcessChecklist;
 	} = data;
 
-	// form ui state
-	let loading = $state(false);
-	let error = $state(false);
-	let success = $state(false);
-	let errorMessage = $state('');
-	let addPageForm;
+	// forms
 
-	let inputConfigs: InputConfig[] = $state([
-		{
-			name: 'title',
-			label: 'Title',
-			type: 'text',
-			value: '',
-			required: true,
-			placeholder: 'Title',
-			disabled: false,
-			error: ''
-		},
-		{
-			name: 'slug',
-			label: 'Slug',
-			type: 'text',
-			value: '',
-			required: true,
-			placeholder: 'slug',
-			disabled: false,
-			error: ''
-		}
-	]);
-
-	const formHandler = createFormHandler(
-		inputConfigs,
-		(isLoading) => (loading = isLoading),
-		(APIError) => (error = APIError),
-		(APISuccess) => (success = APISuccess),
-		(message) => (errorMessage = message)
-	);
+	let addPageConfig = $state(addPageFormConfig);
+	const triggerUpdateHandler = handleTriggerUpdate(addPageConfig);
 </script>
 
 <section>
@@ -119,43 +84,7 @@
 		{/if}
 
 		<h3>Add a page</h3>
-		<form
-			method="post"
-			class="default-styling"
-			action="?/addNewPage"
-			bind:this={addPageForm}
-			use:enhance={formHandler}
-		>
-			{#each inputConfigs as { name, label, placeholder, required, disabled, type, oAuthOnly, options, cloudinary }, i}
-				<FormInput
-					id={name}
-					{name}
-					{label}
-					{placeholder}
-					{required}
-					{type}
-					{options}
-					{cloudinary}
-					bind:value={inputConfigs[i].value}
-					bind:disabled={loading}
-					bind:error={inputConfigs[i].error}
-					autocomplete="off"
-				/>
-			{/each}
-
-			{#if errorMessage}
-				<ErrorMessage {errorMessage} />
-			{/if}
-
-			<button class="btn" disabled={loading}>
-				{#if loading}
-					<LoadingSpinner bind:loading bind:error bind:success dim={44} />
-				{:else}
-					<span>Save</span>
-				{/if}
-			</button>
-		</form>
-
+		<Form name="add page form" config={addPageConfig} triggerUpdate={triggerUpdateHandler} />
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>
 </section>

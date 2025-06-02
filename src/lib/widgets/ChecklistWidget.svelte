@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { enhance } from '$app/forms';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { fly } from 'svelte/transition';
@@ -143,4 +143,4 @@
 			Add new item
 		{/if}
 	</button>
-</form>
+</form> -->

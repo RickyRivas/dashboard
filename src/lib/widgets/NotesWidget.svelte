@@ -58,7 +58,7 @@
 	</p>
 {/if}
 <div class="editor-wrapper" class:typing>
-	<div bind:this={editorContainer} />
+	<div bind:this={editorContainer}></div>
 </div>
 
 <style lang="less">

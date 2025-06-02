@@ -1,8 +1,8 @@
 <script lang="ts">
 	let {
-		loading = $bindable(true),
-		success = $bindable(false),
-		error = $bindable(false),
+		loading = true,
+		success = false,
+		error = false,
 		dim = 100
 	}: { loading?: boolean; success?: boolean; error?: boolean; dim?: number } = $props();
 </script>

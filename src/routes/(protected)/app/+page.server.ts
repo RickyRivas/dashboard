@@ -18,6 +18,12 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 }
 
 export const actions: Actions = {
+    test: async () => {
+        console.log('here buddy')
+
+        return fail(500, { errors: [{ field: 'name', message: 'xxx' }] })
+        // return { success: false, errors: [{ field: 'name', message: 'xxx' }] }
+    },
     updateStatus: async ({ request, locals: { safeGetSession, supabase } }) => {
         const { session } = await safeGetSession();
         const { id } = session?.user
