@@ -23,7 +23,7 @@
 	// $inspect('c', value);
 </script>
 
-<div class="form-control">
+<div class="form-control screenreader" style:position="absolute">
 	<label>
 		<span class="screenreader">
 			{configuration.labelConfig.text}

@@ -17,6 +17,30 @@
 
 	// editing code asset
 	if (data.codeAsset) {
+		// create a new input and add to manager config.
+		// needed for editing existing assets
+		const newFieldDefinition = {
+			configuration: {
+				inputAttributes: {
+					name: 'code-asset-id',
+					type: 'hidden',
+					required: true,
+					disabled: false,
+					placeholder: '',
+					value: data.codeAsset.id
+				},
+				labelConfig: {
+					text: 'code asset id'
+				}
+			},
+			fieldState: {
+				hasError: false,
+				showSuccess: false,
+				statusMessage: ''
+			}
+		};
+		managerConfig.fieldDefinitions.push(newFieldDefinition);
+		// update form values
 		updateConfigWithValues(managerConfig, data.codeAsset);
 		updateConfigWithValues(deleteConfig, data.codeAsset);
 	}
