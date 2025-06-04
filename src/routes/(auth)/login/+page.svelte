@@ -1,15 +1,40 @@
 <script lang="ts">
-	import AuthForm from '$lib/components/form/AuthForm.svelte';
-	import { loginFormConfig } from '$lib/form-configs';
-	let inputConfigs = $state(loginFormConfig);
+	import { appAvailableProviders } from '$lib/auth-controller';
+	import Form from '$lib/components/form/Form.svelte';
+	import { loginFormConfig } from '$lib/form-configs/auth/login';
+	import { handleTriggerUpdate } from '$lib/form-helpers';
+	let loginConfig = $state(loginFormConfig);
+	const loginFormHandler = handleTriggerUpdate(loginConfig);
 </script>
 
 <h1>Sign in</h1>
-<AuthForm
-	submitButtonText="Sign In"
-	action="?/login"
-	bind:inputConfigs
-	showRememberMe={true}
-	oAuth={true}
-	footerContent="<p>Don't have an account? <a href='/register'>Register</a> <br> <a href='/forgot-password'>Forgot password?</a></p>"
-/>
+<Form name="login form" config={loginConfig} triggerUpdate={loginFormHandler} />
+
+<a href="/register" class="btn">Register</a>
+<a href="/forgot-password" class="btn">Forgot password?</a>
+
+<div class="auth-form-divider">
+	<hr />
+	<span>Or</span>
+	<hr />
+</div>
+
+<div class="auth-providers-group">
+	{#each appAvailableProviders as provider}
+		<a
+			class="btn oauth-button-{provider.name.toLowerCase()}"
+			href="/auth/{provider.name.toLowerCase()}?signin"
+		>
+			<img
+				class="icon"
+				src={provider.iconPath}
+				alt=""
+				width="17"
+				height="16"
+				decoding="async"
+				fetchpriority="low"
+			/>
+			Continue with {provider.name}
+		</a>
+	{/each}
+</div>

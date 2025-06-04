@@ -1,8 +1,10 @@
 <script lang="ts">
-	import AuthForm from '$lib/components/form/AuthForm.svelte';
-	import { resetPasswordFormConfig } from '$lib/form-configs';
-	let inputConfigs = $state(resetPasswordFormConfig);
+	import Form from '$lib/components/form/Form.svelte';
+	import { resetPasswordFormConfig } from '$lib/form-configs/auth/reset';
+	import { handleTriggerUpdate } from '$lib/form-helpers';
+	let resetConfig = $state(resetPasswordFormConfig);
+	const resetFormHandler = handleTriggerUpdate(resetConfig);
 </script>
 
 <h1>Please reset your password below.</h1>
-<AuthForm action="?/resetPassword" submitButtonText="Update Password" bind:inputConfigs />
+<Form name="reset password form" config={resetConfig} triggerUpdate={resetFormHandler} />

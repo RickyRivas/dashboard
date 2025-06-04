@@ -50,7 +50,7 @@
 >
 	<!-- fields/widgets -->
 	{#each fieldDefinitions as { fieldState, configuration }, index}
-		{#if configuration.inputAttributes.type === 'text' || configuration.inputAttributes.type === 'tel' || configuration.inputAttributes.type === 'phone' || configuration.inputAttributes.type === 'email' || configuration.inputAttributes.type === 'date' || configuration.inputAttributes.type === 'number' || configuration.inputAttributes.type === 'time'}
+		{#if configuration.inputAttributes.type === 'text' || configuration.inputAttributes.type === 'tel' || configuration.inputAttributes.type === 'phone' || configuration.inputAttributes.type === 'email' || configuration.inputAttributes.type === 'date' || configuration.inputAttributes.type === 'number' || configuration.inputAttributes.type === 'time' || configuration.inputAttributes.type === 'password'}
 			<FormControlInput {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'textarea'}
 			<FormTextarea {configuration} {fieldState} {index} {triggerUpdate} />

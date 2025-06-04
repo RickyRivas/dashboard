@@ -1,13 +1,11 @@
 <script lang="ts">
-	import AuthForm from '$lib/components/form/AuthForm.svelte';
-	import { registerFormConfig } from '$lib/form-configs';
-	let inputConfigs = $state(registerFormConfig);
+	import Form from '$lib/components/form/Form.svelte';
+	import { registerFormConfig } from '$lib/form-configs/auth/register';
+	import { handleTriggerUpdate } from '$lib/form-helpers';
+	let registerConfig = $state(registerFormConfig);
+	const registerFormHandler = handleTriggerUpdate(registerConfig);
 </script>
 
 <h1>Register a new account</h1>
-<AuthForm
-	action="?/register"
-	submitButtonText="Register"
-	bind:inputConfigs
-	footerContent="<p>Already have an account? <a href='/login'>log in</a></p>"
-/>
+<Form name="register form" config={registerConfig} triggerUpdate={registerFormHandler} />
+<a href="/login" class="btn">login</a>
