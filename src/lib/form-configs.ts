@@ -1,29 +1,5 @@
 import type { InputConfig } from "./form-helpers";
 
-export const resetPasswordFormConfig: InputConfig[] = [
-    {
-        name: 'newPassword',
-        label: 'Password',
-        type: 'text',
-        value: '',
-        required: true,
-        placeholder: 'Password',
-        disabled: false,
-        error: '',
-        autocomplete: 'new-password'
-    },
-    {
-        name: 'confirmPassword',
-        label: 'Confirm Password',
-        type: 'text',
-        value: '',
-        required: true,
-        placeholder: 'Confirm Password',
-        disabled: false,
-        error: ''
-    }
-];
-
 export const deleteAccountFormConfig: InputConfig[] = [
     {
         name: 'confirm',
