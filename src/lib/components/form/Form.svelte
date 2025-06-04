@@ -23,9 +23,9 @@
 	}: {
 		config: FormConfig;
 		name: string;
-		clearOnSuccess?: boolean;
+		clearOnSuccess: boolean;
 		triggerUpdate: TriggerUpdate;
-		onSuccess?: (result: any, form: FormConfig) => void | Promise<void>;
+		onSuccess?: (result: any) => void | Promise<void>;
 		classes?: string[];
 	} = $props();
 	const { formState, fieldDefinitions, formAttributes } = config;
