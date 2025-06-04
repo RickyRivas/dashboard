@@ -3,7 +3,8 @@ import type { FormConfig } from "./form-types";
 
 export function formHandler(
     form: FormConfig,
-    onSuccess?: (result: any) => void | Promise<void>
+    onSuccess?: (result: any) => void | Promise<void>,
+    clearOnSuccess?: boolean
 ): SubmitFunction {
     return async function () {
         // clear states & set loading
@@ -42,7 +43,9 @@ export function formHandler(
                             window.location = result.data.redirectTo;
                         }
 
-                        // update({ reset: true });
+                        if (clearOnSuccess) {
+                            update({ reset: true });
+                        }
 
                         form.formState.isLoading = false
                         form.fieldDefinitions.forEach((field) => {
@@ -97,7 +100,7 @@ export function updateConfigWithValues(config: FormConfig, data: Record<string, 
         const dataValue = data[fieldName];
 
         if (dataValue !== undefined) {
-            fieldDef.configuration.inputAttributes.value = dataValue === null ? '' : String(dataValue);
+            fieldDef.configuration.inputAttributes.value = dataValue === null ? '' : dataValue;
         }
     });
 }

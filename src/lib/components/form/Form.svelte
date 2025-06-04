@@ -16,12 +16,14 @@
 	const {
 		config,
 		name,
+		clearOnSuccess = true,
 		triggerUpdate,
 		onSuccess,
 		classes = ['default-styling']
 	}: {
 		config: FormConfig;
 		name: string;
+		clearOnSuccess?: boolean;
 		triggerUpdate: TriggerUpdate;
 		onSuccess?: (result: any, form: FormConfig) => void | Promise<void>;
 		classes?: string[];
@@ -45,7 +47,7 @@
 
 <form
 	{...formAttributes}
-	use:enhance={formHandler(config, onSuccess)}
+	use:enhance={formHandler(config, onSuccess, clearOnSuccess)}
 	class={classes.join(' ')}
 	data-form-name={name}
 >

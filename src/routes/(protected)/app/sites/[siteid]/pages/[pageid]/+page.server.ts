@@ -106,8 +106,7 @@ export const actions: Actions = {
         if (existingSlug) {
             return fail(400, {
                 message: 'Slug already exists',
-                field: 'slug',
-                value: pageData.slug
+                errors: [{ field: 'slug', message: `${pageData.slug} slug already exists` }]
             });
         }
 
@@ -124,15 +123,14 @@ export const actions: Actions = {
         if (updateError) {
             console.error('Error updating page:', updateError);
             return fail(400, {
-                message: 'Failed to update page',
-                details: updateError.message
+                message: `Failed to update page: ${updateError.message}`
             });
         }
 
         return {
             success: true,
             message: 'Page updated successfully',
-            page: updatedPage[0]
+            page: updatedPage
         };
     },
 }

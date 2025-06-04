@@ -14,7 +14,7 @@
 		index: number;
 	} = $props();
 
-	let value = $state(configuration.inputAttributes.value);
+	let value = $state(Boolean(configuration.inputAttributes.value));
 
 	$effect(() => {
 		triggerUpdate(index, value);

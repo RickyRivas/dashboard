@@ -69,7 +69,6 @@
 		<CardGroup>
 			<Card heading="Personal Information">
 				{#if editingProfile}
-					<h3>Update profile form</h3>
 					<Form
 						name="update profile form"
 						classes={['default-styling', 'child-form']}

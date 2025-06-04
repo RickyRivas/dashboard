@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Form from '$lib/components/form/Form.svelte';
-	import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
+	// import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
 	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
 	import { addPageFormConfig } from '$lib/form-configs/app/add-page';
 	import { contactsFormConfig } from '$lib/form-configs/app/sites-contacts';
