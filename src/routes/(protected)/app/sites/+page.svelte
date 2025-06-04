@@ -2,7 +2,7 @@
 	import Form from '$lib/components/form/Form.svelte';
 	import SitesList from '$lib/components/sites/SitesList.svelte';
 	import { handleTriggerUpdate } from '$lib/form-helpers';
-	import { addSiteFormConfig } from '$lib/forms/add-site-form';
+	import { addSiteFormConfig } from '$lib/form-configs/app/add-site';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 	let sites = $state(data.sites);

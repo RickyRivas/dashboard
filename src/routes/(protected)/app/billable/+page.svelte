@@ -5,7 +5,7 @@
 	import { handleTriggerUpdate } from '$lib/form-helpers';
 	import { fly } from 'svelte/transition';
 	import type { PageProps } from '../$types';
-	import { timeEntryFormConfig } from '$lib/forms/time-entry-form';
+	import { timeEntryFormConfig } from '$lib/form-configs/app/time-entry';
 	import Form from '$lib/components/form/Form.svelte';
 
 	const { data }: PageProps = $props();

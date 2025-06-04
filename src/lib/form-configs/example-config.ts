@@ -128,7 +128,7 @@ export const testFormConfig: FormConfig = {
                     options: [{ label: '9:00am', name: '9:00am', value: '9:00am' }, { label: '10:00am', name: '10:00am', value: '10:00am' }, { label: '11:00am', name: '11:00am', value: '11:00am' }]
                 },
                 labelConfig: {
-                    text: 'Who is with friend2?'
+                    text: 'time slot?'
                 }
             },
             fieldState: {

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
 	import type { PageProps } from './$types';
-	import { managerFormConfig } from '$lib/forms/manager-form';
+	import { managerFormConfig } from '$lib/form-configs/app/manager';
 	import Form from '$lib/components/form/Form.svelte';
-	import { deleteAssetConfig } from '$lib/forms/manager-delete-asset';
+	import { deleteAssetConfig } from '$lib/form-configs/app/manager-delete-asset';
 	import moment from 'moment';
 
 	const { data }: PageProps = $props();

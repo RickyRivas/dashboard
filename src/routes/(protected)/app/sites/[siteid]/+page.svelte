@@ -2,9 +2,9 @@
 	import Form from '$lib/components/form/Form.svelte';
 	import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
 	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
-	import { addPageFormConfig } from '$lib/forms/add-page';
-	import { contactsFormConfig } from '$lib/forms/sites-contacts-form';
-	import { siteInfoFormConfig } from '$lib/forms/sites-info.form';
+	import { addPageFormConfig } from '$lib/form-configs/app/add-page';
+	import { contactsFormConfig } from '$lib/form-configs/app/sites-contacts';
+	import { siteInfoFormConfig } from '$lib/form-configs/app/sites-info';
 
 	import type {
 		Site,
