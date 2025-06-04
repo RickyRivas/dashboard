@@ -1,46 +1,80 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { formHandler } from '$lib/form-helpers';
-	import type { FormConfig, TriggerUpdate } from '$lib/form-types';
+	import type { FieldDefinition, FormConfig, TriggerUpdate } from '$lib/form-types';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
+	import Checkbox from './Checkbox.svelte';
 	import CheckboxGroup from './CheckboxGroup.svelte';
 	import CloudinaryInput from './CloudinaryInput.svelte';
+	import CodemirrorTabs from './CodemirrorTabs.svelte';
 	import FormControlInput from './FormControlInput.svelte';
 	import FormSelect from './FormSelect.svelte';
 	import FormTextarea from './FormTextarea.svelte';
+	import HiddenInput from './HiddenInput.svelte';
 	import RadioGroup from './RadioGroup.svelte';
 	const {
 		config,
 		name,
-		triggerUpdate
-	}: { config: FormConfig; name: string; triggerUpdate: TriggerUpdate } = $props();
+		triggerUpdate,
+		onSuccess,
+		classes = ['default-styling']
+	}: {
+		config: FormConfig;
+		name: string;
+		triggerUpdate: TriggerUpdate;
+		onSuccess?: (result: any, form: FormConfig) => void | Promise<void>;
+		classes?: string[];
+	} = $props();
 	const { formState, fieldDefinitions, formAttributes } = config;
+
+	// dynamically create codemirror widget
+	let renderCodemirrorWidget = $state(false);
+	const codemirrorWidgetType = 'codemirror-widget-tab';
+
+	let codeMirrorWidgetTabs: FieldDefinition[] = [];
+	config.fieldDefinitions.forEach((field: FieldDefinition, index: number) => {
+		if (field.configuration.inputAttributes.type === codemirrorWidgetType) {
+			// index is needed to update the config
+			codeMirrorWidgetTabs.push({ ...field, index });
+		}
+	});
+
+	if (codeMirrorWidgetTabs.length) renderCodemirrorWidget = true;
 </script>
 
 <form
 	{...formAttributes}
-	use:enhance={formHandler(config)}
-	class="default-styling"
+	use:enhance={formHandler(config, onSuccess)}
+	class={classes.join(' ')}
 	data-form-name={name}
 >
 	<!-- fields/widgets -->
 	{#each fieldDefinitions as { fieldState, configuration }, index}
-		{#if configuration.inputAttributes.type === 'text' || configuration.inputAttributes.type === 'tel' || configuration.inputAttributes.type === 'phone' || configuration.inputAttributes.type === 'email'}
+		{#if configuration.inputAttributes.type === 'text' || configuration.inputAttributes.type === 'tel' || configuration.inputAttributes.type === 'phone' || configuration.inputAttributes.type === 'email' || configuration.inputAttributes.type === 'date' || configuration.inputAttributes.type === 'number' || configuration.inputAttributes.type === 'time'}
 			<FormControlInput {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'textarea'}
 			<FormTextarea {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'radio-group'}
 			<RadioGroup {configuration} {fieldState} {index} {triggerUpdate} />
+		{:else if configuration.inputAttributes.type === 'checkbox'}
+			<!-- single checkbox -->
+			<Checkbox {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'checkbox-group'}
+			<!-- multi checkbox -->
 			<CheckboxGroup {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'select'}
 			<FormSelect {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'cloudinary-upload'}
 			<CloudinaryInput {configuration} {fieldState} {index} {triggerUpdate} />
-		{:else}
-			<p>Invalid field.</p>
+		{:else if configuration.inputAttributes.type === 'hidden'}
+			<HiddenInput {configuration} {fieldState} {index} {triggerUpdate} />
 		{/if}
 	{/each}
+
+	<!-- special codemirror tabs widget -->
+	{#if renderCodemirrorWidget}
+		<CodemirrorTabs {codeMirrorWidgetTabs} {triggerUpdate} />
+	{/if}
 
 	<!-- submit -->
 	<button

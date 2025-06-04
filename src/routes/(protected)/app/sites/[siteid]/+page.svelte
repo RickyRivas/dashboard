@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Form from '$lib/components/form/Form.svelte';
-	import ContactsForm from '$lib/components/sites/ContactsForm.svelte';
-	import InformationForm from '$lib/components/sites/InformationForm.svelte';
 	import SiteChecklist from '$lib/components/sites/SiteChecklist.svelte';
-	import { handleTriggerUpdate } from '$lib/form-helpers';
+	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
 	import { addPageFormConfig } from '$lib/forms/add-page';
+	import { contactsFormConfig } from '$lib/forms/sites-contacts-form';
+	import { siteInfoFormConfig } from '$lib/forms/sites-info.form';
 
 	import type {
 		Site,
@@ -31,9 +31,19 @@
 	} = data;
 
 	// forms
+	// 1. Contacts
+	let contactsConfig = $state(contactsFormConfig);
+	const contactsFormHandler = handleTriggerUpdate(contactsConfig);
+	if (site_contacts) updateConfigWithValues(contactsConfig, site_contacts);
 
+	// 2. Information
+	let infoConfig = $state(siteInfoFormConfig);
+	const infoFormHandler = handleTriggerUpdate(infoConfig);
+	if (site_information) updateConfigWithValues(infoConfig, site_information);
+
+	// Add Page
 	let addPageConfig = $state(addPageFormConfig);
-	const triggerUpdateHandler = handleTriggerUpdate(addPageConfig);
+	const addPageFormHandler = handleTriggerUpdate(addPageConfig);
 </script>
 
 <section>
@@ -43,7 +53,7 @@
 
 		<h2>Contact Info:</h2>
 		{#if site_contacts}
-			<ContactsForm {site_contacts} />
+			<Form name="site contacts form" config={contactsConfig} triggerUpdate={contactsFormHandler} />
 		{:else}
 			<p>Site contacts unavailable.</p>
 		{/if}
@@ -51,7 +61,7 @@
 
 		<h2>Site Information:</h2>
 		{#if site_information}
-			<InformationForm {site_information} />
+			<Form name="site info form" config={infoConfig} triggerUpdate={infoFormHandler} />
 		{:else}
 			<p>Site information unavailable.</p>
 		{/if}
@@ -59,7 +69,7 @@
 
 		<h2>Site Checklist</h2>
 		{#if site_checklist}
-			<SiteChecklist {site_checklist} />
+			<!-- <SiteChecklist {site_checklist} /> -->
 		{:else}
 			<p>Site checklist unavailable.</p>
 		{/if}
@@ -84,7 +94,7 @@
 		{/if}
 
 		<h3>Add a page</h3>
-		<Form name="add page form" config={addPageConfig} triggerUpdate={triggerUpdateHandler} />
+		<Form name="add page form" config={addPageConfig} triggerUpdate={addPageFormHandler} />
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>
 </section>

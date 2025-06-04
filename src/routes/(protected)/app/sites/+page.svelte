@@ -1,9 +1,14 @@
 <script lang="ts">
-	import AddSiteForm from '$lib/components/sites/AddSiteForm.svelte';
+	import Form from '$lib/components/form/Form.svelte';
 	import SitesList from '$lib/components/sites/SitesList.svelte';
+	import { handleTriggerUpdate } from '$lib/form-helpers';
+	import { addSiteFormConfig } from '$lib/forms/add-site-form';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 	let sites = $state(data.sites);
+
+	let addSiteConfig = $state(addSiteFormConfig);
+	const addSiteFormHandler = handleTriggerUpdate(addSiteConfig);
 </script>
 
 <section>
@@ -20,6 +25,6 @@
 <section>
 	<div class="container">
 		<h2>Add a site</h2>
-		<AddSiteForm {sites} />
+		<Form name="add site form" config={addSiteConfig} triggerUpdate={addSiteFormHandler} />
 	</div>
 </section>

@@ -6,22 +6,7 @@
 	import SlideshowWidget from '$lib/widgets/SlideshowWidget.svelte';
 	const { data }: PageProps = $props();
 	let checklist = $state(data.checklist);
-	import Form from '$lib/components/form/Form.svelte';
-	import { testFormConfig } from '$lib/forms/test';
-	import { handleTriggerUpdate } from '$lib/form-helpers';
-
-	// input testing
-	let configOne = $state(testFormConfig);
-	const triggerUpdateHandlerOne = handleTriggerUpdate(configOne);
-	$inspect('p 1', configOne);
 </script>
-
-<section>
-	<div class="container">
-		<h2>form 2.0 testing</h2>
-		<Form name="form config 1" config={configOne} triggerUpdate={triggerUpdateHandlerOne} />
-	</div>
-</section>
 
 <section>
 	<div class="container">

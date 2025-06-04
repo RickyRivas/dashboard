@@ -24,28 +24,17 @@
 </script>
 
 <div class="form-control">
-	<fieldset>
-		<legend>
+	<label>
+		<span class="screenreader">
 			{configuration.labelConfig.text}
-		</legend>
-		<div class="form-radio-group">
-			{#if configuration.inputAttributes.options?.length}
-				{#each configuration.inputAttributes.options as { name, label, value: optionValue, disabled }}
-					<label>
-						<input
-							type="radio"
-							name={configuration.inputAttributes.name}
-							bind:group={value}
-							value={optionValue}
-						/>
-						{label}
-					</label>
-				{/each}
-			{:else}
-				<p>No options.</p>
-			{/if}
-		</div>
-	</fieldset>
+		</span>
+		<input
+			{...configuration.inputAttributes}
+			class:error={fieldState.hasError}
+			class:success={fieldState.showSuccess}
+			bind:value
+		/>
+	</label>
 	{#if fieldState.hasError && fieldState.statusMessage}
 		<ErrorMessage errorMessage={fieldState.statusMessage} />
 	{/if}

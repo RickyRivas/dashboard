@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	let { id, favorite = false, dim = 44 }: { id: string; favorite: boolean; dim: number } = $props();
+	let {
+		id,
+		favorite = false,
+		dim = 44
+	}: { id: string; favorite?: boolean; dim?: number } = $props();
 	let table = 'code_snippets';
 
 	async function toggleFavorite(id: string) {

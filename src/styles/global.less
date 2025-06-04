@@ -145,6 +145,23 @@ p {
     .ib;
 }
 
+/* ===============================================
+	.screenreader 
+	a11y support for descriptive text on vaguely worded buttons
+	https://gomakethings.com/hidden-content-for-better-a11y/#hidden-labels
+=============================================== */
+.screenreader {
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
 // anchors & buttons
 .btn {
     .buttonreset;

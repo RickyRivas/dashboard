@@ -3,6 +3,7 @@ import type { FormConfig } from "./form-types";
 
 export function formHandler(
     form: FormConfig,
+    onSuccess?: (result: any) => void | Promise<void>
 ): SubmitFunction {
     return async function () {
         // clear states & set loading
@@ -24,10 +25,15 @@ export function formHandler(
         // 3. set loading
         form.formState.isLoading = true
 
-        return async ({ result }) => {
+        return async ({ result, update }) => {
             if (result.type === 'success' && result.status === 200) {
                 form.formState.showSuccess = true
                 form.formState.hasError = false
+
+                // Call the optional success callback
+                if (onSuccess) {
+                    await onSuccess(result);
+                }
 
                 if (result.data) {
                     // show success/error state for a 1s
@@ -35,6 +41,8 @@ export function formHandler(
                         if (result?.data?.redirectTo) {
                             window.location = result.data.redirectTo;
                         }
+
+                        update({ reset: true });
 
                         form.formState.isLoading = false
                         form.fieldDefinitions.forEach((field) => {
@@ -81,6 +89,17 @@ export function handleTriggerUpdate(config: FormConfig) {
     return (index: number, newValue: any) => {
         updateValue(config, index, newValue);
     };
+}
+
+export function updateConfigWithValues(config: FormConfig, data: Record<string, any>): void {
+    config.fieldDefinitions.forEach(fieldDef => {
+        const fieldName = fieldDef.configuration.inputAttributes.name;
+        const dataValue = data[fieldName];
+
+        if (dataValue !== undefined) {
+            fieldDef.configuration.inputAttributes.value = dataValue === null ? '' : String(dataValue);
+        }
+    });
 }
 
 export interface FormApiError {

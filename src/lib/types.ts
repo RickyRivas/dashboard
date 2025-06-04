@@ -173,3 +173,26 @@ export type SitePage = {
     level?: number;
     full_path?: string; // e.g., "/about/team/john-doe"
 };
+
+
+interface TimeEntry {
+    id: string;
+    user_id: string;
+    project_name: string;
+    date: string;
+    start_time: string;
+    end_time: string;
+    hours_spent: string;
+    task_description: string | null;
+    task_category: string;
+    billable_status: boolean;
+    hourly_rate: number;
+    billable_amount: number;
+    client_contact: string | null;
+    notes: string | null;
+    invoice_number: string | null;
+    status: string;
+    tags: string[];
+    created_at: string;
+    updated_at: string;
+}

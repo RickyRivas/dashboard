@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	// imports
 	import type { CodeAsset } from '$lib/types';
 
@@ -117,4 +117,5 @@
 			gap: 1em;
 		}
 	}
-</style>
+</style> -->
+CODEDISPLAYPANEL.SVELTE

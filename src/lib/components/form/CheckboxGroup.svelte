@@ -20,7 +20,7 @@
 		triggerUpdate(index, value);
 	});
 
-	// $inspect('c', value);
+	$inspect('c', value);
 </script>
 
 <div class="form-control">

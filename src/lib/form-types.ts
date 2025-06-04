@@ -25,8 +25,9 @@ export type InputAttributes = {
     required?: boolean;
     disabled: boolean;
     placeholder?: string;
-    value: string;
+    value: string | number | boolean;
     step?: string | undefined;
+    codeMirrorLang?: "html" | "css" | "javascript"
     options?: OptionItem[]; // Added for radio, checkbox, and select
     autocomplete?:
     | 'off'
@@ -79,6 +80,7 @@ export type FieldDefinition = {
         labelConfig: LabelConfig;
     };
     fieldState: FieldState;
+    index?: number;
 };
 
 export type FormConfig = {

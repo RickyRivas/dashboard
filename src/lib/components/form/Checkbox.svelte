@@ -24,28 +24,10 @@
 </script>
 
 <div class="form-control">
-	<fieldset>
-		<legend>
-			{configuration.labelConfig.text}
-		</legend>
-		<div class="form-radio-group">
-			{#if configuration.inputAttributes.options?.length}
-				{#each configuration.inputAttributes.options as { name, label, value: optionValue, disabled }}
-					<label>
-						<input
-							type="radio"
-							name={configuration.inputAttributes.name}
-							bind:group={value}
-							value={optionValue}
-						/>
-						{label}
-					</label>
-				{/each}
-			{:else}
-				<p>No options.</p>
-			{/if}
-		</div>
-	</fieldset>
+	<label>
+		<input type="checkbox" name={configuration.inputAttributes.name} bind:checked={value} />
+		{configuration.labelConfig.text}
+	</label>
 	{#if fieldState.hasError && fieldState.statusMessage}
 		<ErrorMessage errorMessage={fieldState.statusMessage} />
 	{/if}
