@@ -102,7 +102,7 @@ export const actions: Actions = {
             const confirm = formData.get('confirm')
 
             const validateFormResult = await validateForm(deleteUserSchema, { confirm })
-            if (validateFormResult.errors) return fail(400, { errors: validateFormResult.errors });
+            if (validateFormResult.errors) return fail(400, { message: 'Try again.', errors: validateFormResult.errors });
 
             const { error } = await supabaseServiceRole.auth.admin.deleteUser(
                 user.id,

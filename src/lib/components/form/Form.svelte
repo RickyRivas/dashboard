@@ -3,6 +3,7 @@
 	import { formHandler } from '$lib/form-helpers';
 	import type { FieldDefinition, FormConfig, TriggerUpdate } from '$lib/form-types';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
+	import AvatarWidget from './AvatarWidget.svelte';
 	import Checkbox from './Checkbox.svelte';
 	import CheckboxGroup from './CheckboxGroup.svelte';
 	import CloudinaryInput from './CloudinaryInput.svelte';
@@ -68,6 +69,8 @@
 			<CloudinaryInput {configuration} {fieldState} {index} {triggerUpdate} />
 		{:else if configuration.inputAttributes.type === 'hidden'}
 			<HiddenInput {configuration} {fieldState} {index} {triggerUpdate} />
+		{:else if configuration.inputAttributes.type === 'avatar-widget'}
+			<AvatarWidget {configuration} {fieldState} {index} {triggerUpdate} />
 		{/if}
 	{/each}
 

@@ -42,7 +42,7 @@ export function formHandler(
                             window.location = result.data.redirectTo;
                         }
 
-                        update({ reset: true });
+                        // update({ reset: true });
 
                         form.formState.isLoading = false
                         form.fieldDefinitions.forEach((field) => {

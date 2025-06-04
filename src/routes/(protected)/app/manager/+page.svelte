@@ -24,7 +24,12 @@
 
 <section>
 	<div class="container">
-		<h1>Library Manager - <span style:color={'red'}>edit mode</span></h1>
+		<h1>
+			Library Manager
+			{#if data.codeAsset}
+				- <span style:color={'red'}>edit mode</span>
+			{/if}
+		</h1>
 
 		<Form name="manager form" config={managerConfig} triggerUpdate={manageFormHandler} />
 

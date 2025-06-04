@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { appAvailableProviders } from '$lib/auth-controller';
+	import { appAvailableProviders } from '$lib/auth-controller.svelte';
 	import Form from '$lib/components/form/Form.svelte';
 	import { loginFormConfig } from '$lib/form-configs/auth/login';
 	import { handleTriggerUpdate } from '$lib/form-helpers';
