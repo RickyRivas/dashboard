@@ -11,7 +11,7 @@ export const linkProviderGoogleFormConfig: FormConfig = {
         isDisabled: false,
         isLoading: false,
         statusMessage: '',
-        submitButtonText: 'link from Google'
+        submitButtonText: 'Link to Google'
     },
     fieldDefinitions: [
         {
