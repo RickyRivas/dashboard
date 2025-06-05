@@ -1,4 +1,5 @@
-<!-- <script lang="ts">
+<script lang="ts">
+	// TODO: CLEANUP
 	import { enhance } from '$app/forms';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { fly } from 'svelte/transition';
@@ -134,13 +135,13 @@
 	<button class="btn" disabled={checklistFormLoading}>
 		{#if checklistFormLoading}
 			<LoadingSpinner
-				bind:loading={checklistFormLoading}
-				bind:error={checklistFormError}
-				bind:success={checklistFormSuccess}
+				loading={checklistFormLoading}
+				error={checklistFormError}
+				success={checklistFormSuccess}
 				dim={44}
 			/>
 		{:else}
 			Add new item
 		{/if}
 	</button>
-</form> -->
+</form>
