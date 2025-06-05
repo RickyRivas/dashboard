@@ -55,6 +55,13 @@ export const registerNewUserSchema = z
         path: ["passwordConfirmed"]
     });
 
+export const deleteSiteSchema = z.object({
+    confirm: z.literal('confirm', {
+        invalid_type_error: "Please type 'confirm' to delete this website.",
+        required_error: "Confirmation is required"
+    })
+})
+
 export async function validateForm(schema, data) {
     const result = schema.safeParse(data)
 

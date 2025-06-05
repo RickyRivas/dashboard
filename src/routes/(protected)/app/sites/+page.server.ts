@@ -86,22 +86,5 @@ export const actions: Actions = {
 
         return { success: true, redirectTo: `/app/sites/${site.id}` }
     },
-    removeSite: async ({ request, locals: { supabase, safeGetSession } }) => {
-        const formData = await request.formData()
-        const siteId = formData.get('id') as string
-        const { user } = await safeGetSession()
 
-        // 1. remove site
-        const { error } = await supabase
-            .from('sites')
-            .delete()
-            .eq('id', siteId)
-            .eq('user_id', user.id);
-
-        if (error) {
-            return fail(500, { message: `Failed to remove site: ${error.message}` });
-        }
-
-        return { success: true, removedItemid: siteId };
-    }
 }

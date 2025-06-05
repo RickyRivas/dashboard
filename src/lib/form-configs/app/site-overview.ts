@@ -73,6 +73,66 @@ export const siteOverviewFormConfig: FormConfig = {
                 showSuccess: false,
                 statusMessage: ''
             }
+        },
+        {
+            configuration: {
+                inputAttributes: {
+                    name: 'website_status',
+                    type: 'text',
+                    required: true,
+                    disabled: false,
+                    placeholder: '',
+                    value: ''
+                },
+                labelConfig: {
+                    text: 'Website Status'
+                }
+            },
+            fieldState: {
+                hasError: false,
+                showSuccess: false,
+                statusMessage: ''
+            }
+        },
+        {
+            configuration: {
+                inputAttributes: {
+                    name: 'start_date',
+                    type: 'text',
+                    required: true,
+                    disabled: false,
+                    placeholder: '',
+                    value: ''
+                },
+                labelConfig: {
+                    text: 'Start Date'
+                }
+            },
+            fieldState: {
+                hasError: false,
+                showSuccess: false,
+                statusMessage: ''
+            }
+        },
+        {
+            configuration: {
+                inputAttributes: {
+                    name: 'launch_date',
+                    type: 'text',
+                    required: true,
+                    disabled: false,
+                    placeholder: '',
+                    value: ''
+                },
+                labelConfig: {
+                    text: 'Launch Date'
+                }
+            },
+            fieldState: {
+                hasError: false,
+                showSuccess: false,
+                statusMessage: ''
+            }
         }
     ]
 };

@@ -1,8 +1,9 @@
-import { redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
-import type { Actions } from "@sveltejs/kit";
-import { fail } from "@sveltejs/kit";
+
 import type { Site, SiteContacts, SiteInformation, SiteProcessChecklist } from "$lib/types";
+import type { Actions } from "@sveltejs/kit";
+import { deleteSiteSchema, validateForm } from "$lib/zod-helper";
 
 const redirectPath = '/app/sites'
 
@@ -21,8 +22,6 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .single()
 
     if (error) throw redirect(303, redirectPath)
-
-
 
     // 3. site contacts table
     const { data: site_contacts, error: siteContactsError } = await supabase
@@ -58,26 +57,25 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 };
 
 export const actions: Actions = {
-    addNewPage: async ({ request, params, locals: { supabase, safeGetSession } }) => {
-        const { siteid } = params;
-        const { user } = await safeGetSession();
-        const formData = await request.formData();
-        const data = Object.fromEntries([...formData]);
+    removeSite: async ({ params, request, locals: { supabase, safeGetSession } }) => {
+        const formData = await request.formData()
+        const { siteid } = params
+        const { user } = await safeGetSession()
 
-        const newPage = {
-            site_id: siteid,
-            title: data.title as string,
-            slug: data.slug as string
+        const confirm = formData.get('confirm')
+        const validateFormResult = await validateForm(deleteSiteSchema, { confirm })
+        if (validateFormResult.errors) return fail(400, { errors: validateFormResult.errors });
+
+        const { error } = await supabase
+            .from('sites')
+            .delete()
+            .eq('id', siteid)
+            .eq('user_id', user.id);
+
+        if (error) {
+            return fail(500, { message: `Failed to remove site: ${error.message}` });
         }
 
-        const { data: sitePages, error: sitePagesError } = await supabase
-            .from('site_pages')
-            .insert(newPage)
-            .select()
-            .single()
-
-        if (sitePagesError) return fail(400, { message: `Error creating site page: ${sitePagesError.message}` });
-
-        return { success: true, sitePages }
+        return { success: true, redirectTo: "/app/sites" };
     }
 }

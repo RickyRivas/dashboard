@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { updateConfigWithValues } from '$lib/form-helpers';
+	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
 
 	import type {
 		Site,
@@ -14,6 +14,8 @@
 	import Card from '$lib/components/Card.svelte';
 	import { siteOverviewFormConfig } from '$lib/form-configs/app/site-overview';
 	import DisplayForm from '$lib/components/display-form/DisplayForm.svelte';
+	import { removeSiteFormConfig } from '$lib/form-configs/app/remove-site';
+	import Form from '$lib/components/form/Form.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const {
@@ -33,6 +35,9 @@
 	updateConfigWithValues(overviewConfig, site);
 	if (siteContacts) updateConfigWithValues(overviewConfig, siteContacts);
 	if (siteInformation) updateConfigWithValues(overviewConfig, siteInformation);
+
+	let deleteConfig = $state(removeSiteFormConfig);
+	const deleteFormHandler = handleTriggerUpdate(deleteConfig);
 </script>
 
 <section>
@@ -47,6 +52,14 @@
 				<a href="/app/sites" class="btn">View all accounts</a>
 				<a href="/app/sites/{site.id}/configuration" class="btn">Site Configuration</a>
 				<a href="/app/sites/{site.id}/pages" class="btn">Site Pages</a>
+			</Card>
+			<Card heading="Danger">
+				<Form
+					name="delete account form"
+					classes={['default-styling', 'child-form']}
+					config={deleteConfig}
+					triggerUpdate={deleteFormHandler}
+				/>
 			</Card>
 		</CardGroup>
 	</div>
