@@ -8,11 +8,6 @@
 	let { data }: { data: PageData } = $props();
 	let sites = $state(data.sites);
 
-	function removeSite(siteId: string) {
-		const indexToRemove = sites.findIndex((site) => site.id === siteId);
-		sites.splice(indexToRemove, 1);
-	}
-
 	let addSiteConfig = $state(addSiteFormConfig);
 	const addSiteFormHandler = handleTriggerUpdate(addSiteConfig);
 </script>
@@ -24,7 +19,9 @@
 				{#if sites.length}
 					<ul>
 						{#each sites as site}
-							<a class="btn" href="/app/sites/{site.id}">View {site.site_name}</a>
+							<li>
+								<a class="btn" href="/app/sites/{site.id}">View {site.site_name}</a>
+							</li>
 						{/each}
 					</ul>
 				{:else}
