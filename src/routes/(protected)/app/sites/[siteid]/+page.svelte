@@ -14,6 +14,8 @@
 		SiteProcessChecklist
 	} from '$lib/types';
 	import type { PageData } from './$types';
+	import { siteChecklistConfig } from '$lib/auto-form-configs/site-checklist';
+	import AutoFormGroup from '$lib/components/auto-form/AutoFormGroup.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const {
@@ -41,7 +43,12 @@
 	const infoFormHandler = handleTriggerUpdate(infoConfig);
 	if (site_information) updateConfigWithValues(infoConfig, site_information);
 
-	// Add Page
+	// 3. checklist
+	let checklistConfig = $state(siteChecklistConfig);
+	const checklistFormHandler = handleTriggerUpdate(checklistConfig);
+	if (site_checklist) updateConfigWithValues(checklistConfig, site_checklist);
+
+	// 4. Add Page
 	let addPageConfig = $state(addPageFormConfig);
 	const addPageFormHandler = handleTriggerUpdate(addPageConfig);
 </script>
@@ -69,7 +76,11 @@
 
 		<h2>Site Checklist</h2>
 		{#if site_checklist}
-			<!-- <SiteChecklist {site_checklist} /> -->
+			<AutoFormGroup
+				name="site checklist form group"
+				config={checklistConfig}
+				triggerUpdate={checklistFormHandler}
+			/>
 		{:else}
 			<p>Site checklist unavailable.</p>
 		{/if}

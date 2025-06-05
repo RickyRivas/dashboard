@@ -1,5 +1,6 @@
 // global form styling
-form.default-styling {
+form.default-styling,
+.auto-form-group {
     .flex;
     .fdir(column);
     width: 100%;
@@ -91,7 +92,9 @@ form.inline {
     }
 
 
-    input:not([type='checkbox']):not([type='radio']) {
+    input:not([type='checkbox']):not([type='radio']),
+    textarea,
+    select {
         &.error {
             border-color: red;
             background-color: lightpink;
@@ -149,5 +152,4 @@ form.inline {
             line-height: 44px;
         }
     }
-
 }

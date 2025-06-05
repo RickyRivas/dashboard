@@ -4,7 +4,7 @@
 	import { page } from '$app/state';
 	import ChecklistWidget from '$lib/widgets/ChecklistWidget.svelte';
 	import SlideshowWidget from '$lib/widgets/SlideshowWidget.svelte';
-	import FormGroup from '$lib/components/auto-form/AutoFormGroup.svelte';
+	import AutoFormGroup from '$lib/components/auto-form/AutoFormGroup.svelte';
 	import { autoFormConfig } from '$lib/auto-form-configs/example';
 	import { handleTriggerUpdate } from '$lib/form-helpers';
 	const { data }: PageProps = $props();
@@ -17,7 +17,7 @@
 <section>
 	<div class="container">
 		<h2>auto group</h2>
-		<FormGroup name="auto form" config={autoConfig} triggerUpdate={autoConfigFormHandler} />
+		<AutoFormGroup name="auto form" config={autoConfig} triggerUpdate={autoConfigFormHandler} />
 	</div>
 </section>
 

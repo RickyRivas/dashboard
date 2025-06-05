@@ -26,7 +26,13 @@
 <div class="form-control">
 	<label>
 		{configuration.labelConfig.text}
-		<select name={configuration.inputAttributes.name} bind:value>
+		<select
+			name={configuration.inputAttributes.name}
+			class:success={fieldState.showSuccess}
+			class:error={fieldState.hasError}
+			disabled={configuration.inputAttributes.disabled}
+			bind:value
+		>
 			<option value="">Please select an option</option>
 			{#if configuration.inputAttributes.options?.length}
 				{#each configuration.inputAttributes.options as { name, label, value: optionValue, disabled }}
