@@ -54,7 +54,7 @@
 	<input type="hidden" name="id" value={site.id} />
 	<button class="btn" disabled={loading}>
 		{#if loading}
-			<LoadingSpinner bind:loading bind:error bind:success dim={44} />
+			<LoadingSpinner {loading} {error} {success} dim={44} />
 		{:else}
 			Remove
 		{/if}

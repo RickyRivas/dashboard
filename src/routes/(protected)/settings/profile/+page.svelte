@@ -1,6 +1,7 @@
 <script lang="ts">
 	// components
 	import Form from '$lib/components/form/Form.svelte';
+	import DisplayForm from '$lib/components/display-form/DisplayForm.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import CardGroup from '$lib/components/CardGroup.svelte';
 
@@ -18,7 +19,6 @@
 	import { updateProfileFormConfig } from '$lib/form-configs/settings/profile';
 	import { deleteAccountFormConfig } from '$lib/form-configs/settings/account-deletion';
 	import { appAvailableProviders } from '$lib/auth-controller.svelte';
-	import DisplayForm from '$lib/components/display-form/DisplayForm.svelte';
 	import type { FieldDefinition } from '$lib/form-types';
 
 	let editingProfile = $state(false);
@@ -103,13 +103,15 @@
 						triggerUpdate={updateProfileFormHandler}
 						onSuccess={updateProfileOnSuccess}
 					/>
-					<Form
-						name="send password reset request"
-						classes={['']}
-						config={passwordResetConfig}
-						triggerUpdate={passwordResetFormHandler}
-						onSuccess={passwordResetOnSuccess}
-					/>
+					{#if hasEmailAuthentication}
+						<Form
+							name="send password reset request"
+							classes={['']}
+							config={passwordResetConfig}
+							triggerUpdate={passwordResetFormHandler}
+							onSuccess={passwordResetOnSuccess}
+						/>
+					{/if}
 				{:else}
 					<DisplayForm
 						classes={['display-form', 'child-form']}

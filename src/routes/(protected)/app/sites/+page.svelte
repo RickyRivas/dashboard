@@ -7,6 +7,11 @@
 	let { data }: { data: PageData } = $props();
 	let sites = $state(data.sites);
 
+	function removeSite(siteId: string) {
+		const indexToRemove = sites.findIndex((site) => site.id === siteId);
+		sites.splice(indexToRemove, 1);
+	}
+
 	let addSiteConfig = $state(addSiteFormConfig);
 	const addSiteFormHandler = handleTriggerUpdate(addSiteConfig);
 </script>
@@ -15,7 +20,7 @@
 	<div class="container">
 		<h1>Sites</h1>
 		{#if sites.length}
-			<SitesList bind:sites />
+			<SitesList {sites} {removeSite} />
 		{:else}
 			<p>No sites. Go make some sales!!!</p>
 		{/if}

@@ -8,6 +8,7 @@
 	import CheckboxGroup from './CheckboxGroup.svelte';
 	import CloudinaryInput from './CloudinaryInput.svelte';
 	import CodemirrorTabs from './CodemirrorTabs.svelte';
+	import ErrorMessage from './ErrorMessage.svelte';
 	import FormControlInput from './FormControlInput.svelte';
 	import FormSelect from './FormSelect.svelte';
 	import FormTextarea from './FormTextarea.svelte';
@@ -16,7 +17,7 @@
 	const {
 		config,
 		name,
-		clearOnSuccess = true,
+		clearOnSuccess = false,
 		triggerUpdate,
 		onSuccess,
 		classes = ['default-styling']
@@ -79,6 +80,10 @@
 	<!-- special codemirror tabs widget -->
 	{#if renderCodemirrorWidget}
 		<CodemirrorTabs {codeMirrorWidgetTabs} {triggerUpdate} />
+	{/if}
+
+	{#if formState.statusMessage && formState.hasError}
+		<ErrorMessage errorMessage={formState.statusMessage} />
 	{/if}
 
 	<!-- submit -->

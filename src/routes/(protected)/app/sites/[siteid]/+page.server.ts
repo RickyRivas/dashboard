@@ -90,8 +90,6 @@ export const actions: Actions = {
             .select()
             .single()
 
-        console.log(sitePages, sitePagesError)
-
         if (sitePagesError) return fail(400, { message: `Error creating site page: ${sitePagesError.message}` });
 
         return { success: true, sitePages }
@@ -131,6 +129,10 @@ export const actions: Actions = {
             .select('id')
             .eq('site_id', siteid)
             .single();
+
+        if (!existingContact) {
+            return fail(400, { message: 'Unauthorized' })
+        }
 
         // Update existing record
         const { data, error } = await supabase
@@ -218,8 +220,6 @@ export const actions: Actions = {
         const formData = await request.formData();
         const data = Object.fromEntries([...formData]);
 
-        if (data) data.updated_at = new Date().toISOString()
-
         const { data: checklistItemUpdated, error } = await supabase
             .from('site_process_checklist')
             .update(data)
@@ -227,7 +227,7 @@ export const actions: Actions = {
 
         if (error) {
             console.error(error.message)
-            return fail(500, { message: 'Failed to update status' });
+            return fail(500, { message: 'Failed to update status', errors: [{ field: Object.keys(data)[0], message: error.message }] });
         }
 
         return { success: true }

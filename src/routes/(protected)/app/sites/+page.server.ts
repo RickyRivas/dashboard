@@ -60,9 +60,7 @@ export const actions: Actions = {
                 }
             ]);
 
-        if (contactError) {
-            return { success: true, site, errorMessage: `Error creating site contact record: ${contactError.message}` };
-        }
+        if (contactError) return fail(400, { message: `Error creating site contact record: ${contactError.message}` })
 
         // 4. create site information table
         const { error: informationError } = await supabase
@@ -73,9 +71,7 @@ export const actions: Actions = {
                 }
             ]);
 
-        if (informationError) {
-            return { success: true, site, errorMessage: `Error creating site information record: ${contactError.message}` };
-        }
+        if (informationError) return fail(400, { message: `Error creating site information record: ${informationError.message}` })
 
         // 5. create site checklist table
         const { error: checklistError } = await supabase
@@ -86,9 +82,7 @@ export const actions: Actions = {
                 }
             ]);
 
-        if (informationError) {
-            return { success: true, site, errorMessage: `Error creating site checklist record: ${checklistError?.message}` };
-        }
+        if (checklistError) return fail(400, { message: `Error creating site checklist record: ${checklistError?.message}` })
 
         return { success: true, redirectTo: `/app/sites/${site.id}` }
     },

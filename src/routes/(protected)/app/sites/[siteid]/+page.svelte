@@ -4,6 +4,7 @@
 	import { addPageFormConfig } from '$lib/form-configs/app/add-page';
 	import { contactsFormConfig } from '$lib/form-configs/app/sites-contacts';
 	import { siteInfoFormConfig } from '$lib/form-configs/app/sites-info';
+	import { siteChecklistConfig } from '$lib/auto-form-configs/site-checklist';
 
 	import type {
 		Site,
@@ -13,7 +14,6 @@
 		SiteProcessChecklist
 	} from '$lib/types';
 	import type { PageData } from './$types';
-	import { siteChecklistConfig } from '$lib/auto-form-configs/site-checklist';
 	import AutoFormGroup from '$lib/components/auto-form/AutoFormGroup.svelte';
 	let { data }: { data: PageData } = $props();
 
@@ -104,7 +104,12 @@
 		{/if}
 
 		<h3>Add a page</h3>
-		<Form name="add page form" config={addPageConfig} triggerUpdate={addPageFormHandler} />
+		<Form
+			name="add page form"
+			clearOnSuccess={true}
+			config={addPageConfig}
+			triggerUpdate={addPageFormHandler}
+		/>
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>
 </section>
