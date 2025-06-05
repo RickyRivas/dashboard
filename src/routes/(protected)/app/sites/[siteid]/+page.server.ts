@@ -2,12 +2,17 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
-import type { Site, SitePage } from "$lib/types";
+import type { Site, SiteContacts, SiteInformation, SitePage, SiteProcessChecklist } from "$lib/types";
 
 const redirectPath = '/app/sites'
 
 export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
     const { siteid } = params
+
+    let sitePages: SitePage[] | undefined;
+    let siteContacts: SiteContacts | undefined
+    let siteInformation: SiteInformation | undefined
+    let siteChecklist: SiteProcessChecklist | undefined
 
     // 1. grab site from sites table
     const { data: site, error } = await supabase
@@ -25,10 +30,8 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .order('display_order', { ascending: true })
 
-    // TODO
-    if (sitePagesError) {
-        console.error('error fetching pages:', sitePagesError.message)
-    }
+    if (site_pages && !sitePagesError) sitePages = site_pages
+
 
     // 3. site contacts table
     const { data: site_contacts, error: siteContactsError } = await supabase
@@ -37,10 +40,8 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .single()
 
-    // TODO
-    if (siteContactsError) {
-        console.error('error fetching contacts table:', siteContactsError)
-    }
+    if (site_contacts && !siteContactsError) siteContacts = site_contacts
+
 
     // 4. site information table
     const { data: site_information, error: siteInformationError } = await supabase
@@ -49,10 +50,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .single()
 
-    // TODO
-    if (siteInformationError) {
-        console.error('error fetching information table:', siteInformationError)
-    }
+    if (site_information && !siteInformationError) siteInformation = site_information
 
     // 5. site checklist
     const { data: site_checklist, error: siteChecklistError } = await supabase
@@ -61,13 +59,10 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
         .eq('site_id', siteid)
         .single()
 
-    // TODO
-    if (siteChecklistError) {
-        console.error('error fetching checklist table:', siteChecklistError)
-    }
+    if (site_checklist && !siteChecklistError) siteChecklist = site_checklist
 
     return {
-        site, site_pages: site_pages as SitePage[], site_contacts, site_information, site_checklist
+        site, sitePages, siteContacts, siteInformation, siteChecklist
     };
 };
 
@@ -124,15 +119,13 @@ export const actions: Actions = {
             preferred_contact_method: formData.get('preferred_contact_method') as string
         };
 
-        const { data: existingContact } = await supabase
+        const { data: existingContact, error: existingContactError } = await supabase
             .from('site_contacts')
             .select('id')
             .eq('site_id', siteid)
             .single();
 
-        if (!existingContact) {
-            return fail(400, { message: 'Unauthorized' })
-        }
+        if (existingContactError) return fail(400, { message: existingContactError.message })
 
         // Update existing record
         const { data, error } = await supabase
@@ -141,11 +134,10 @@ export const actions: Actions = {
             .eq('id', existingContact?.id)
             .select();
 
-        if (error) return fail(400, { message: 'Failed to save contact information' })
+        if (error) return fail(400, { message: error.message })
 
         return {
             success: true,
-            message: 'Contact information saved successfully',
         };
     },
     updateSiteInfo: async ({ request, params, locals: { supabase, safeGetSession } }) => {
@@ -201,17 +193,13 @@ export const actions: Actions = {
 
 
         if (siteInformationError) {
-            console.error('Error saving site information:', siteInformationError?.message);
             return fail(400, {
-                message: 'Failed to save site information',
-                details: siteInformationError.message
+                message: siteInformationError.message
             });
         }
 
-        // Return success with the updated/created data
         return {
             success: true,
-            message: 'Site information saved successfully',
         };
     },
     updateChecklistItem: async ({ request, params, locals: { supabase } }) => {
@@ -226,11 +214,9 @@ export const actions: Actions = {
             .eq('site_id', siteid);
 
         if (error) {
-            console.error(error.message)
             return fail(500, { message: 'Failed to update status', errors: [{ field: Object.keys(data)[0], message: error.message }] });
         }
 
         return { success: true }
-
     }
 }

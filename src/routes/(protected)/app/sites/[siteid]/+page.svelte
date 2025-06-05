@@ -19,33 +19,33 @@
 
 	const {
 		site,
-		site_pages,
-		site_contacts,
-		site_information,
-		site_checklist
+		sitePages,
+		siteContacts,
+		siteInformation,
+		siteChecklist
 	}: {
 		site: Site;
-		site_pages: SitePage[];
-		site_contacts: SiteContacts;
-		site_information: SiteInformation;
-		site_checklist: SiteProcessChecklist;
+		sitePages: SitePage[] | undefined;
+		siteContacts: SiteContacts | undefined;
+		siteInformation: SiteInformation | undefined;
+		siteChecklist: SiteProcessChecklist | undefined;
 	} = data;
 
 	// forms
 	// 1. Contacts
 	let contactsConfig = $state(contactsFormConfig);
 	const contactsFormHandler = handleTriggerUpdate(contactsConfig);
-	if (site_contacts) updateConfigWithValues(contactsConfig, site_contacts);
+	if (siteContacts) updateConfigWithValues(contactsConfig, siteContacts);
 
 	// 2. Information
 	let infoConfig = $state(siteInfoFormConfig);
 	const infoFormHandler = handleTriggerUpdate(infoConfig);
-	if (site_information) updateConfigWithValues(infoConfig, site_information);
+	if (siteInformation) updateConfigWithValues(infoConfig, siteInformation);
 
 	// 3. checklist
 	let checklistConfig = $state(siteChecklistConfig);
 	const checklistFormHandler = handleTriggerUpdate(checklistConfig);
-	if (site_checklist) updateConfigWithValues(checklistConfig, site_checklist);
+	if (siteChecklist) updateConfigWithValues(checklistConfig, siteChecklist);
 
 	// 4. Add Page
 	let addPageConfig = $state(addPageFormConfig);
@@ -58,7 +58,7 @@
 		<hr />
 
 		<h2>Contact Info:</h2>
-		{#if site_contacts}
+		{#if siteContacts}
 			<Form name="site contacts form" config={contactsConfig} triggerUpdate={contactsFormHandler} />
 		{:else}
 			<p>Site contacts unavailable.</p>
@@ -66,7 +66,7 @@
 		<hr />
 
 		<h2>Site Information:</h2>
-		{#if site_information}
+		{#if siteInformation}
 			<Form name="site info form" config={infoConfig} triggerUpdate={infoFormHandler} />
 		{:else}
 			<p>Site information unavailable.</p>
@@ -74,7 +74,7 @@
 		<hr />
 
 		<h2>Site Checklist</h2>
-		{#if site_checklist}
+		{#if siteChecklist}
 			<AutoFormGroup
 				name="site checklist form group"
 				config={checklistConfig}
@@ -87,9 +87,9 @@
 
 		<h2>Pages</h2>
 		<p>All <a href="/app/sites/{site.id}/pages">pages</a> for {site.site_name}</p>
-		{#if site_pages.length}
+		{#if sitePages?.length}
 			<ul>
-				{#each site_pages as page}
+				{#each sitePages as page}
 					<li>
 						<h2>{page.title}</h2>
 						<div>display order: {page.display_order}</div>
