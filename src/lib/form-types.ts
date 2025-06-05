@@ -66,6 +66,7 @@ export type InputAttributes = {
 
 export type LabelConfig = {
     text: string;
+    displayFormLabel?: string;
 };
 
 export type FieldState = {

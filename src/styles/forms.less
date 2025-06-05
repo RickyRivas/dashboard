@@ -1,11 +1,12 @@
 // global form styling
 form.default-styling,
-.auto-form-group {
+.auto-form-group,
+.display-form {
     .flex;
     .fdir(column);
     width: 100%;
     padding: 1em;
-    gap: 1em;
+    gap: .5em;
     background-color: var(--bg-alternate);
     box-shadow: var(--box-shadow);
     text-align: left;
@@ -16,6 +17,10 @@ form.default-styling,
         padding: 0;
         border: none;
         border-radius: 0px
+    }
+
+    &.margin-bottom-1em {
+        margin-bottom: 1em;
     }
 }
 
@@ -29,6 +34,7 @@ form.inline {
     width: 100%;
     position: relative;
     .fs(16px);
+    .lh(0);
 
     label {
         line-height: 2;
@@ -43,7 +49,7 @@ form.inline {
         .show;
         width: 100%;
         border: 1px solid rgba(256, 256, 256, 0);
-        .rounded(var(--border-radius));
+        .rounded(calc(var(--border-radius)));
         transition: border-color .33s ease, background-color .33s ease, color .33s ease;
         .lh(44px);
         padding: 0 1em;
@@ -103,7 +109,7 @@ form.inline {
 
         &:focus,
         &:active {
-            border-color: var(--secondary);
+            border-color: var(--primary);
         }
 
         &:not([id]):disabled {
@@ -150,6 +156,18 @@ form.inline {
             .ib;
             .va(middle);
             line-height: 44px;
+        }
+    }
+
+
+    // display
+    &--display {
+
+        input:not([type='checkbox']):not([type='radio']),
+        textarea,
+        select {
+            cursor: default;
+            border: none;
         }
     }
 }

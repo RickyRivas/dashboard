@@ -69,12 +69,17 @@
 </script>
 
 <div class="form-control">
-	<input
-		type="hidden"
-		name={configuration.inputAttributes.name}
-		value={configuration.inputAttributes.value}
-		required={configuration.inputAttributes.required}
-	/>
+	<div>
+		<label>
+			{configuration.labelConfig.text}
+			<input
+				type="hidden"
+				name={configuration.inputAttributes.name}
+				value={configuration.inputAttributes.value}
+				required={configuration.inputAttributes.required}
+			/>
+		</label>
+	</div>
 	<div class="small-avatar">
 		<img
 			src={configuration.inputAttributes.value.toString() || avatarPlaceholderPath}

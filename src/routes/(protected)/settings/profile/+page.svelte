@@ -18,6 +18,8 @@
 	import { updateProfileFormConfig } from '$lib/form-configs/settings/profile';
 	import { deleteAccountFormConfig } from '$lib/form-configs/settings/account-deletion';
 	import { appAvailableProviders } from '$lib/auth-controller.svelte';
+	import DisplayForm from '$lib/components/display-form/DisplayForm.svelte';
+	import type { FieldDefinition } from '$lib/form-types';
 
 	let editingProfile = $state(false);
 	const toggleEditMode = () => (editingProfile = !editingProfile);
@@ -37,7 +39,7 @@
 		avatar_url: page.data.profile.avatar_url || '',
 		full_name: page.data.profile.full_name || ''
 	});
-	function updateProfileOnSuccess(result, form) {
+	function updateProfileOnSuccess(result) {
 		invalidate('supabase:auth');
 
 		if (result.data?.updatedValues) {
@@ -52,7 +54,7 @@
 	const passwordResetFormHandler = handleTriggerUpdate(passwordResetConfig);
 	updateConfigWithValues(passwordResetConfig, { userid: user?.id || '' });
 	let sentRequest = $state(false);
-	function passwordResetOnSuccess(result, form) {
+	function passwordResetOnSuccess(result) {
 		sentRequest = true;
 		editingProfile = false;
 	}
@@ -60,6 +62,31 @@
 	// 3. account deletion
 	let deleteConfig = $state(deleteAccountFormConfig);
 	const deleteFormHandler = handleTriggerUpdate(deleteConfig);
+
+	// 4. display form. add a few fields that wont be updated by user
+	const extraFields: FieldDefinition[] = [];
+	const passwordField: FieldDefinition = $state({
+		configuration: {
+			inputAttributes: {
+				name: 'password',
+				type: 'text',
+				value: hasEmailAuthentication ? '***' : 'No password set.',
+				disabled: false
+			},
+			labelConfig: {
+				text: 'Password'
+			}
+		},
+		fieldState: { hasError: false, showSuccess: false, statusMessage: '' }
+	});
+	extraFields.push(passwordField);
+
+	// reactive reset pw success ui
+	$effect(() => {
+		if (sentRequest)
+			passwordField.configuration.inputAttributes.value =
+				'A password request has been sent to your email.';
+	});
 </script>
 
 <section>
@@ -71,7 +98,7 @@
 				{#if editingProfile}
 					<Form
 						name="update profile form"
-						classes={['default-styling', 'child-form']}
+						classes={['default-styling', 'child-form', 'margin-bottom-1em']}
 						config={updateProfileConfig}
 						triggerUpdate={updateProfileFormHandler}
 						onSuccess={updateProfileOnSuccess}
@@ -84,20 +111,15 @@
 						onSuccess={passwordResetOnSuccess}
 					/>
 				{:else}
-					<p>Email: {user?.user_metadata.email}</p>
-					<p>avatar_url: {page.data.profile.avatar_url}</p>
-					<p>full_name: {page.data.profile.full_name}</p>
-					{#if hasEmailAuthentication}
-						<p>Password: ***</p>
-					{/if}
-					<p></p>
-					<p>last login: {moment(data.user?.last_sign_in_at).format('MMMM D, YYYY [at] h:mm A')}</p>
-					{#if sentRequest}
-						<p>A password request has been sent to your email.</p>
-					{/if}
+					<DisplayForm
+						classes={['display-form', 'child-form']}
+						name="display user data"
+						{extraFields}
+						config={updateProfileConfig}
+					/>
 				{/if}
 
-				<button class="btn" onclick={toggleEditMode}>
+				<button class="btn" style:margin-top="1em" onclick={toggleEditMode}>
 					{editingProfile ? 'Cancel edit mode' : 'Edit Profile'}
 				</button>
 			</Card>

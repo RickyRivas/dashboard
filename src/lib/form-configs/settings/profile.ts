@@ -21,11 +21,11 @@ export const updateProfileFormConfig: FormConfig = {
                     type: 'avatar-widget',
                     required: false,
                     disabled: false,
-                    placeholder: 'Avatar Url',
+                    placeholder: 'Avatar',
                     value: '',
                 },
                 labelConfig: {
-                    text: 'Avatar Url'
+                    text: 'Avatar'
                 }
             },
             fieldState: {
@@ -63,11 +63,10 @@ export const updateProfileFormConfig: FormConfig = {
                     disabled: false,
                     placeholder: 'Email',
                     value: '',
-                    // Note: oAuthOnly would need to be added to InputAttributes type
-                    // oAuthOnly: false // You'll need to set this dynamically: !hasEmailAuthentication
                 },
                 labelConfig: {
-                    text: "Email - You will need to verify your new email address after you change it."
+                    text: "Email - You will need to verify your new email address after you change it.",
+                    displayFormLabel: "Email"
                 }
             },
             fieldState: {
