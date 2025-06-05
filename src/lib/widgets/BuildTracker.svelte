@@ -1,4 +1,5 @@
-<!-- <script lang="ts">
+<script lang="ts">
+	// TODO:
 	import { page } from '$app/state';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { buildTrackerState } from '$lib/tracker-state.svelte';
@@ -139,7 +140,7 @@
 				</a>
 				<button class="btn" onclick={resetTrackingInfo}>
 					{#if loading}
-						<LoadingSpinner bind:loading bind:success bind:error dim={44} />
+						<LoadingSpinner {loading} {success} {error} dim={44} />
 					{:else}
 						<span>Done?</span>
 					{/if}
@@ -161,7 +162,7 @@
 				</div>
 				<button class="btn">
 					{#if loading}
-						<LoadingSpinner bind:loading bind:success bind:error dim={44} />
+						<LoadingSpinner {loading} {success} {error} dim={44} />
 					{:else}
 						<span>Track</span>
 					{/if}
@@ -209,4 +210,4 @@
 			}
 		}
 	}
-</style> -->
+</style>
