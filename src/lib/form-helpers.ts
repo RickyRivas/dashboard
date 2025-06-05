@@ -83,6 +83,7 @@ export function formHandler(
     }
 }
 
+// editing from index to name
 export function updateValue(formConfig: FormConfig, index: number, newValue: string) {
     const fieldToUpdate = formConfig.fieldDefinitions[index];
     if (fieldToUpdate) fieldToUpdate.configuration.inputAttributes.value = newValue;

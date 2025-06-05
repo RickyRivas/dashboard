@@ -18,11 +18,13 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 }
 
 export const actions: Actions = {
-    test: async () => {
-        console.log('here buddy')
+    autoFormExample: async ({ request }) => {
+        // auto forms send only one object with one property 
+        const formData = await request.formData();
+        const data = Object.fromEntries([...formData]);
 
-        return fail(500, { errors: [{ field: 'name', message: 'xxx' }] })
-        // return { success: false, errors: [{ field: 'name', message: 'xxx' }] }
+        // return fail(500, { errors: [{ field: Object.keys(data)[0], message: 'yeehaw!' }] })
+        return { success: true }
     },
     updateStatus: async ({ request, locals: { safeGetSession, supabase } }) => {
         const { session } = await safeGetSession();

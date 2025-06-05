@@ -23,7 +23,7 @@
 	}: {
 		config: FormConfig;
 		name: string;
-		clearOnSuccess: boolean;
+		clearOnSuccess?: boolean;
 		triggerUpdate: TriggerUpdate;
 		onSuccess?: (result: any) => void | Promise<void>;
 		classes?: string[];
