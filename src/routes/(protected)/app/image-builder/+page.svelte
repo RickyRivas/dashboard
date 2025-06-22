@@ -114,10 +114,7 @@
 <section>
 	<div class="container">
 		<h1>Image Builder</h1>
-		<p>
-			When you select an image, a modal initiates with the common img markup with attributes filled
-			out. Only works locally.
-		</p>
+		<p>Only works locally. Dynamically generate image markup and batch optimize images.</p>
 
 		{#if imagesDirectory && currentDirectory}
 			<div class="imgs-builder-btns">
@@ -150,7 +147,7 @@
 							dim={44}
 						/>
 					{:else}
-						Run Optimization
+						Run Batch Optimization
 					{/if}
 				</button>
 			</div>

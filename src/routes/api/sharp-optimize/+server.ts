@@ -5,9 +5,7 @@ import path from 'node:path';
 
 export async function POST({ request }) {
     const { folder } = await request.json()
-    if (!folder || !folder.children.length) {
-        return new Response(JSON.stringify({ error: 'Invalid Credentials' }), { status: 400 });
-    }
+    if (!folder || !folder.children.length || !folder.relativePath) return json({ status: 200 })
 
     // optimize all child files inside passed folder. exclude SVGS
     let folderName = "optimized";
@@ -26,8 +24,8 @@ export async function POST({ request }) {
 
     await Promise.all(
         folder.children.map(async (child) => {
-            if (child.type === "file" && child.systemPath && child.ext !== ".svg") {
-                const outputPath = path.join(newFolderPath, `${child.name}`);
+            if (child.type === "file" && child.systemPath && ['.jpg', '.jpeg', '.png', '.webp', '.tiff', '.bmp', '.gif'].includes(child.ext.toLowerCase())) {
+                const outputPath = path.join(newFolderPath, `${child.name}${child.ext}`);
 
                 let sharpInstance = sharp(child.systemPath);
 
