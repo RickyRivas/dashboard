@@ -25,6 +25,7 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
             const entryPath = path.join(dirPath, entry.name);
             const relativePath = entryPath.replace(basePath, '');
             const urlPath = entryPath.replace(basePath, localHostPath);
+            // const systemPath =
 
             // Get common stats for both files and directories
             const stats = await fs.stat(entryPath);
@@ -32,6 +33,10 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
             if (entry.isDirectory()) {
                 // It's a directory, recursively process it
                 const children = await getFilesAndFolders(entryPath, basePath, localHostPath);
+
+                // console.log(path.join(entryPath, entry.name))
+
+
                 return {
                     name: entry.name,
                     type: 'directory',
@@ -40,7 +45,7 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
                     size: formatBytes(stats.size),
                     lastModified: stats.mtime,
                     children,
-                    parentFolder: entryPath
+                    parentFolder: entryPath,
                 };
             } else {
                 // It's a file, get additional file info
@@ -75,7 +80,8 @@ async function getFilesAndFolders(dirPath, basePath, localHostPath) {
                     fileWidth: dimensions.width,
                     fileHeight: dimensions.height,
                     fileSize: formatBytes(stats.size),
-                    lastModified: stats.mtime
+                    lastModified: stats.mtime,
+                    systemPath: entryPath
                 };
             }
         });
@@ -148,6 +154,7 @@ export async function POST({ request }) {
         return json({
             imagesDirectory: {
                 type: 'directory',
+                topLevel: true,
                 children: fileTree
             }
         })

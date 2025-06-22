@@ -69,11 +69,45 @@
 
 		if (data) {
 			imagesDirectory = data.imagesDirectory;
-			currentDirectory = data.imagesDirectory;
+
+			// return to same folder
+			currentDirectory = findParentObject(currentDirectory.children[0]);
 		}
 
 		refreshing = false;
 		refreshed = true;
+	}
+
+	let optimizing = $state(false);
+	let optimizeSuccess = $state(false);
+	let optimizeError = $state(false);
+
+	async function optimizeFolder() {
+		if (!currentDirectory) return;
+		optimizing = true;
+
+		const response = await fetch('/api/sharp-optimize', {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ folder: currentDirectory })
+		});
+
+		const data = await response.json();
+		optimizing = false;
+
+		if (data.status === 200) {
+			optimizeSuccess = true;
+			refresh();
+		} else {
+			optimizeError = true;
+		}
+
+		setTimeout(() => {
+			optimizeError = false;
+			optimizeSuccess = false;
+		}, 1000);
 	}
 </script>
 
@@ -98,13 +132,25 @@
 				<button class="btn" onclick={refresh}>
 					{#if refreshing}
 						<LoadingSpinner
-							bind:loading={refreshing}
-							bind:error={refreshError}
-							bind:success={refreshed}
+							loading={refreshing}
+							error={refreshError}
+							success={refreshed}
 							dim={44}
 						/>
 					{:else}
 						Refresh
+					{/if}
+				</button>
+				<button class="btn" onclick={optimizeFolder}>
+					{#if optimizing}
+						<LoadingSpinner
+							loading={optimizing}
+							error={optimizeError}
+							success={optimizeSuccess}
+							dim={44}
+						/>
+					{:else}
+						Run Optimization
 					{/if}
 				</button>
 			</div>
