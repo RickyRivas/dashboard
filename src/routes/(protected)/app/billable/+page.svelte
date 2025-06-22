@@ -20,12 +20,21 @@
 			timeEntries.push(newTimeEntry);
 		}
 	}
+
+	let estimatedTotal = $state(0);
+	if (timeEntries.length) {
+		estimatedTotal = timeEntries.reduce(
+			(total: number, timeEntry: any) =>
+				total + (timeEntry.status === 'Pending' ? timeEntry.billable_amount : 0),
+			0
+		);
+	}
 </script>
 
 <section>
 	<div class="container">
 		<CardGroup>
-			<Card heading="Timesheet">
+			<Card heading="Timesheet - Estimated Payout: ${estimatedTotal}">
 				<div class="timesheet">
 					<table>
 						<thead>

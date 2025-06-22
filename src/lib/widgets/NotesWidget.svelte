@@ -1,80 +1,99 @@
-<script>
-	import { onMount } from 'svelte';
+<script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
 	import { getNotesFromSB, saveNotesToSB } from '$lib/supabase-db';
 	import moment from 'moment';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 
 	let quill;
-	let editorContainer;
-
-	let lastUpdated = '';
-	let typing = false;
-
-	const toolbarOptions = [
-		['bold', 'italic', 'underline', 'strike'],
-		['blockquote', 'code-block'],
-		[{ header: 1 }, { header: 2 }],
-		[{ list: 'ordered' }, { list: 'bullet' }],
-		[{ script: 'sub' }, { script: 'super' }],
-		['clean']
-	];
+	let editorContainer: HTMLDivElement;
+	let html = $state('');
+	let text = $state('');
+	let lastUpdated = $state('');
 
 	onMount(async () => {
-		await import('quill/dist/quill.snow.css');
 		const Quill = (await import('quill')).default;
 
-		quill = new Quill(editorContainer, {
-			modules: {
-				toolbar: toolbarOptions
-			},
-			theme: 'snow'
-		});
+		if (editorContainer) {
+			quill = new Quill(editorContainer, {
+				modules: {
+					toolbar: [
+						[{ header: [1, 2, 3, false] }],
+						['bold', 'italic', 'underline'],
+						[{ list: 'ordered' }, { list: 'bullet' }],
+						['link', 'image', 'video'],
+						['code-block', 'clean']
+					]
+				},
+				theme: 'snow'
+			});
 
-		// get content & display
-		const { notes, updated } = await getNotesFromSB();
-		lastUpdated = updated;
-		quill.root.innerHTML = notes;
-
-		// listen for changes
-		// saves if we click outside container after typing
-		quill.on('selection-change', async (range, oldRange, source) => {
-			if (range) {
-				typing = true;
-			} else if (typing) {
-				const html = quill.root.innerHTML;
-				await saveNotesToSB(html);
-				typing = false;
+			// if (notes) quill.setContents([{ insert: notes }]);
+			const { notes, updated } = await getNotesFromSB();
+			if (notes && quill) {
+				quill.root.innerHTML = notes;
 			}
-		});
+
+			if (updated) lastUpdated = updated;
+
+			if (quill) {
+				quill.on('text-change', (range, oldRange, source) => {
+					if (source == 'api' || 'user') {
+						html = quill.root.innerHTML;
+						text = quill.getContents().ops[0].insert;
+					}
+				});
+			}
+		}
 	});
+
+	onDestroy(() => {
+		if (quill) quill.off();
+	});
+
+	let loading = $state(false);
+	let success = $state(false);
+	let error = $state(false);
+
+	async function saveNotes() {
+		if (html && editorContainer) {
+			success = false;
+			error = false;
+			loading = true;
+
+			// save markup to DB
+			const { error: saveNotesError } = await saveNotesToSB(html);
+
+			if (!saveNotesError) success = true;
+			else error = true;
+
+			setTimeout(() => {
+				loading = false;
+			}, 1000);
+		}
+	}
 </script>
+
+<svelte:head>
+	<link
+		rel="stylesheet"
+		href="https://unpkg.com/quill@2.0.3/dist/quill.snow.css"
+		crossorigin="anonymous"
+	/>
+</svelte:head>
 
 <h2>App Notes</h2>
 {#if lastUpdated}
-	<p>
+	<span style="font-size: 14px">
 		Last Saved: {moment(lastUpdated).format('MMMM D, YYYY [at] h:mm A')}.
-		{#if typing}
-			<span class="green-text"> Waiting for you to click outside...</span>
-		{/if}
-	</p>
+	</span>
 {/if}
-<div class="editor-wrapper" class:typing>
-	<div bind:this={editorContainer}></div>
-</div>
 
-<style lang="less">
-	.editor-wrapper {
-		height: 400px;
-		margin-bottom: 80px; /* Space for toolbar */
-		position: relative;
-		display: block;
-	}
+<div class="notes-widget" bind:this={editorContainer}></div>
 
-	p {
-		margin: 0;
-		font-size: 16px;
-	}
-
-	.green-text {
-		color: green;
-	}
-</style>
+<button class="btn" onclick={saveNotes} disabled={loading} class:error class:success>
+	{#if loading}
+		<LoadingSpinner dim={44} {loading} {success} {error} />
+	{:else}
+		<span>Save Notes</span>
+	{/if}
+</button>
