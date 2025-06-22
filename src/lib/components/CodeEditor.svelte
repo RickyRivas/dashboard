@@ -20,6 +20,24 @@
 	import { oneDark } from '@codemirror/theme-one-dark';
 	type Lang = 'javascript' | 'html' | 'css';
 
+	// formatting/highlighting
+	import Prism from 'prismjs';
+	import beautify from 'js-beautify';
+	import 'prismjs/components/prism-javascript';
+	import 'prismjs/components/prism-css';
+
+	const formatOpts = {
+		inline: [''],
+		wrap_line_length: 100,
+		indent_size: 2,
+		preserve_newlines: true,
+		indent_inner_html: true,
+		// Ensure HTML comments and images are on new lines
+		unformatted: [''],
+		content_unformatted: ['']
+	};
+
+	//
 	let editorContainer: HTMLDivElement;
 	let view: EditorView | undefined = $state(undefined);
 	let languageCompartment = new Compartment();
@@ -38,13 +56,14 @@
 		readonly?: boolean;
 		classes?: string[];
 	} = $props();
+
 	function createEditorView() {
 		const extensions: Extension[] = $state([
 			basicSetup,
 			languageCompartment.of(getLanguageSupport(lang) || html()),
 			oneDark,
 			EditorState.tabSize.of(2),
-			placeholderExt('Enter code here...'),
+			placeholderExt(readonly ? '' : 'Enter code here...'),
 			EditorView.lineWrapping,
 			closeBrackets(),
 			bracketMatching(),
@@ -102,6 +121,9 @@
 			const currentDoc = view.state.doc.toString();
 
 			if (doc !== currentDoc) {
+				// one time reformat, on lang change.
+				doc = beautify[lang === 'javascript' ? 'js' : lang](doc, formatOpts);
+
 				isUpdatingFromProp = true;
 				view.dispatch({
 					changes: {

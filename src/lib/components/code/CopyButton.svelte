@@ -22,14 +22,14 @@
 		lang,
 		text = 'Copy',
 		minimize = true
-	}: { snippet: string; lang: string; text: string; minimize: boolean } = $props();
+	}: { snippet: string; lang: string; text: string; minimize?: boolean } = $props();
 	let copyBtn: HTMLButtonElement;
 	let success = $state(false);
 
 	const beautifyFunctions = {
 		html: beautify.html,
 		css: beautify.css,
-		javascript: beautify.javascript
+		javascript: beautify.js
 	};
 
 	const prismLanguages = {
@@ -50,7 +50,14 @@
 	}
 </script>
 
-<button class="btn" class:success {onclick} bind:this={copyBtn} aria-label="copy code snippet">
+<button
+	class="btn"
+	class:success
+	disabled={!snippet.length}
+	{onclick}
+	bind:this={copyBtn}
+	aria-label="copy code snippet"
+>
 	{text ? text : 'Copy'}
 </button>
 

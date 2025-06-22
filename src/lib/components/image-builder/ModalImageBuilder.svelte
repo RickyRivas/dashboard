@@ -48,6 +48,14 @@
 	let imageString = $state('<img/>');
 	let imageStringFormattedHighlighted = $state('<img/>');
 
+	const idSuggestions = ['spot'];
+	const classNamesSuggestions = ['decoration'];
+	const altSuggestions = ['Portrait of'];
+
+	idSuggestions.push(img.name);
+	classNamesSuggestions.push(img.name);
+	altSuggestions.push(img.name);
+
 	function generateImgString() {
 		let attributes = [
 			imgConfig.id && `id="${imgConfig.id}"`,
@@ -85,29 +93,55 @@
 			Id
 			<input type="text" name="" id="" bind:value={imgConfig.id} />
 		</label>
+		{#each idSuggestions as name}
+			<button class="btn" disabled={imgConfig.id === name} onclick={() => (imgConfig.id = name)}
+				>{name}</button
+			>
+		{/each}
+		<button class="btn" disabled={imgConfig.id === ''} onclick={() => (imgConfig.id = '')}
+			>Clear</button
+		>
 	</div>
 	<div class="form-control">
 		<label>
 			Class
 			<input type="text" name="" id="" bind:value={imgConfig.className} />
 		</label>
+		{#each classNamesSuggestions as name}
+			<button
+				class="btn"
+				disabled={imgConfig.className === name}
+				onclick={() => (imgConfig.className = name)}>{name}</button
+			>
+		{/each}
+		<button
+			class="btn"
+			disabled={imgConfig.className === ''}
+			onclick={() => (imgConfig.className = '')}>Clear</button
+		>
 	</div>
 	<div class="form-control">
 		<label>
 			Alt
 			<input type="text" name="" bind:value={imgConfig.alt} />
 		</label>
+		{#each altSuggestions as name}
+			<button class="btn" disabled={imgConfig.alt === name} onclick={() => (imgConfig.alt = name)}
+				>{name}</button
+			>
+		{/each}
+		<button class="btn" disabled={imgConfig.alt === ''} onclick={() => (imgConfig.alt = '')}
+			>Clear</button
+		>
 	</div>
 	<div class="form-control">
 		<label>
-			lazyload?
 			<input type="checkbox" bind:checked={imgConfig.lazyload} />
+			lazyload?
 		</label>
-	</div>
-	<div class="form-control">
 		<label>
-			decoding?
 			<input type="checkbox" bind:checked={imgConfig.decoding} />
+			decoding?
 		</label>
 	</div>
 	<div class="btns">

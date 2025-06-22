@@ -8,6 +8,7 @@
 	import CardGroup from '$lib/components/CardGroup.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import CodeEditor from '$lib/components/CodeEditor.svelte';
+	import CopyButton from '$lib/components/code/CopyButton.svelte';
 
 	let { data }: PageProps = $props();
 	const { codeAsset, category } = data;
@@ -59,6 +60,11 @@
 							{tab.lang}
 						</button>
 					{/each}
+					<CopyButton
+						lang={selectedTab.lang}
+						snippet={selectedTab.value}
+						text="Copy {selectedTab.lang.toUpperCase()}"
+					/>
 				</div>
 				<CodeEditor
 					readonly={true}
