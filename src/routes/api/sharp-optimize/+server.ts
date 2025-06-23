@@ -5,17 +5,17 @@ import path from 'node:path';
 
 export async function POST({ request }) {
     const { folder } = await request.json()
-    if (!folder || !folder.children.length || !folder.relativePath) return json({ status: 200 })
+    if (!folder || !folder.children.length || !folder.path) return json({ status: 200 })
 
     // optimize all child files inside passed folder. exclude SVGS
     let folderName = "optimized";
     let counter = 1;
-    let newFolderPath = path.join("/Applications/MAMP/www/", folder.relativePath, folderName);
+    let newFolderPath = path.join(folder.path, folderName);
 
     // Check if folder exists and create a unique name
     while (await fs.access(newFolderPath).then(() => true).catch(() => false)) {
         folderName = `optimized-${counter}`;
-        newFolderPath = path.join("/Applications/MAMP/www/", folder.relativePath, folderName);
+        newFolderPath = path.join(folder.path, folderName);
         counter++;
     }
 
@@ -24,10 +24,10 @@ export async function POST({ request }) {
 
     await Promise.all(
         folder.children.map(async (child) => {
-            if (child.type === "file" && child.systemPath && ['.jpg', '.jpeg', '.png', '.webp', '.tiff', '.bmp', '.gif'].includes(child.ext.toLowerCase())) {
+            if (child.type === "file" && child.path && ['.jpg', '.jpeg', '.png', '.webp', '.tiff', '.bmp', '.gif'].includes(child.ext.toLowerCase())) {
                 const outputPath = path.join(newFolderPath, `${child.name}${child.ext}`);
 
-                let sharpInstance = sharp(child.systemPath);
+                let sharpInstance = sharp(child.path);
 
                 // Apply aggressive optimization based on format
                 if (child.ext === '.jpg' || child.ext === '.jpeg') {

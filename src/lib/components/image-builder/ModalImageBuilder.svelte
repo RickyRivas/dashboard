@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { FileItem } from '$lib/types';
-	import { buildTrackerState } from '$lib/tracker-state.svelte';
 	import CopyButton from '../code/CopyButton.svelte';
 	import Prism from 'prismjs';
 	import beautify from 'js-beautify';
@@ -8,7 +6,7 @@
 	import 'prismjs/components/prism-css';
 	import 'prismjs/components/prism-markup';
 
-	const { img }: { img: FileItem } = $props();
+	const { img } = $props();
 
 	const formatOpts = {
 		inline: [''],
@@ -34,10 +32,10 @@
 	};
 
 	const imgConfig = $state({
-		src: img.relativePath.replace(`/${buildTrackerState.buildTracker.account}/www`, '') || '',
+		src: img.markupSrc,
 		alt: '',
-		width: img.fileWidth,
-		height: img.fileHeight,
+		width: img?.dimensions?.width || 0,
+		height: img?.dimensions?.height || 0,
 		id: '',
 		className: '',
 		lazyload: true,

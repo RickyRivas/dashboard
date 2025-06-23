@@ -14,21 +14,6 @@ export type CodeAsset = {
     buildtime: string | null;
 }
 
-export type FileItem = {
-    name: string;
-    base: string;
-    type: "file" | "directory";
-    ext: string;
-    relativePath: string;
-    dashboardSrc: string;
-    urlPath: string;
-    fileWidth: number | null;
-    fileHeight: number | null;
-    fileSize: string;
-    lastModified: string | Date;
-    // Add this property for directories
-    children?: FileItem[];
-};
 
 export type SiteContacts = {
     // Primary key and foreign key

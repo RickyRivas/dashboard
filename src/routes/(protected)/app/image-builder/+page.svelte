@@ -19,30 +19,21 @@
 		currentDirectory = imgsData.imagesDirectory;
 	}
 
-	function findParentObject(targetObject) {
-		// relative paths values are unique
-		const targetRelativePath = targetObject.relativePath;
-
+	function findFolder(targetPath) {
 		// Recursive function to search through the tree
-		function search(currentObj, parent = null) {
-			// If current object matches the target, return the parent
-			if (currentObj.relativePath === targetRelativePath) return parent;
+		function search(currentObj) {
+			if (currentObj.path === targetPath) return currentObj;
 
-			// If the current object has children, search through them
-			if (currentObj.children && currentObj.children.length > 0) {
+			if (currentObj?.children?.length) {
 				for (const child of currentObj.children) {
-					// Check if this child is the target
-					if (child.relativePath === targetRelativePath) {
-						return currentObj; // Current object is the parent
+					if (child?.path === targetPath) {
+						return child;
 					}
 
-					// Search through this child's children
-					const result = search(child, currentObj);
+					const result = search(child);
 					if (result) return result;
 				}
 			}
-
-			return null;
 		}
 
 		return search(imagesDirectory);
@@ -71,7 +62,7 @@
 			imagesDirectory = data.imagesDirectory;
 
 			// return to same folder
-			currentDirectory = findParentObject(currentDirectory.children[0]);
+			currentDirectory = findFolder(currentDirectory.path);
 		}
 
 		refreshing = false;
@@ -109,6 +100,42 @@
 			optimizeSuccess = false;
 		}, 1000);
 	}
+
+	let deleting = $state(false);
+	let deleteSuccess = $state(false);
+	let deleteError = $state(false);
+
+	async function deleteFileOrFolder(systemPath: string) {
+		if (!currentDirectory) return;
+
+		const confirm = prompt(`are you sure?`);
+		if (!confirm) return;
+
+		deleting = true;
+
+		const response = await fetch('/api/delete-item', {
+			method: 'delete',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ systemPath })
+		});
+
+		const data = await response.json();
+		deleting = false;
+
+		if (data.success) {
+			deleteSuccess = true;
+			refresh();
+		} else {
+			deleteError = true;
+		}
+
+		setTimeout(() => {
+			deleteError = false;
+			deleteSuccess = false;
+		}, 1000);
+	}
 </script>
 
 <section>
@@ -116,15 +143,18 @@
 		<h1>Image Builder</h1>
 		<p>Only works locally. Dynamically generate image markup and batch optimize images.</p>
 
+		<h2>Viewing {currentDirectory?.name || 'All folders'}</h2>
 		{#if imagesDirectory && currentDirectory}
 			<div class="imgs-builder-btns">
 				{#if imagesDirectory.name !== currentDirectory.name}
 					<button
 						class="btn"
 						onclick={() => {
-							currentDirectory = findParentObject(currentDirectory);
-						}}>Go Back</button
+							currentDirectory = findFolder(currentDirectory.parentPath);
+						}}
 					>
+						Go Back
+					</button>
 				{/if}
 				<button class="btn" onclick={refresh}>
 					{#if refreshing}
@@ -157,32 +187,71 @@
 					{#each currentDirectory.children as child}
 						<!-- list files -->
 						{#if child.type === 'file'}
-							<button
-								class="images-grid-item"
-								onclick={() => {
-									selectedImage = child;
-									showModal = true;
-								}}
-							>
-								<img src={child.dashboardSrc} alt="" width="" />
+							<div class="images-grid-item">
+								{#if child?.dimensions?.type && child.siteManagerLocalHostURL}
+									<img src={child.siteManagerLocalHostURL} alt="" width="" />
+								{/if}
 								<div class="info">
 									<p>{child.base}</p>
-									<p>{child.fileWidth + 'px'} x {child.fileHeight + 'px'}</p>
-									<p>{child.fileSize}</p>
+									{#if child.dimensions && child.dimensions.width && child.dimensions.height}
+										<p>{child.dimensions.width + 'px'} x {child.dimensions.height + 'px'}</p>
+									{/if}
+									{#if child.size}
+										<p>{child.size}</p>
+									{/if}
 								</div>
-							</button>
+								<div class="images-grid-item__mod">
+									{#if child?.dimensions?.type && child?.siteManagerLocalHostURL}
+										<button
+											class="btn"
+											onclick={() => {
+												selectedImage = child;
+												showModal = true;
+											}}
+										>
+											View
+										</button>
+									{/if}
+									<button
+										class="btn"
+										onclick={() => {
+											deleteFileOrFolder(child.path);
+										}}
+									>
+										Delete
+									</button>
+								</div>
+							</div>
 						{/if}
 
 						<!-- list folders -->
 						{#if child.type === 'directory'}
-							<button
-								class="btn folder-btn"
-								disabled={!child.children.length}
-								onclick={() => {
-									currentDirectory = child;
-								}}
+							<div
+								class="images-grid-item images-grid-item--folder"
+								class:images-grid-item--disabled={!child.children.length}
 							>
-								view {child.name} ({child.children.length})
+								<div class="images-grid-item__mod">
+									<button
+										class="btn"
+										disabled={!child.children.length}
+										onclick={() => {
+											currentDirectory = child;
+										}}
+									>
+										View
+									</button>
+									<button
+										class="btn"
+										onclick={() => {
+											deleteFileOrFolder(child.path);
+										}}
+									>
+										Delete
+									</button>
+								</div>
+								<div class="info">
+									<p>{child.name} ({child.children.length})</p>
+								</div>
 								<svg
 									class="folder-icon"
 									xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +265,7 @@
 										d="M5.5 41.25h33c3.034 0 5.5-2.466 5.5-5.5v-22c0-3.034-2.466-5.5-5.5-5.5H24.75a2.731 2.731 0 0 1-2.2-1.1l-1.65-2.2a5.51 5.51 0 0 0-4.4-2.2h-11A5.505 5.505 0 0 0 0 8.25v27.5c0 3.034 2.466 5.5 5.5 5.5Z"
 									/>
 								</svg>
-							</button>
+							</div>
 						{/if}
 					{/each}
 				{/if}
@@ -246,15 +315,6 @@
 		padding-top: 1.75em;
 		border: none;
 
-		svg {
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: -1;
-			color: var(--secondary);
-			width: 100%;
-		}
-
 		&:disabled {
 			svg {
 				color: #ccc;
@@ -277,6 +337,25 @@
 		font: inherit;
 		max-width: 330px;
 
+		&--folder {
+			border: none;
+		}
+
+		&__mod {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: 7;
+			// text-align: center;
+			padding: 10px;
+		}
+
+		svg {
+			color: var(--secondary);
+			width: 100%;
+		}
+
 		img {
 			width: auto;
 			height: auto;
@@ -295,6 +374,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-end;
+			flex-wrap: wrap;
 			background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%);
 			text-align: left;
 			padding: 1em;
