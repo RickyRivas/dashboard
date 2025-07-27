@@ -57,16 +57,20 @@ export const editPageFormConfig: FormConfig = {
         {
             configuration: {
                 inputAttributes: {
-                    name: 'parent_id',
+                    name: 'navigation_item_type',
                     type: 'select',
-                    required: false,
+                    required: true,
                     disabled: false,
-                    placeholder: 'Select parent page (optional)',
-                    value: '',
-                    options: [] // Populated with available parent pages
+                    placeholder: 'Select item type',
+                    value: 'page',
+                    options: [
+                        { label: 'Page', name: 'page', value: 'page' },
+                        { label: 'Folder', name: 'folder', value: 'folder' },
+                        { label: 'External Link', name: 'link', value: 'link' }
+                    ]
                 },
                 labelConfig: {
-                    text: 'Parent Page'
+                    text: 'Navigation Item Type*'
                 }
             },
             fieldState: {
@@ -78,23 +82,16 @@ export const editPageFormConfig: FormConfig = {
         {
             configuration: {
                 inputAttributes: {
-                    name: 'page_type',
+                    name: 'parent_id',
                     type: 'select',
                     required: false,
-                    disabled: false,
-                    placeholder: 'Select page type',
-                    value: 'standard',
-                    options: [
-                        { label: 'Standard Page', name: 'standard', value: 'standard' },
-                        { label: 'Blog Post', name: 'blog', value: 'blog' },
-                        { label: 'Landing Page', name: 'landing', value: 'landing' },
-                        { label: 'Contact Page', name: 'contact', value: 'contact' },
-                        { label: 'About Page', name: 'about', value: 'about' },
-                        { label: 'Services Page', name: 'services', value: 'services' }
-                    ]
+                    disabled: true,
+                    placeholder: 'Select parent (optional)',
+                    value: '',
+                    options: [] // Populated dynamically with available parent pages/folders
                 },
                 labelConfig: {
-                    text: 'Page Type'
+                    text: 'Parent Item (Populated dynamically)'
                 }
             },
             fieldState: {
@@ -111,7 +108,7 @@ export const editPageFormConfig: FormConfig = {
                     required: false,
                     disabled: false,
                     placeholder: 'Enter page content (JSON format for now)',
-                    value: '',
+                    value: ''
                 },
                 labelConfig: {
                     text: 'Page Content'
@@ -151,7 +148,7 @@ export const editPageFormConfig: FormConfig = {
                     required: false,
                     disabled: false,
                     placeholder: 'Brief description for search engines (150-160 characters)',
-                    value: '',
+                    value: ''
                 },
                 labelConfig: {
                     text: 'Meta Description'
@@ -170,39 +167,11 @@ export const editPageFormConfig: FormConfig = {
                     type: 'cloudinary-upload',
                     required: false,
                     disabled: false,
-                    placeholder: 'https://example.com/image.jpg',
-                    value: '',
+                    placeholder: 'Upload featured image',
+                    value: ''
                 },
                 labelConfig: {
-                    text: 'Featured Image URL'
-                }
-            },
-            fieldState: {
-                hasError: false,
-                showSuccess: false,
-                statusMessage: ''
-            }
-        },
-        {
-            configuration: {
-                inputAttributes: {
-                    name: 'template',
-                    type: 'select',
-                    required: false,
-                    disabled: false,
-                    placeholder: 'Select page template',
-                    value: 'default',
-                    options: [
-                        { label: 'Default', name: 'default', value: 'default' },
-                        { label: 'Full Width', name: 'full-width', value: 'full-width' },
-                        { label: 'Sidebar Left', name: 'sidebar-left', value: 'sidebar-left' },
-                        { label: 'Sidebar Right', name: 'sidebar-right', value: 'sidebar-right' },
-                        { label: 'Landing Page', name: 'landing', value: 'landing' },
-                        { label: 'Minimal', name: 'minimal', value: 'minimal' }
-                    ]
-                },
-                labelConfig: {
-                    text: 'Page Template'
+                    text: 'Featured Image'
                 }
             },
             fieldState: {
@@ -218,8 +187,8 @@ export const editPageFormConfig: FormConfig = {
                     type: 'number',
                     required: false,
                     disabled: false,
-                    placeholder: '',
-                    value: '',
+                    placeholder: 'Order in navigation',
+                    value: ''
                 },
                 labelConfig: {
                     text: 'Display Order'
@@ -243,26 +212,6 @@ export const editPageFormConfig: FormConfig = {
                 },
                 labelConfig: {
                     text: 'Published'
-                }
-            },
-            fieldState: {
-                hasError: false,
-                showSuccess: false,
-                statusMessage: ''
-            }
-        },
-        {
-            configuration: {
-                inputAttributes: {
-                    name: 'is_homepage',
-                    type: 'checkbox',
-                    required: false,
-                    disabled: false,
-                    placeholder: '',
-                    value: false
-                },
-                labelConfig: {
-                    text: 'Set as Homepage'
                 }
             },
             fieldState: {

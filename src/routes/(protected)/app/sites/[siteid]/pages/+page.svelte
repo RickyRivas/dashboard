@@ -1,22 +1,21 @@
 <script lang="ts">
 	import Form from '$lib/components/form/Form.svelte';
-	import { addPageFormConfig } from '$lib/form-configs/app/add-page';
+	import { createNavItemFormConfig } from '$lib/form-configs/app/create-nav-item';
 	import { handleTriggerUpdate } from '$lib/form-helpers';
-	import type { Site, SitePage } from '$lib/types';
+	import type { Site, SiteNavigationItem } from '$lib/types';
+	import PageTreeEditor from '$lib/widgets/PageTreeEditor.svelte';
 	import type { PageData } from './$types';
+
 	let { data }: { data: PageData } = $props();
 
-	const {
-		site,
-		sitePages
-	}: {
-		site: Site;
-		sitePages: SitePage[] | undefined;
-	} = data;
+	const { site, site_navigation } = data;
 
 	// 4. Add Page
-	let addPageConfig = $state(addPageFormConfig);
-	const addPageFormHandler = handleTriggerUpdate(addPageConfig);
+	let createNavItemConfig = $state(createNavItemFormConfig);
+	const createNavItemFormHandler = handleTriggerUpdate(createNavItemConfig);
+
+	// navigation
+	let pages = $state(site_navigation);
 </script>
 
 <section>
@@ -28,30 +27,25 @@
 
 <section>
 	<div class="container">
-		<h2>Pages</h2>
-		<p>All <a href="/app/sites/{site.id}/pages">pages</a> for {site.site_name}</p>
-		{#if sitePages?.length}
-			<ul>
-				{#each sitePages as page}
-					<li>
-						<h2>{page.title}</h2>
-						<div>display order: {page.display_order}</div>
-						<input type="text" value={page.display_order} />
-						<div>parent id: {page.parent_id || 'Top Level. No Parent ID'}</div>
-						<a href="/app/sites/{site.id}/pages/{page.id}">Edit page</a>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p>No pages.</p>
-		{/if}
-
-		<h3>Add a page</h3>
+		<h2>Sitemap</h2>
+		<PageTreeEditor {pages} {site} onPagesTreeChange={(hasChanges, updatesCount) => {}} />
+		<h3>Add a Page, Folder, or Link to the Navigation</h3>
 		<Form
-			name="add page form"
+			name="add nav item"
 			clearOnSuccess={true}
-			config={addPageConfig}
-			triggerUpdate={addPageFormHandler}
+			config={createNavItemConfig}
+			triggerUpdate={createNavItemFormHandler}
+			onSuccess={(result) => {
+				if (result.type === 'success') {
+					console.log(result);
+					// 1. show success state
+					// 2. update the nav
+					const addedPage = result?.data?.addedPage;
+					if (addedPage) {
+						pages = [...pages, addedPage];
+					}
+				}
+			}}
 		/>
 		<a href="/app/sites" class="btn">View all sites</a>
 	</div>

@@ -25,6 +25,41 @@
     // borders
     --border-radius: .75em;
     --border-color: #ecebe7;
+
+    // Editor Light theme (default) 
+    --editor-theme-background: #eee;
+    --editor-theme-editor-background: #fff;
+    --editor-theme-text-color: #000;
+    --editor-theme-text-muted: #777;
+    --editor-theme-border-color: #eee;
+    --editor-theme-hover-background: #eee;
+    --editor-theme-active-background: rgba(223, 232, 250, 0.3);
+    --editor-theme-active-control: rgb(60, 132, 244);
+    --editor-theme-dropdown-background: #fff;
+    --editor-theme-dropdown-shadow: rgba(0, 0, 0, 0.3);
+    --editor-theme-dropdown-hover: #eee;
+    --editor-theme-toolbar-background: #fff;
+    --editor-theme-link-color: rgb(33, 111, 219);
+    --editor-theme-link-editor-background: #eee;
+    --editor-theme-modal-overlay: rgba(40, 40, 40, 0.6);
+    --editor-theme-modal-background: #fff;
+    --editor-theme-modal-shadow: #444;
+    --editor-theme-button-background: #eee;
+    --editor-theme-button-hover-background: #ddd;
+    --editor-theme-icon-filter: none;
+    --editor-theme-sticky-shadow: rgba(0, 0, 0, 0.2);
+    --editor-theme-sticky-shadow-darker: rgba(0, 0, 0, 0.4);
+    --editor-theme-code-background: rgb(240, 242, 245);
+    --editor-theme-quote-color: rgb(101, 103, 107);
+    --editor-theme-quote-border-color: rgb(206, 208, 212);
+    --editor-theme-table-border-color: #bbb;
+    --editor-theme-table-header-background: #f2f3f5;
+    --editor-theme-table-cell-background: #ffffff;
+    --editor-theme-table-highlight-color: #c9dbf0;
+    --editor-theme-table-selected-outline: rgb(60, 132, 244);
+    --editor-theme-checkbox-border: #999;
+    --editor-theme-checkbox-background: #3d87f5;
+    --editor-theme-hr-color: #ccc;
 }
 
 :root.dark {
@@ -44,8 +79,42 @@
     // shadows
     --box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
     --border-color: #353533;
-}
 
+    // Content Editor Dark Theme
+    --editor-theme-background: #1e1e1e;
+    --editor-theme-editor-background: #2d2d2d;
+    --editor-theme-text-color: #e0e0e0;
+    --editor-theme-text-muted: #aaa;
+    --editor-theme-border-color: #444;
+    --editor-theme-hover-background: #3d3d3d;
+    --editor-theme-active-background: rgba(60, 132, 244, 0.2);
+    --editor-theme-active-control: rgb(82, 145, 255);
+    --editor-theme-dropdown-background: #2d2d2d;
+    --editor-theme-dropdown-shadow: rgba(0, 0, 0, 0.5);
+    --editor-theme-dropdown-hover: #3d3d3d;
+    --editor-theme-toolbar-background: #2d2d2d;
+    --editor-theme-link-color: rgb(100, 160, 255);
+    --editor-theme-link-editor-background: #3d3d3d;
+    --editor-theme-modal-overlay: rgba(0, 0, 0, 0.7);
+    --editor-theme-modal-background: #2d2d2d;
+    --editor-theme-modal-shadow: #111;
+    --editor-theme-button-background: #3d3d3d;
+    --editor-theme-button-hover-background: #4d4d4d;
+    --editor-theme-icon-filter: invert(0.8);
+    --editor-theme-sticky-shadow: rgba(0, 0, 0, 0.4);
+    --editor-theme-sticky-shadow-darker: rgba(0, 0, 0, 0.6);
+    --editor-theme-code-background: #2a2a2a;
+    --editor-theme-quote-color: #aaa;
+    --editor-theme-quote-border-color: #555;
+    --editor-theme-table-border-color: #555;
+    --editor-theme-table-header-background: #333;
+    --editor-theme-table-cell-background: #2d2d2d;
+    --editor-theme-table-highlight-color: #3d5a7a;
+    --editor-theme-table-selected-outline: rgb(82, 145, 255);
+    --editor-theme-checkbox-border: #666;
+    --editor-theme-checkbox-background: #4d97f5;
+    --editor-theme-hr-color: #555;
+}
 
 html {
     overflow-y: scroll;
@@ -130,6 +199,11 @@ p {
     line-height: 1.5;
 }
 
+ol,
+ul {
+    padding: 0;
+    margin: 0 0 1.58em 1.6em;
+}
 
 .container {
     display: block;
@@ -885,4 +959,46 @@ svg {
 
 .notes-editor {
     color: #fff;
+}
+
+
+.draggable-page-component {
+    background-color: var(--bg-alternate);
+    box-shadow: var(--box-shadow);
+    text-align: left;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+
+    .draggable-page-list,
+    .draggable-page-sub-list {
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+        padding: 1em;
+        width: 100%;
+        list-style: none;
+        margin: 0;
+
+        &__item,
+        &__sub-item {
+            display: block;
+
+            &-handle,
+            &-sub-handle {
+                display: block;
+                border-left: 5px solid var(--secondary);
+            }
+
+            &-edit-link,
+            &-sub-edit-link {
+                display: inline-block;
+                color: var(--text);
+                padding: 0 5px;
+            }
+
+            // &-sub-edit-link {
+            //     font-size: .8em;
+            // }
+        }
+    }
 }

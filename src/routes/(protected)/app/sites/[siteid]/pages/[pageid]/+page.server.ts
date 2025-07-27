@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 
     // 2. grab page
     const { data: page, error: pageError } = await supabase
-        .from('site_pages')
+        .from('site_navigation')
         .select('*')
         .eq('id', pageid)
         .single()
@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 
 
 export const actions: Actions = {
-    updatePage: async ({ request, params, locals: { supabase, safeGetSession } }) => {
+    updateNavItem: async ({ request, params, locals: { supabase, safeGetSession } }) => {
         const { siteid, pageid } = params;
         const { user } = await safeGetSession();
 
@@ -47,90 +47,164 @@ export const actions: Actions = {
             return fail(400, { message: 'Unauthorized' });
         }
 
-        // Verify page belongs to this site
-        const { data: existingPage, error: pageError } = await supabase
-            .from('site_pages')
-            .select('id, is_homepage')
+        // Verify nav item belongs to this site
+        const { data: existingNavItem, error: navItemError } = await supabase
+            .from('site_navigation')
+            .select('id')
             .eq('id', pageid)
             .eq('site_id', siteid)
             .single();
 
-        if (pageError || !existingPage) {
-            return fail(400, { message: 'Page not found' });
+        if (navItemError || !existingNavItem) {
+            return fail(400, { message: 'Navigation item not found' });
         }
 
         // Get form data 
         const formData = await request.formData();
         const data = Object.fromEntries([...formData]);
 
-        // Process the form data
-        const pageData = {
+        // Process the form data based on new schema
+        const navItemData = {
             title: data.title as string,
-            slug: data.slug as string,
-            content: data.content ? JSON.parse(data.content as string) : null,
+            navigation_item_type: data.navigation_item_type as 'page' | 'folder' | 'link',
+            is_published: data.is_published === 'on',
+            parent_id: data.parent_id as string || null,
+            display_order: data.display_order ? parseInt(data.display_order as string) : 0,
+            description: data.description as string || null,
+
+            // Fields that depend on type
+            slug: data.slug as string || null,
+            external_url: data.external_url as string || null,
+            link_target: data.link_target as string || null,
+
+            // SEO fields
             meta_title: data.meta_title as string || null,
             meta_description: data.meta_description as string || null,
+            meta_keywords: data.meta_keywords as string || null,
+            meta_robots: data.meta_robots as string || null,
+            canonical_url: data.canonical_url as string || null,
+
+            // Open Graph fields
+            og_title: data.og_title as string || null,
+            og_description: data.og_description as string || null,
+            og_image: data.og_image as string || null,
+            og_type: data.og_type as string || null,
+            og_url: data.og_url as string || null,
+
+            // Twitter fields
+            twitter_card: data.twitter_card as string || null,
+            twitter_title: data.twitter_title as string || null,
+            twitter_description: data.twitter_description as string || null,
+            twitter_image: data.twitter_image as string || null,
+            twitter_creator: data.twitter_creator as string || null,
+            twitter_site: data.twitter_site as string || null,
+
+            // Additional SEO
             featured_image: data.featured_image as string || null,
-            page_type: data.page_type as string || 'standard',
-            template: data.template as string || null,
-            parent_id: data.parent_id as string || null,
-            display_order: parseInt(data.display_order as string) || 0,
-            is_published: data.is_published === 'on',
-            is_homepage: data.is_homepage === 'on'
+            schema_markup: data.schema_markup ? JSON.parse(data.schema_markup as string) : null
         };
 
-        // Handle homepage logic - only one homepage per site
-        // if (pageData.is_homepage && !existingPage.is_homepage) {
-        //     // Remove homepage status from other pages
-        //     const { error: homepageError } = await supabase
-        //         .from('site_pages')
-        //         .update({ is_homepage: false })
-        //         .eq('site_id', siteid)
-        //         .eq('is_homepage', true);
-
-        //     if (homepageError) {
-        //         console.error('Error updating existing homepage:', homepageError);
-        //         return fail(400, { message: 'Failed to update homepage status' });
-        //     }
-        // }
-
-        // Validate slug uniqueness within the site
-        const { data: existingSlug, error: slugError } = await supabase
-            .from('site_pages')
-            .select('id')
-            .eq('site_id', siteid)
-            .eq('slug', pageData.slug)
-            .neq('id', pageid)
-            .single();
-
-        if (existingSlug) {
+        // Validation for navigation item types
+        if (!['page', 'folder', 'link'].includes(navItemData.navigation_item_type)) {
             return fail(400, {
-                message: 'Slug already exists',
-                errors: [{ field: 'slug', message: `${pageData.slug} slug already exists` }]
+                message: 'Invalid navigation item type',
+                errors: [{ field: 'navigation_item_type', message: 'Must be page, folder, or link' }]
             });
         }
 
-        // Update the page
-        const { data: updatedPage, error: updateError } = await supabase
-            .from('site_pages')
+        // Type-specific validation
+        if (navItemData.navigation_item_type === 'page' && (!navItemData.slug || navItemData.slug === '')) {
+            return fail(400, {
+                message: 'Page slug is required',
+                errors: [{ field: 'slug', message: 'Pages must have a slug' }]
+            });
+        }
+
+        if (navItemData.navigation_item_type === 'link' && (!navItemData.external_url || navItemData.external_url === '')) {
+            return fail(400, {
+                message: 'External URL is required for links',
+                errors: [{ field: 'external_url', message: 'Links must have an external URL' }]
+            });
+        }
+
+        // Validate parent_id exists if provided
+        if (navItemData.parent_id) {
+            const { data: parentExists, error: parentError } = await supabase
+                .from('site_navigation')
+                .select('id, navigation_item_type')
+                .eq('id', navItemData.parent_id)
+                .eq('site_id', siteid)
+                .single();
+
+            if (!parentExists) {
+                return fail(400, {
+                    message: 'Invalid parent item',
+                    errors: [{ field: 'parent_id', message: 'Parent item does not exist' }]
+                });
+            }
+
+            // Business rule validation
+            if (navItemData.navigation_item_type === 'page' && parentExists.navigation_item_type !== 'folder') {
+                return fail(400, {
+                    message: 'Pages can only be placed in folders',
+                    errors: [{ field: 'parent_id', message: 'Pages can only be children of folders' }]
+                });
+            }
+
+            if (navItemData.navigation_item_type === 'folder' && parentExists.navigation_item_type === 'page') {
+                return fail(400, {
+                    message: 'Folders cannot be placed inside pages',
+                    errors: [{ field: 'parent_id', message: 'Folders cannot be children of pages' }]
+                });
+            }
+
+            if (navItemData.navigation_item_type === 'link' && parentExists.navigation_item_type === 'page') {
+                return fail(400, {
+                    message: 'Links cannot be placed inside pages',
+                    errors: [{ field: 'parent_id', message: 'Links cannot be children of pages' }]
+                });
+            }
+        }
+
+        // Validate slug uniqueness within the site (only for pages and folders with slugs)
+        if (navItemData.slug) {
+            const { data: existingSlug, error: slugError } = await supabase
+                .from('site_navigation')
+                .select('id')
+                .eq('site_id', siteid)
+                .eq('slug', navItemData.slug)
+                .neq('id', pageid)
+                .single();
+
+            if (existingSlug) {
+                return fail(400, {
+                    message: 'Slug already exists',
+                    errors: [{ field: 'slug', message: `${navItemData.slug} slug already exists` }]
+                });
+            }
+        }
+
+        // Update the navigation item
+        const { data: updatedNavItem, error: updateError } = await supabase
+            .from('site_navigation')
             .update({
-                ...pageData,
+                ...navItemData,
                 updated_at: new Date().toISOString()
             })
             .eq('id', pageid)
             .select();
 
         if (updateError) {
-            console.error('Error updating page:', updateError);
+            console.error('Error updating navigation item:', updateError);
             return fail(400, {
-                message: `Failed to update page: ${updateError.message}`
+                message: `Failed to update navigation item: ${updateError.message}`
             });
         }
 
         return {
             success: true,
-            message: 'Page updated successfully',
-            page: updatedPage
+            message: 'Navigation item updated successfully',
+            navItem: updatedNavItem
         };
     },
 }
