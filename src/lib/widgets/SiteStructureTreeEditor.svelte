@@ -173,19 +173,11 @@
 					moveInfo
 				});
 			},
-
-			onClick: async (event, node) => {
-				// const pageId = node._data.id;
-				// console.log(event, node._data);
-				// if (pageId) {
-				// 	window.location.href = `/app/sites/${site.id}/pages/${pageId}`;
-				// }
-			},
 			renderLabel: (data) => {
 				return `
     <span data-nav-type="${data.navigation_item_type}" class="nav-item-content">
       <span class="drag-handle">⋮⋮</span>
-      <a href="/app/sites/${site.id}/pages/${data.id}" onclick="event.stopPropagation()">
+      <a href="/app/sites/${site.id}/structure/${data.id}" onclick="event.stopPropagation()">
         ${data.title}
       </a>
     </span>

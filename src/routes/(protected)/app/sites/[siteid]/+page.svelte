@@ -51,7 +51,7 @@
 				/>
 				<a href="/app/sites" class="btn">View all accounts</a>
 				<a href="/app/sites/{site.id}/configuration" class="btn">Site Configuration</a>
-				<a href="/app/sites/{site.id}/pages" class="btn">Site Pages</a>
+				<a href="/app/sites/{site.id}/structure" class="btn">Site Structure</a>
 			</Card>
 			<Card heading="Danger">
 				<Form

@@ -1,10 +1,12 @@
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
+import type { Actions } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 
 const redirectPath = '/app/sites'
 
 export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
-    const { siteid, pageid } = params
+    const { siteid, nav_item_id } = params
 
     // 1. grab site
     const { data: site, error } = await supabase
@@ -16,23 +18,22 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
     if (error) throw redirect(303, redirectPath)
 
     // 2. grab page
-    const { data: page, error: pageError } = await supabase
+    const { data: navItem, error: navItemFetchError } = await supabase
         .from('site_navigation')
         .select('*')
-        .eq('id', pageid)
+        .eq('id', nav_item_id)
         .single()
 
-    if (pageError) throw redirect(303, redirectPath)
+    if (navItemFetchError) throw redirect(303, redirectPath)
 
     return {
-        site, page
+        site, navItem
     };
 };
 
-
 export const actions: Actions = {
     updateNavItem: async ({ request, params, locals: { supabase, safeGetSession } }) => {
-        const { siteid, pageid } = params;
+        const { siteid, nav_item_id } = params;
         const { user } = await safeGetSession();
 
         // Verify site ownership first
@@ -51,7 +52,7 @@ export const actions: Actions = {
         const { data: existingNavItem, error: navItemError } = await supabase
             .from('site_navigation')
             .select('id')
-            .eq('id', pageid)
+            .eq('id', nav_item_id)
             .eq('site_id', siteid)
             .single();
 
@@ -173,7 +174,7 @@ export const actions: Actions = {
                 .select('id')
                 .eq('site_id', siteid)
                 .eq('slug', navItemData.slug)
-                .neq('id', pageid)
+                .neq('id', nav_item_id)
                 .single();
 
             if (existingSlug) {
@@ -191,7 +192,7 @@ export const actions: Actions = {
                 ...navItemData,
                 updated_at: new Date().toISOString()
             })
-            .eq('id', pageid)
+            .eq('id', nav_item_id)
             .select();
 
         if (updateError) {
