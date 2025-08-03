@@ -8,7 +8,12 @@
 
 <section>
 	<div class="container">
-		<a href="/app/sites/{site.id}/structure/{navItem.id}/seo" class="btn">Page SEO</a>
-		<a href="/app/sites/{site.id}/structure/{navItem.id}/blocks" class="btn">Page Blocks</a>
+		<a href="/app/sites/{site.id}/structure/{navItem.id}/info" class="btn">
+			{navItem.title} {navItem.navigation_item_type} Information</a
+		>
+		<!-- page layout/structure -->
+		{#if navItem.navigation_item_type === 'page'}
+			<a href="/app/sites/{site.id}/structure/{navItem.id}/blocks" class="btn">Page Blocks</a>
+		{/if}
 	</div>
 </section>

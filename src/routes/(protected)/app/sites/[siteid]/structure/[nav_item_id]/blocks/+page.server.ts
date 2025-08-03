@@ -26,6 +26,9 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 
     if (navItemFetchError) throw redirect(303, redirectPath)
 
+    // this page only allows for editing of "page" nav item types
+    if (navItem.navigation_item_type !== 'page') throw redirect(303, `/app/sites/${siteid}/structure`)
+
     return {
         site, navItem
     };

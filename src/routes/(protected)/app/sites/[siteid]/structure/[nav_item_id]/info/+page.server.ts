@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, locals: { supabase } }) => 
 
     if (error) throw redirect(303, redirectPath)
 
-    // 2. grab page
+    // 2. grab nav item
     const { data: navItem, error: navItemFetchError } = await supabase
         .from('site_navigation')
         .select('*')

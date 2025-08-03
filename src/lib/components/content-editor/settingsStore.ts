@@ -12,7 +12,7 @@ const DEFAULT_SETTINGS = {
     measureTypingPerf: false,
     showNestedEditorTreeView: false,
     showTableOfContents: false,
-    showTreeView: true,
+    showTreeView: false,
     tableCellMerge: true,
     tableCellBackgroundColor: true,
     tableHorizontalScroll: true,

@@ -199,3 +199,6 @@ interface TimeEntry {
     created_at: string;
     updated_at: string;
 }
+
+
+export type fieldType = 'text' | 'image' | 'content' | 'repeater';

@@ -77,7 +77,7 @@
 
 	let editorDiv: HTMLDivElement | undefined = $state();
 
-	let { onsave, json }: { onsave(json: string): void; json?: string } = $props();
+	let { onUpdateValue, json }: { onUpdateValue(json: string): void; json?: string } = $props();
 
 	const initialConfig = {
 		editorState: undefined,
@@ -138,14 +138,7 @@
 </script>
 
 <div id="content-editor">
-	<button
-		class="btn"
-		onclick={() => {
-			const json = composer.getEditor().getEditorState().toJSON();
-			onsave(json);
-		}}>Export JSON</button
-	>
-	<button
+	<!-- <button
 		class="btn"
 		onclick={() => {
 			const editor = composer.getEditor();
@@ -154,7 +147,7 @@
 				console.log(html);
 			});
 		}}>Export HTML</button
-	>
+	> -->
 	<Composer {initialConfig} bind:this={composer}>
 		<div class="editor-shell">
 			{#if $settings.isRichText}
@@ -212,14 +205,12 @@
 			{/if}
 		</div>
 	</Composer>
+	<button
+		class="btn"
+		type="button"
+		onclick={() => {
+			const json = composer.getEditor().getEditorState().toJSON();
+			onUpdateValue(json);
+		}}>Save</button
+	>
 </div>
-
-<h1 class="PlaygroundEditorTheme__h1" dir="ltr">
-	<span style="white-space: pre-wrap;">heading</span>
-</h1>
-<h2 class="PlaygroundEditorTheme__h2" dir="ltr">
-	<span style="white-space: pre-wrap;">heading 2</span>
-</h2>
-<h3 class="PlaygroundEditorTheme__h3" dir="ltr">
-	<span style="white-space: pre-wrap;">Heading 3</span>
-</h3>

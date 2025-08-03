@@ -2,7 +2,7 @@
 	import Form from '$lib/components/form/Form.svelte';
 	import { handleTriggerUpdate, updateConfigWithValues } from '$lib/form-helpers';
 	import type { Site, SiteNavigationItem } from '$lib/types';
-	import type { PageData } from './$types';
+	import type { PageData } from '../seo/$types';
 	import { updateNavItemFormConfig } from '$lib/form-configs/app/update-nav-item-page';
 	import { updateFolderNavItemFormConfig } from '$lib/form-configs/app/update-nav-item-folder';
 	import { updateLinkNavItemFormConfig } from '$lib/form-configs/app/update-nav-item-link';
