@@ -56,6 +56,17 @@
 		"svelte-lexical": "^0.6.1",
 		"svelte-preprocess": "^6.0.3",
 		"swiper": "^11.2.6",
+		"wx-filemanager-data-provider": "^2.2.0",
+		"wx-filemanager-locales": "^2.2.0",
+		"wx-filemanager-store": "^2.2.0",
+		"wx-lib-dom": "^0.9.1",
+		"wx-lib-state": "^1.9.3",
+		"wx-lib-svelte": "^0.5.1",
+		"wx-svelte-core": "^2.2.0",
+		"wx-svelte-filemanager": "^2.2.0",
+		"wx-svelte-grid": "^2.2.0",
+		"wx-svelte-menu": "^2.2.0",
+		"wx-svelte-uploader": "^2.2.0",
 		"zod": "^3.24.1"
 	}
 }

@@ -27,6 +27,8 @@ const auth: Handle = async ({ event, resolve }) => {
                 { name: 'user', value: 'jane', options: { secure: true } }
             ]);
              */
+
+            // BUGGY! switching tabs back to dashboard tab causes break
             setAll: (cookiesToSet) => {
                 cookiesToSet.forEach(({ name, value, options }) => {
                     event.cookies.set(name, value, { ...options, path: '/' });
