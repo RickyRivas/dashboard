@@ -15,27 +15,3 @@
 		<Panel />
 	</UploadDropArea>
 </div>
-
-<style>
-	.wx-wrapper {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		max-height: 100%;
-		max-width: 100%;
-		flex-shrink: 1;
-	}
-
-	.wx-wrapper > :global(.wx-upload-area) {
-		height: calc(100% - 48px);
-	}
-
-	.wx-wrapper > :global(.wx-upload-area) {
-		overflow-y: auto;
-		border: 1px solid transparent;
-		border-radius: 0 0 6px 6px;
-	}
-	.wx-wrapper > :global(.wx-upload-area.wx-active) {
-		border: 1px solid var(--wx-color-primary);
-	}
-</style>

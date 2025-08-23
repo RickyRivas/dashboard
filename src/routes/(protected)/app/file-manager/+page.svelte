@@ -4,6 +4,7 @@
 	import Willow from '$lib/filemanager/themes/Willow.svelte';
 	import RestDataProvider from '$lib/filemanager/RestDataProvider';
 	import { Globals, WillowDark, Material, Locale, popupContainer } from 'wx-svelte-core';
+	import CustomTheme from '$lib/filemanager/themes/CustomTheme.svelte';
 
 	const server = '/api/local-file-manager';
 	const restProvider = new RestDataProvider(server); // init provider
@@ -67,14 +68,14 @@
 
 <section>
 	<div class="container">
-		<Willow>
-			<div class="wx-willow-theme content" use:popupContainer>
-				<Locale>
-					<Globals>
-						<CustomFileManager bind:this={fmApi} {init} {data} {drive} onrequestdata={loadData} />
-					</Globals>
-				</Locale>
-			</div>
-		</Willow>
+		<CustomTheme>
+			<!-- <div class="wx-willow-theme content" use:popupContainer> -->
+			<Locale>
+				<Globals>
+					<CustomFileManager bind:this={fmApi} {init} {data} {drive} onrequestdata={loadData} />
+				</Globals>
+			</Locale>
+			<!-- </div> -->
+		</CustomTheme>
 	</div>
 </section>

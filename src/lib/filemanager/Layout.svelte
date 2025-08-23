@@ -219,7 +219,7 @@
 							>
 								<Sidebar {readonly} {menuOptions} />
 							</div>
-							<div class="wx-content" style="width: calc(100% - {sidebarWidth}px - 10px)">
+							<div class="wx-content">
 								<div class="wx-content-item{$rPreview ? '' : '-fit'}" data-id="body">
 									{#if $rMode === 'table'}
 										<TableView panel={$rActivePanel} />
@@ -253,72 +253,3 @@
 		</ContextMenu>
 	{/if}
 </div>
-
-<style>
-	.wx-flex {
-		display: flex;
-		width: 100%;
-	}
-	.wx-filemanager {
-		max-width: 100vw;
-		max-height: 100vh;
-		overflow: hidden;
-		background-color: var(--wx-fm-background);
-		flex-direction: column;
-		height: 100%;
-	}
-	.wx-content {
-		flex-grow: 1;
-		display: flex;
-		flex-shrink: 0;
-	}
-	.wx-content-item-fit {
-		width: 100%;
-		padding: 0 10px 10px;
-	}
-	.wx-content-item {
-		width: 67%;
-		padding: 0 10px 10px;
-	}
-	.wx-content-wrapper {
-		margin-top: 10px;
-		max-width: 100%;
-		max-height: 100%;
-		position: relative;
-	}
-	.wx-info {
-		width: 38%;
-	}
-	.wx-sidebar {
-		flex: 0 0 auto;
-		width: 238px;
-		padding: 0 10px 10px;
-		height: 100%;
-	}
-	.wx-sidebar-narrow {
-		position: absolute !important;
-		z-index: 3;
-		left: -300px;
-		transition-duration: 0.6s;
-	}
-	.wx-sidebar-visible {
-		left: 0;
-	}
-	.wx-info-narrow {
-		width: 100%;
-		height: 100%;
-		padding-top: 10px;
-	}
-	.wx-filemanager > :global(div[data-menu-ignore='true']) {
-		height: calc(100% - var(--wx-fm-toolbar-height));
-		width: 100%;
-	}
-	.wx-filemanager > :global(span[data-menu-ignore='true']),
-	.wx-filemanager
-		> :global(span[data-menu-ignore='true'])
-		> :global(span[data-menu-ignore='true']) {
-		height: 100%;
-		width: 100%;
-		display: flex;
-	}
-</style>

@@ -87,16 +87,3 @@
 		{/if}
 	</Modal>
 {/if}
-
-<style>
-	.wx-list {
-		text-align: left;
-		padding-left: 20px;
-		max-height: 300px;
-		overflow: auto;
-	}
-
-	.wx-list li {
-		font-weight: var(--wx-font-weight-md);
-	}
-</style>

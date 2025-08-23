@@ -122,7 +122,7 @@ export async function POST({ request }) {
     const { account } = await request.json()
     if (!account) return json({ error: 'Invalid Credentials' }, { status: 400 })
 
-    const startingPoint = `/Applications/MAMP/www/${account}/www/assets/images`
+    const startingPoint = `/Applications/MAMP/www/${account}/www/assets`
 
     try {
         // Get all files and directories recursively

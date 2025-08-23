@@ -34,12 +34,3 @@
 >
 	{@render children?.()}
 </div>
-
-<style>
-	.wx-upload-area {
-		height: 100%;
-	}
-	.wx-upload-area.wx-active {
-		background: var(--wx-color-primary-selected);
-	}
-</style>

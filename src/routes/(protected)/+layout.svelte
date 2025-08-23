@@ -11,4 +11,6 @@
 
 {@render children()}
 
+<!-- App Global -->
+
 <ToTop />

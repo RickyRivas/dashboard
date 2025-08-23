@@ -15,23 +15,8 @@
 ></i>
 
 <style>
-	.wx-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 38px;
-		width: 38px;
-		font-size: var(--wx-icon-size);
-		color: var(--wx-icon-color);
-		border-radius: 50%;
-	}
-
 	.wx-icon.wx-clickable {
 		cursor: pointer;
-	}
-
-	.wx-icon.wx-clickable:hover {
-		background-color: var(--wx-background-alt);
 	}
 
 	.wx-spin:before {

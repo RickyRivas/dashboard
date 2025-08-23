@@ -114,33 +114,3 @@
 		{/each}
 	</div>
 {/if}
-
-<style>
-	.wx-cards {
-		flex-grow: 1;
-		flex-wrap: wrap;
-		height: 100%;
-		border-top: none;
-		padding: 30px 20px 10px;
-		display: flex;
-		align-items: flex-start;
-		overflow-y: auto;
-		align-content: flex-start;
-		outline: none;
-	}
-	.wx-cards.wx-has-back-link {
-		padding: 0 20px 10px;
-	}
-	.wx-not-found-text {
-		text-align: center;
-		color: var(--wx-color-font-alt);
-	}
-	.wx-not-found {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 5px;
-		height: 100%;
-	}
-</style>

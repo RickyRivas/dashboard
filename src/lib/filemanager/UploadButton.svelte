@@ -17,9 +17,3 @@
 <div class="wx-upload-button" onclick={openFileChooserDialog}>
 	<span>{_(item.text)}</span>
 </div>
-
-<style>
-	.wx-upload-button {
-		width: 100%;
-	}
-</style>

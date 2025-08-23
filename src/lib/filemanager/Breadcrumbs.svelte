@@ -29,6 +29,7 @@
 	});
 
 	function refresh() {
+		// console.log('Current folder ID:', crumbs[crumbs.length - 1]?.id);
 		loading = true;
 		api.exec('request-data', {
 			id: crumbs[crumbs.length - 1].id
@@ -53,34 +54,3 @@
 		</div>
 	{/each}
 </div>
-
-<style>
-	.wx-breadcrumbs {
-		flex: 0 0 48px;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		padding: 0 4px;
-		max-width: 100%;
-		border-radius: 6px 6px 0 0;
-		background-color: var(--wx-background);
-		font-size: 16px;
-		overflow: hidden;
-	}
-
-	.wx-refresh-icon {
-		margin-right: 4px;
-	}
-
-	.wx-item {
-		cursor: pointer;
-		font-size: 16px;
-		font-weight: 300;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.wx-item:hover {
-		color: var(--wx-color-primary);
-	}
-</style>

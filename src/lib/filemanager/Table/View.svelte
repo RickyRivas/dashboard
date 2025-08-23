@@ -203,9 +203,9 @@
 		border-radius: 6px;
 	}
 
-	.wx-list {
+	/* .wx-list {
 		height: calc(100% - 50px);
-	}
+	} */
 	.wx-list > :global(.wx-upload-area .wx-grid) {
 		--wx-table-cell-border: var(--wx-fm-grid-border);
 		--wx-table-header-border: var(--wx-fm-grid-border);
@@ -230,7 +230,7 @@
 	}
 
 	.wx-list > :global(.wx-upload-area.wx-active .wx-row) {
-		background: var(--wx-color-primary-selected);
+		/* background: var(--wx-color-primary-selected); */
 		--wx-table-cell-border: 1px solid var(--wx-color-primary-selected);
 	}
 	/*switch off focus due to filamanager own navigation system*/

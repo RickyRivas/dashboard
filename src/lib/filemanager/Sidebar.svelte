@@ -50,7 +50,7 @@
 	{#if !readonly}
 		<div class="wx-button">
 			<DropDownMenu {options} at="bottom-fit" onclick={handleClick}>
-				<Button type="primary block">{_('Add New')}</Button>
+				<button class="btn">Add New</button>
 			</DropDownMenu>
 		</div>
 	{/if}
@@ -59,24 +59,3 @@
 	</div>
 	<Drive />
 </div>
-
-<style>
-	.wx-wrapper {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		background-color: var(--wx-background);
-		border-radius: 6px;
-		box-shadow: var(--wx-fm-box-shadow);
-	}
-
-	.wx-button {
-		padding: 8px 8px 0;
-	}
-
-	.wx-tree {
-		padding-top: 8px;
-		flex-grow: 1;
-		overflow-x: auto;
-	}
-</style>

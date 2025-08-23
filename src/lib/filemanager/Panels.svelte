@@ -28,20 +28,3 @@
 		/>
 	</div>
 </div>
-
-<style>
-	.wx-panels {
-		display: flex;
-		width: 100%;
-		max-width: 100%;
-		height: 100%;
-	}
-	.wx-item {
-		flex-grow: 1;
-		flex-shrink: 0;
-		width: calc(50% - 10px);
-	}
-	.wx-item:first-child {
-		margin-right: 10px;
-	}
-</style>
