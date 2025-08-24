@@ -7,6 +7,43 @@
 
 	let currentPagePath = $derived(page.url.pathname);
 	let routes = $derived(findRouteInfo('/app')?.route.children as RouteInfo[]);
+
+	import ToTop from '$lib/components/ToTop.svelte';
+
+	// TODO: MIGRATE
+	import Modal from '$lib/components/ui/Modal.svelte';
+
+	// notes
+	import NotesWidget from '$lib/widgets/NotesWidget.svelte';
+	import { createSettingsStore } from '$lib/components/content-editor/settingsStore';
+	import { onMount, setContext } from 'svelte';
+	import { getChecklistFromSB, getNotesFromSB } from '$lib/supabase-db';
+	import ChecklistWidget from '$lib/widgets/ChecklistWidget.svelte';
+
+	let showNotesModal = $state(false);
+	let notesJSON = $state();
+	let notesLastSaved = $state('');
+
+	// Lexical Editor (global state)
+	const settings = createSettingsStore();
+	settings.setOption('emptyEditor', false);
+	setContext('settings', settings);
+
+	// checklist
+	let showChecklistModal = $state(false);
+	let checklistItems = $state([]);
+
+	// client side fetching
+	onMount(async () => {
+		// get notes
+		let { notes, updated } = await getNotesFromSB();
+		if (notes) notesJSON = notes;
+		if (updated) notesLastSaved = updated;
+
+		// get checklist
+		let { checklist } = await getChecklistFromSB();
+		if (checklist) checklistItems = checklist;
+	});
 </script>
 
 <main>
@@ -38,3 +75,55 @@
 	</section>
 	{@render children()}
 </main>
+
+<!-- App Global -->
+<div class="global-fixed-btns">
+	<ToTop />
+	<button
+		class="btn"
+		onclick={() => {
+			showNotesModal = !showNotesModal;
+		}}
+	>
+		App Notes
+	</button>
+	<button
+		class="btn"
+		onclick={() => {
+			showChecklistModal = !showChecklistModal;
+		}}
+	>
+		Build Checklist
+	</button>
+</div>
+
+{#if showNotesModal}
+	<Modal
+		closeModal={() => {
+			showNotesModal = false;
+		}}
+	>
+		{#snippet modalContent()}
+			<NotesWidget
+				data={notesJSON}
+				{notesLastSaved}
+				onUpdateValue={(newData) => {
+					if (newData.notes) notesJSON = newData.notes;
+					if (newData.lastUpdated) notesLastSaved = newData.lastUpdated;
+				}}
+			/>
+		{/snippet}
+	</Modal>
+{/if}
+
+{#if showChecklistModal}
+	<Modal
+		closeModal={() => {
+			showChecklistModal = false;
+		}}
+	>
+		{#snippet modalContent()}
+			<ChecklistWidget checklist={checklistItems} />
+		{/snippet}
+	</Modal>
+{/if}

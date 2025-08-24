@@ -11,6 +11,18 @@ let table = 'code_snippets'
 let notesTable = 'editor_contents'
 const masterNoteId = 'b1533fd2-2dda-4e65-9033-46c4ccd85ee1'
 
+export async function getChecklistFromSB() {
+    const { data, error } = await supabase
+        .from('checklist')
+        .select('*')
+        // .eq('user_id', id)
+        .order('created_at', { ascending: true });
+
+    return {
+        checklist: error ? [] : data
+    }
+}
+
 export async function getNotesFromSB() {
     const { data, error } = await supabase
         .from(notesTable)
@@ -28,7 +40,6 @@ export async function getNotesFromSB() {
 }
 
 export async function saveNotesToSB(newNotes) {
-    // id will be true if we're updating an exisiting snippet
     const { data, error } = await supabase
         .from(notesTable)
         .upsert({

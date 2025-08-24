@@ -1,21 +1,4 @@
 import { fail, type Actions } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types"
-
-export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
-    const { session } = await safeGetSession();
-    const { id } = session?.user
-
-    // 1. grab checklist for cl widget
-    const { data, error } = await supabase
-        .from('checklist')
-        .select('*')
-        .eq('user_id', id)
-        .order('created_at', { ascending: true });
-
-    return {
-        checklist: error ? [] : data
-    };
-}
 
 export const actions: Actions = {
     autoFormExample: async ({ request }) => {

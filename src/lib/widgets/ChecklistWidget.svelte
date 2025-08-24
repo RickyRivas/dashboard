@@ -18,7 +18,7 @@
 			<li id="checklist-item-{item.id}" class:checked={item.checked} transition:fly={{ x: 100 }}>
 				<form
 					class="update-status-form"
-					action="?/updateStatus"
+					action="/app?/updateStatus"
 					method="post"
 					use:enhance={() => {
 						return async ({ result }) => {
@@ -47,7 +47,7 @@
 				</form>
 				<form
 					class="checklist-delete-form"
-					action="?/deleteItem"
+					action="/app?/deleteItem"
 					method="post"
 					use:enhance={() => {
 						return async ({ result }) => {
@@ -70,27 +70,33 @@
 	</ul>
 {/key}
 
-<form
-	action="?/resetAllToPending"
-	method="post"
-	use:enhance={() => {
-		return async ({ result }) => {
-			if (result.type === 'success') {
-				checklist = checklist.map((item) => ({
-					...item,
-					checked: false
-				}));
-			}
-		};
-	}}
->
-	<button class="btn">Reset Checklist</button>
-</form>
+<div style="margin-bottom: 1em;">
+	<form
+		class="inline"
+		action="/app?/resetAllToPending"
+		method="post"
+		use:enhance={() => {
+			return async ({ result }) => {
+				if (result.type === 'success') {
+					checklist = checklist.map((item) => ({
+						...item,
+						checked: false
+					}));
+				}
+			};
+		}}
+	>
+		<button class="btn">Reset Checklist</button>
+	</form>
+
+	<button class="btn">Generate Excel Sheet</button>
+</div>
+
 <h2>Add checklist item</h2>
 <form
 	id="checklist-form"
 	class="default-styling"
-	action="?/addItem"
+	action="/app?/addItem"
 	method="post"
 	use:enhance={() => {
 		checklistFormLoading = true;
