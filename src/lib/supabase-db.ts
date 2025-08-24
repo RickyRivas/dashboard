@@ -36,9 +36,10 @@ export async function saveNotesToSB(newNotes) {
             content: newNotes,
             updated_at: new Date()
         })
+        // return update columns
+        .select()
 
-    if (error) throw error
-    return { data }
+    return { data, error }
 }
 
 

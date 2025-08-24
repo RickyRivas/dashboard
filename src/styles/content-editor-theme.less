@@ -11,6 +11,7 @@
     display: block;
     margin: 0 auto;
     position: relative;
+    text-align: left;
 
     .editor-shell {
         width: 100%;
@@ -2134,7 +2135,8 @@
 }
 
 .svelte-lexical.dropdown {
-    z-index: 100;
+    // TODO: fix to a less crazy number
+    z-index: 9000;
     display: block;
     position: fixed;
     box-shadow:
@@ -2144,8 +2146,6 @@
     border-radius: 8px;
     min-height: 40px;
     background-color: var(--editor-theme-dropdown-background);
-
-
 }
 
 i.palette {

@@ -79,6 +79,9 @@
 
 	let { onUpdateValue, json }: { onUpdateValue(json: string): void; json?: string } = $props();
 
+	let data = $state();
+	if (json) data = json;
+
 	const initialConfig = {
 		editorState: undefined,
 		namespace: 'Playground',
@@ -111,9 +114,9 @@
 	};
 
 	onMount(() => {
-		if (json) {
+		if (data) {
 			const editor = composer.getEditor();
-			editor.setEditorState(editor.parseEditorState(json));
+			editor.setEditorState(editor.parseEditorState(data));
 		}
 
 		if (browser) {
@@ -209,8 +212,9 @@
 		class="btn"
 		type="button"
 		onclick={() => {
-			const json = composer.getEditor().getEditorState().toJSON();
-			onUpdateValue(json);
+			const newJSON = composer.getEditor().getEditorState().toJSON();
+			onUpdateValue(newJSON);
+			data = newJSON;
 		}}>Save</button
 	>
 </div>

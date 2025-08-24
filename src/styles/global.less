@@ -283,6 +283,42 @@ svg {
     height: auto;
 }
 
+.global-fixed-btns {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 3001;
+
+    #btt {
+        transition: background-color .33s ease-in-out,
+            0.33s ease-in-out;
+
+        &.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+}
+
+// #btt {
+//     background: none;
+//     border: none;
+//     border-radius: 0px;
+//     background-color: var(--primary);
+//     color: #fff;
+//     transition: opacity 0.33s ease-in-out;
+//     width: 44px;
+//     height: 44px;
+//     padding: 5px;
+//     border-radius: var(--border-radius);
+//     pointer-events: all;
+
+//     &.hide {
+//         opacity: 0;
+//         pointer-events: none;
+//     }
+// }
+
 // temp
 .settings-card {}
 
