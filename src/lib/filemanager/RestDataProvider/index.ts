@@ -27,19 +27,24 @@ export default class RestDataProvider extends Rest<TProviderMethodsConfig> {
         return {
             "create-file": {
                 handler: (ev: THandlersConfig["create-file"]) => {
+                    // FILE UPLOADS
                     if (ev.file.file) {
-                        const multipartFormData = new FormData();
-                        multipartFormData.append("file", ev.file.file);
-                        multipartFormData.append("name", ev.file.name);
+                        let data = {
+                            // folder uploads unsupported so files only
+                            // api needs type and name to upload file
+                            type: 'file',
+                            name: ev.file.name
+                        }
 
                         return this.send(
-                            `?parent-id=${encodeURIComponent(ev.parent)}`,
+                            `&parentid=${encodeURIComponent(ev.parent)}`,
                             "POST",
-                            multipartFormData
+                            JSON.stringify(data)
                         );
                     } else {
+                        // Create new files via UI
                         return this.send(
-                            `?parent-id=${encodeURIComponent(ev.parent)}`,
+                            `&parentid=${encodeURIComponent(ev.parent)}`,
                             "POST",
                             this.getParams({
                                 name: `${ev.file.name}`,
@@ -58,7 +63,7 @@ export default class RestDataProvider extends Rest<TProviderMethodsConfig> {
             "rename-file": {
                 handler: (ev: THandlersConfig["rename-file"]) => {
                     return this.send(
-                        `?parent-id=${encodeURIComponent(ev.id)}`,
+                        `&parentid=${encodeURIComponent(ev.id)}`,
                         "PUT",
                         this.getParams({
                             operation: "rename",
@@ -121,21 +126,21 @@ export default class RestDataProvider extends Rest<TProviderMethodsConfig> {
             },
             "download-file": {
                 handler: (ev: THandlersConfig["download-file"]) => {
-                    // console.log('download-file', ev)
-                    // // const fileId = ev.id;
-                    // const fileId = ev.relativePath;
+                    if (!ev.item && ev.item.relativePath) {
+                        console.error("relative path required in order to download file.")
+                        return
+                    }
 
-                    // // Remove leading slash for the download URL
-                    // const cleanPath = fileId.startsWith('/') ? fileId.slice(1) : fileId;
+                    const fileId = ev.item.relativePath;
 
-                    // // Create download URL
-                    // const downloadUrl = `/api/download-file?filepath=${encodeURIComponent(cleanPath)}`;
+                    // Create download URL
+                    const downloadUrl = `/api/download-file?filepath=${encodeURIComponent(fileId)}`;
 
-                    // // Trigger download by opening URL in new window/tab
-                    // window.open(downloadUrl, '_blank');
+                    // Trigger download by opening URL in new window/tab
+                    window.open(downloadUrl, '_blank');
 
-                    // // Return a resolved promise since the download is handled by browser
-                    // return Promise.resolve({ success: true });
+                    // Return a resolved promise since the download is handled by browser
+                    return Promise.resolve({ success: true });
                 },
             },
         };
@@ -143,7 +148,7 @@ export default class RestDataProvider extends Rest<TProviderMethodsConfig> {
 
     async loadFiles(id: TID): Promise<IEntity[]> {
         const data = await this.send<IEntity[]>(
-            id ? `parent-id?${encodeURIComponent(id)}` : "",
+            id ? `parentid?${encodeURIComponent(id)}` : "",
             "GET"
         );
         return this.parseDates(data);
@@ -182,7 +187,10 @@ export default class RestDataProvider extends Rest<TProviderMethodsConfig> {
             req.body = data;
         }
 
-        return fetch(`${this._url}/${url}`, req).then(res => {
+        // this._url = server api url
+        // url = contains only params?
+
+        return fetch(`${this._url}${url}`, req).then(res => {
             return res
                 .json()
                 .then(response => {

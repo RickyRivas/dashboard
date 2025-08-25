@@ -13,6 +13,8 @@
 
 	let preview = $derived(templates.preview(item, 214, 163));
 	let icon = $derived(templates.icon(item, 'big'));
+
+	const displayExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
 </script>
 
 {#if item.id == '/wx-filemanager-parent-link'}
@@ -37,6 +39,17 @@
 		{#if preview}
 			<div class="wx-preview wx-file-preview">
 				<img class="wx-card-preview" alt={_('A miniature file preview')} src={preview} />
+			</div>
+			<!-- special local path for contracting work -->
+		{:else if item.localHostPath && item.ext && displayExts.includes(item.ext.toLowerCase())}
+			<div class="wx-preview">
+				<img class="wx-file-preview-img" alt="" src={item.localHostPath} />
+				{#if item.imageDimensions}
+					<div class="wx-preview-mod">
+						<span>D: {item.imageDimensions.width} x {item.imageDimensions.height}</span>
+						<span>S: {item.imageDimensions.size}</span>
+					</div>
+				{/if}
 			</div>
 		{:else if icon}
 			<div class="wx-preview wx-file-icon">

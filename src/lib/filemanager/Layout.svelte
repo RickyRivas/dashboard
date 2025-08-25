@@ -124,10 +124,11 @@
 	}
 
 	function performAction(action, context, inTree) {
+		// console.log('performAction', action, context, inTree);
 		const ids = inTree ? [context.id] : selected;
 		switch (action) {
 			case 'download':
-				api.exec('download-file', { id: context.id });
+				api.exec('download-file', { item: context });
 				break;
 			case 'copy':
 			case 'move':
@@ -153,6 +154,10 @@
 				break;
 			case 'preview':
 				api.exec('show-preview', { mode: !$rPreview });
+				break;
+			// custom action - will trigger on api "on" call
+			case 'markup-generator':
+				api.exec('markup-generator', { item: context });
 				break;
 		}
 	}

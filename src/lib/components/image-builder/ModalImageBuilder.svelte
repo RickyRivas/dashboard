@@ -6,7 +6,13 @@
 	import 'prismjs/components/prism-css';
 	import 'prismjs/components/prism-markup';
 
-	const { img } = $props();
+	const { img, account } = $props();
+
+	function modifyPath(path, name, ext) {
+		// modifys a file's relative path to a new path that works for html images
+		// in contracting builds
+		return path.replace(`/applications/mamp/www/${account}/www`, '');
+	}
 
 	const formatOpts = {
 		inline: [''],
@@ -32,10 +38,10 @@
 	};
 
 	const imgConfig = $state({
-		src: img.markupSrc,
+		src: modifyPath(img.relativePath, img.name, img.ext),
 		alt: '',
-		width: img?.dimensions?.width || 0,
-		height: img?.dimensions?.height || 0,
+		width: img?.imageDimensions?.width || 0,
+		height: img?.imageDimensions?.height || 0,
 		id: '',
 		className: '',
 		lazyload: true,

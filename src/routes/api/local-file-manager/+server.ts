@@ -1,33 +1,43 @@
 import { json } from '@sveltejs/kit'
 import path from 'path';
 import fs from 'fs/promises';
+import imageSize from 'image-size';
 
-const BASE_DIR = "/applications/mamp/www/doublet-smiles"
-
-// refresh - new data format bug
+const mampPrefix = '/applications/mamp/www/';
+const localHostPrefix = 'http://localhost:8888';
+const imgTypes = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp']
 
 export async function GET({ url }) {
     try {
-        const parentId = url.searchParams.get('parent-id')
-        const fullPath = path.join(BASE_DIR, parentId !== null ? decodeURIComponent(parentId) : "");
-        const files = await scanDirectory(fullPath, parentId !== null ? decodeURIComponent(parentId) : "")
+        const parentId = url.searchParams.get('parentid') ?? ""
+        const directory = url.searchParams.get('directory') ?? ""
+        const fullPath = path.join(directory, decodeURIComponent(parentId));
+        const files = await scanDirectory(fullPath, decodeURIComponent(parentId))
         return json(files);
     } catch (error) {
         return json({ error: error.message }, { status: 500 });
     }
 }
 
-// POST /api/files/[parent-id] - Create files & folders
+// POST /api/files/[parentid] - Create files & folders
 export async function POST({ request, url }) {
     try {
-        const body = await request.json()
-        const name = decodeURIComponent(body.name)
-        const type = body.type
-        const parentId = url.searchParams.get('parent-id') ? decodeURIComponent(url.searchParams.get('parent-id')) : '';
-        const parentPath = path.join(BASE_DIR, parentId)
+        console.log('post call', request)
+        const data = await request.json()
+        console.log('post call data', data)
+
+        if (!data.name && !data.type) return new Response('file name & type required.', { status: 400 });
+
+        const name = decodeURIComponent(data.name)
+        const type = data.type
+        const parentId = decodeURIComponent(url.searchParams.get('parentid') ?? "");
+        const directory = url.searchParams.get('directory') as string
+        const parentPath = path.join(directory, parentId)
+
+        // console.log('post call', url)
 
         if (type === 'folder') {
-            const newFolderPath = path.join(BASE_DIR, parentId, name);
+            const newFolderPath = path.join(directory, parentId, name);
             await fs.mkdir(newFolderPath, { recursive: true });
             const virtualId = parentId ? `/${parentId}/${name}` : `/${name}`;
 
@@ -77,16 +87,17 @@ export async function POST({ request, url }) {
 // PUT /api/files/[id] - Rename/Move operations
 export async function PUT({ url, request }) {
     try {
-        const id = decodeURIComponent(url.searchParams.get('parent-id'));
+        const id = decodeURIComponent(url.searchParams.get('parentid') ?? "");
         const body = await request.json();
+        const directory = url.searchParams.get('directory') as string
 
         if (body.operation === 'rename') {
-            const oldPath = path.join(BASE_DIR, id);
+            const oldPath = path.join(directory, id);
             const newPath = path.join(path.dirname(oldPath), body.name);
 
             await fs.rename(oldPath, newPath);
 
-            const newVirtualId = `/${path.relative(BASE_DIR, newPath).replace(/\\/g, '/')}`;
+            const newVirtualId = `/${path.relative(directory, newPath).replace(/\\/g, '/')}`;
 
             return json({
                 result: {
@@ -98,9 +109,9 @@ export async function PUT({ url, request }) {
             const results = [];
 
             for (const id of ids) {
-                const sourcePath = path.join(BASE_DIR, id);
+                const sourcePath = path.join(directory, id);
                 const fileName = path.basename(sourcePath);
-                const targetPath = path.join(BASE_DIR, target, fileName);
+                const targetPath = path.join(directory, target, fileName);
 
                 // Check if target already exists
                 if (await fileExists(targetPath)) {
@@ -128,9 +139,9 @@ export async function PUT({ url, request }) {
             const results = [];
 
             for (const id of ids) {
-                const sourcePath = path.join(BASE_DIR, id);
+                const sourcePath = path.join(directory, id);
                 const fileName = path.basename(sourcePath);
-                const targetPath = path.join(BASE_DIR, target, fileName);
+                const targetPath = path.join(directory, target, fileName);
 
                 // Check if target already exists
                 if (await fileExists(targetPath)) {
@@ -161,13 +172,14 @@ export async function PUT({ url, request }) {
 }
 
 // DELETE /api/files - Delete files
-export async function DELETE({ request }) {
+export async function DELETE({ request, url }) {
     try {
         const body = await request.json();
         const { ids } = body;
+        const directory = url.searchParams.get('directory') as string
 
         for (const id of ids) {
-            const filePath = path.join(BASE_DIR, id);
+            const filePath = path.join(directory, id);
             await fs.rm(filePath, { recursive: true, force: true });
         }
 
@@ -186,8 +198,11 @@ async function scanDirectory(dirPath, virtualPath = '') {
         const entries = await fs.readdir(dirPath, { withFileTypes: true });
 
         for (const entry of entries) {
+            // Skip hidden files
+            if (entry.name.startsWith('.')) continue;
+
             const realPath = path.join(dirPath, entry.name);
-            const relativePath = path.join(BASE_DIR, entry.name)
+
             const virtualId = virtualPath
                 ? `${virtualPath}/${entry.name}`
                 : `/${entry.name}`;
@@ -203,17 +218,33 @@ async function scanDirectory(dirPath, virtualPath = '') {
                     date: stats.mtime,
                     count: subEntries.length,
                     lazy: true,
-                    relativePath
+                    relativePath: realPath,
                 });
             } else if (entry.isFile()) {
                 const stats = await fs.stat(realPath);
+
+                // if image type get dimensions
+                const { ext } = path.parse(entry.name);
+
+                let imageDimensions
+
+                if (ext && imgTypes.includes(ext.toLowerCase())) {
+                    const buffer = await fs.readFile(realPath);
+                    if (buffer) {
+                        imageDimensions = imageSize(buffer);
+                        imageDimensions.size = formatBytes(stats.size)
+                    }
+                }
+
                 files.push({
                     id: virtualId,
                     type: 'file',
                     value: entry.name,
                     date: stats.mtime,
                     size: stats.size,
-                    relativePath
+                    relativePath: realPath,
+                    localHostPath: systemPathToUrl(realPath),
+                    imageDimensions
                 });
             }
         }
@@ -253,3 +284,29 @@ async function copyFileOrDirectory(source, destination) {
         }
     }
 }
+
+const systemPathToUrl = (systemPath: string) => {
+    // from "/Applications/MAMP/www/account/www/assets/images/logo.svg"
+    // to "http://localhost:8888/account/assets/images/logo.svg"
+    if (!systemPath.startsWith(mampPrefix)) {
+        throw new Error('Invalid system path: must start with MAMP www directory');
+    }
+
+    // Remove the prefix and get the relative path
+    const relativePath = systemPath.replace(mampPrefix, '');
+
+    // Remove the 'www/' part from the path if it exists
+    const urlPath = relativePath.replace(/^([^/]+\/)?www\//, '');
+
+    // Combine with base URL
+    return `${localHostPrefix}/${relativePath.split('/')[0]}/${urlPath}`;
+};
+
+const formatBytes = (bytes, decimals = 2) => {
+    if (!+bytes) return "0 Bytes";
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ["Bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
