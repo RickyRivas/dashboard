@@ -53,12 +53,12 @@
 	let imageStringFormattedHighlighted = $state('<img/>');
 
 	const idSuggestions = ['spot'];
-	const classNamesSuggestions = ['decoration'];
+	const classNamesSuggestions = ['decoration', 'img-right'];
 	const altSuggestions = ['Portrait of'];
 
-	idSuggestions.push(img.name);
-	classNamesSuggestions.push(img.name);
-	altSuggestions.push(img.name);
+	// idSuggestions.push(img.name);
+	// classNamesSuggestions.push(img.name);
+	// altSuggestions.push(img.name);
 
 	function generateImgString() {
 		let attributes = [

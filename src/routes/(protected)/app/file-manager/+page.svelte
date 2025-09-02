@@ -21,7 +21,7 @@
 		account: { account }
 	} = $derived(data);
 
-	const directory = encodeURIComponent(`/applications/mamp/www/${account.trim()}/www/assets`);
+	const directory = encodeURIComponent(`/applications/mamp/www/${account.trim()}`);
 	const server = `/api/local-file-manager?directory=${directory}`;
 	const restProvider = new RestDataProvider(server); // init provider
 
@@ -38,12 +38,45 @@
 			}
 		});
 
+		api.on('bulk-optimize', async (ev) => {
+			if (ev.item && ev.item.relativePath) {
+				await optimizeFolder(ev.item.relativePath);
+			}
+		});
+
 		api.setNext(restProvider);
 	};
 
-	// function getLink(id, download) {
-	// 	return server + '/direct?id=' + encodeURIComponent(id) + (download ? '&download=true' : '');
-	// }
+	let optimizing = $state(false);
+	let optimizeSuccess = $state(false);
+	let optimizeError = $state(false);
+
+	async function optimizeFolder(folder, quality = '90%') {
+		if (!folder) return;
+		optimizing = true;
+
+		const response = await fetch('/api/sharp-optimize', {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ folder, quality })
+		});
+
+		const data = await response.json();
+		optimizing = false;
+
+		if (data.status === 200) {
+			optimizeSuccess = true;
+		} else {
+			optimizeError = true;
+		}
+
+		setTimeout(() => {
+			optimizeError = false;
+			optimizeSuccess = false;
+		}, 1000);
+	}
 
 	// on refresh & view folder
 	async function loadData(ev) {
@@ -86,6 +119,21 @@
 						},
 						...getMenuOptions(mode)
 					];
+			case 'folder':
+				return [
+					// add our new option
+					{
+						icon: '',
+						text: 'Bulk Optimize',
+						hotkey: '',
+						// also the action name
+						id: 'bulk-optimize'
+					},
+					{
+						type: 'separator'
+					},
+					...getMenuOptions(mode)
+				];
 			default:
 				return getMenuOptions(mode);
 		}

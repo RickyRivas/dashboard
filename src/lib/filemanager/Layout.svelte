@@ -155,9 +155,13 @@
 			case 'preview':
 				api.exec('show-preview', { mode: !$rPreview });
 				break;
-			// custom action - will trigger on api "on" call
+			// custom action - init markup generator for images
 			case 'markup-generator':
 				api.exec('markup-generator', { item: context });
+				break;
+			// custom action - bulk optimize (folder)
+			case 'bulk-optimize':
+				api.exec('bulk-optimize', { item: context });
 				break;
 		}
 	}

@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	let modal: HTMLDivElement, modalContainer;
-	let { closeModal, modalContent } = $props();
+	let { closeModal, modalContent, maxWidth = 600 } = $props();
 
 	const _focusableElementsSelector =
 		'a[href],area[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button:not([disabled]),iframe,object,embed,[contenteditable],[tabindex]:not([tabindex^="-"])';
@@ -61,7 +61,14 @@
 	transition:fade
 >
 	<div class="modal-backdrop" onclick={handleBackdropClick}></div>
-	<div class="modal" role="document" bind:this={modalContainer}>{@render modalContent()}</div>
+	<div
+		class="modal"
+		role="document"
+		style:max-width={maxWidth / 20 + 'em'}
+		bind:this={modalContainer}
+	>
+		{@render modalContent()}
+	</div>
 	<button id="close-modal" aria-label="Close (Press escape to close)" onclick={() => closeModal()}>
 		<img src="/icons/close.svg" width="25" height="25" alt="close icon" />
 	</button>

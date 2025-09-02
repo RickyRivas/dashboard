@@ -81,6 +81,7 @@
 	<ToTop />
 	<button
 		class="btn"
+		class:active={showNotesModal}
 		onclick={() => {
 			showNotesModal = !showNotesModal;
 		}}
@@ -89,6 +90,7 @@
 	</button>
 	<button
 		class="btn"
+		class:active={showChecklistModal}
 		onclick={() => {
 			showChecklistModal = !showChecklistModal;
 		}}
@@ -99,6 +101,7 @@
 
 {#if showNotesModal}
 	<Modal
+		maxWidth={1000}
 		closeModal={() => {
 			showNotesModal = false;
 		}}

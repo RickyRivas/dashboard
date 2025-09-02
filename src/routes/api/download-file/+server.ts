@@ -14,25 +14,15 @@ export async function GET({ url }) {
 
         try {
             const stats = await fs.stat(decodedPath);
-            console.log('5. File exists! Stats:', {
-                isFile: stats.isFile(),
-                isDirectory: stats.isDirectory(),
-                size: stats.size
-            });
 
             if (!stats.isFile()) {
-                console.log('6. ERROR: Path exists but is not a file');
                 return new Response('Not a file', { status: 400 });
             }
         } catch (statError) {
-            console.log('6. ERROR: fs.stat failed:', statError.message);
-            console.log('   Error code:', statError.code);
-
             // Try to check if directory exists
             const dirPath = path.dirname(decodedPath);
             try {
                 await fs.stat(dirPath);
-                console.log('   Parent directory exists:', dirPath);
             } catch (dirError) {
                 console.log('   Parent directory does not exist:', dirPath);
             }

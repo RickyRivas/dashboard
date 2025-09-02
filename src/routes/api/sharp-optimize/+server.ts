@@ -4,7 +4,7 @@ import { promises as fs, mkdir, mkdirSync, readdirSync } from "node:fs";
 import path from 'node:path';
 
 export async function POST({ request }) {
-    const { folder } = await request.json()
+    const { folder, quality } = await request.json()
     if (!folder || !folder.children.length || !folder.path) return json({ status: 200 })
 
     // optimize all child files inside passed folder. exclude SVGS
