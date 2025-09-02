@@ -36,7 +36,6 @@ export const routes: Record<RouteGroup, RouteInfo[]> = {
                 { path: '/app/file-manager', name: 'File Manager', iconPath: '', showInNav: true },
                 { path: '/app/billable', name: 'Billable', iconPath: '', showInNav: true },
                 { path: '/app/manager', name: 'Manager', iconPath: '', showInNav: true },
-                { path: '/app/products', name: 'Products', iconPath: '', showInNav: true },
                 { path: '/app/sites', name: 'Sites', iconPath: '', showInNav: true },
             ]
         },
