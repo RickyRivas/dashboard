@@ -12,6 +12,86 @@
     @media only screen and (min-width:1024px) {
         position: fixed;
         background: var(--bg);
+
+        // sidebar style
+        &.protected {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            border-right: 1px solid var(--border-color);
+            padding: 1em .4em;
+            transition: width .1s ease-in-out;
+
+            &+main {
+                transition: width .1s ease-in-out;
+            }
+
+            .container {
+                flex-direction: column;
+                height: 100%;
+                gap: .5em;
+                width: 100%;
+
+                .mod {
+                    flex-direction: column;
+                    width: 100%;
+                }
+
+                nav {
+                    overflow: hidden auto;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                nav ul {
+                    flex-direction: column;
+                    justify-content: center;
+                    margin: 0;
+                    gap: .5em;
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            &.minimize {
+                width: 50px;
+
+                &+main {
+                    width: calc(100% - 50px);
+                }
+
+                .settings-dropdown {
+                    &-list {
+                        width: auto;
+                    }
+
+                    .info {
+                        opacity: 0;
+                    }
+
+                    .avatar {
+                        transform: translate(-.15em, 0);
+                    }
+                }
+
+                #logo {
+                    transform: scale(.3);
+                }
+
+                nav {
+
+                    a[id],
+                    button[id] {
+
+                        .cta {
+                            opacity: 0;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .logo-flag {
@@ -25,13 +105,48 @@
             .show;
             .lh(0);
             width: (100/20em);
-            height: (38/20em);
+            height: auto;
             color: var(--text);
+            transition: transform .1s ease-in-out;
         }
 
         .flag {
             .show;
             width: (50/20em);
+        }
+    }
+
+    .collapse-toggle {
+        position: absolute;
+        left: calc(100% - 4.5px);
+        top: 50%;
+        transform: translate(0%, -50%);
+        z-index: 1;
+        width: 10px;
+        padding: 0;
+        height: 44px;
+        .rounded(0px);
+        border-width: 2px;
+        display: none;
+
+        background-color: var(--primary);
+        border-color: var(--primary);
+
+
+        transition: background-color .33s ease-in-out,
+            border-color .33s ease-in-out;
+
+        @media only screen and (min-width: 1024px) {
+            display: block;
+        }
+
+        &.minimize {
+            background-color: var(--bg);
+            border-color: var(--border-color);
+        }
+
+        &:hover {
+            border-color: var(--primary);
         }
     }
 
@@ -104,14 +219,15 @@
             a[id],
             button[id] {
                 @fs: 16;
-                @lh: 30;
+                @lh: 33;
 
-                display: block;
+                .flex;
+                .ai(center);
                 color: var(--text);
                 text-transform: capitalize;
                 font-size: 16px;
                 line-height: (44/@fs);
-                padding: 0 1em;
+                padding: 0;
                 transition: background-color .33s ease;
                 position: relative;
                 border: 0;
@@ -119,9 +235,24 @@
                 text-align: left;
                 width: 100%;
                 text-decoration: none;
-                .rounded(var(--border-radius));
+                gap: .5em;
 
-                @media only screen and (min-width: 1024px) {}
+                @media only screen and (min-width: 1024px) {
+                    line-height: (@lh/@fs);
+                }
+
+                .icon {
+                    width: 33px;
+                    min-width: 33px;
+                    height: auto;
+                }
+
+                .cta {
+                    .ib;
+                    .va(middle);
+                    white-space: nowrap;
+                    transition: opacity .33s ease-in-out;
+                }
             }
 
             &.active,
@@ -154,6 +285,7 @@
         .buttonreset;
         z-index: 3;
         position: relative;
+        flex-shrink: 0;
 
         @media only screen and (min-width: 1024px) {
             display: none;

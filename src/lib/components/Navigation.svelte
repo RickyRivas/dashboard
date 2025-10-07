@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import Logo from '$lib/Logo.svelte';
 	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
-	import BuildTracker from '$lib/widgets/BuildTracker.svelte';
+	import NavigationSettingsDropdown from './NavigationSettingsDropdown.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	interface navProps {
@@ -19,56 +19,89 @@
 
 	let currentPagePath = $derived(page.url.pathname);
 
-	// let protectedRoute = $derived(findRouteInfo(currentPagePath)?.group === 'protected');
+	let isProtectedRoute = $derived(findRouteInfo(currentPagePath)?.group === 'protected');
+
+	let minimize = $state(true);
 </script>
 
-<header id="main-nav">
+<header id="main-nav" class={navType} class:minimize>
 	<div class="container">
 		<div class="logo-flag">
 			<a id="logo" href="/"> <Logo /> </a>
-			<svg
-				class="flag"
-				aria-hidden="true"
-				role="img"
-				xmlns="http://www.w3.org/2000/svg"
-				width="73"
-				height="38"
-				fill="none"
-				viewBox="0 0 73 38"
-			>
-				<path fill="#B31942" d="M0 0h72.2v38H0" />
-				<path
-					fill="#fff"
-					d="M72.2 32.154v2.923H0v-2.923h72.2Zm0-5.847v2.924H0v-2.924h72.2Zm0-5.846v2.923H0v-2.923h72.2Zm0-5.846v2.923H0v-2.923h72.2Zm0-5.846v2.923H0V8.77h72.2Zm0-5.846v2.923H0V2.923h72.2Z"
-				/>
-				<path fill="#0A3161" d="M0 0h28.88v20.462H0" />
-				<path
-					fill="#fff"
-					d="M2.67 18.054h.849l-.687.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.262.808Zm4.813 0h.85l-.688.5.263.807-.688-.499-.687.5.262-.809-.687-.499h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.499-.687.5.263-.809-.687-.499h.85l.262-.808.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.499-.687.5.263-.809-.687-.499h.85l.262-.808.262.808Zm-21.66-2.046h.85l-.688.5.263.807-.687-.5-.688.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.688.5.263.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808ZM2.67 13.962h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.5.263.807-.688-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Zm-21.66-2.046h.85l-.688.499.263.808-.687-.5-.688.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.687.499.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.499.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.808Zm4.813 0h.85l-.688.499.263.808-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.688.499.263.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808ZM2.67 9.869h.85l-.687.5.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.807Zm4.814 0h.85l-.688.5.263.808-.688-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.807Zm4.813 0h.85l-.688.5.263.808-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.807Zm4.813 0h.85l-.687.5.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.807Zm4.814 0h.85l-.688.5.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.807Zm4.813 0h.85l-.688.5.263.808-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.807ZM5.076 7.823h.85l-.688.5.263.808-.687-.5-.688.5.263-.808-.687-.5h.85l.262-.808.262.808Zm4.813 0h.85l-.687.5.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.808.262.808Zm4.814 0h.85l-.688.5.262.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.808-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.808.262.808Zm4.813 0h.85l-.688.5.263.808-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.808.262.808ZM2.67 5.777h.85l-.687.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.262.808Zm4.814 0h.85l-.688.5.263.807-.688-.499-.687.5.262-.809-.687-.499h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.499-.687.5.263-.809-.687-.499h.85l.262-.808.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.499-.687.5.262-.809-.687-.499h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.499-.687.5.263-.809-.687-.499h.85l.262-.808.262.808ZM5.076 3.731h.85l-.688.5.263.807-.687-.5-.688.5.263-.808-.687-.499h.85l.262-.808.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.499h.85l.262-.808.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.5-.687.5.262-.808-.687-.499h.85l.262-.808.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.499h.85l.262-.808.262.808Zm4.813 0h.85l-.688.5.263.807-.687-.5-.687.5.262-.808-.687-.499h.85l.262-.808.262.808ZM2.67 1.685h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.5.263.807-.688-.5-.687.5.262-.808-.687-.5h.85L7.22.878l.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Zm4.813 0h.85l-.687.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.262.808Zm4.814 0h.85l-.688.5.262.807-.687-.5-.687.5.262-.808-.687-.5h.85l.262-.807.263.808Zm4.813 0h.85l-.688.5.263.807-.688-.5-.687.5.263-.808-.687-.5h.85l.262-.807.262.808Z"
-				/>
-			</svg>
 		</div>
 
-		<div class="mod">
+		{#if navType === 'protected' && routes[0] && routes[0].children}
 			<nav>
 				<ul class:active={isActive}>
-					{#if navType === 'protected'}
-						<li>
-							<BuildTracker />
-						</li>
-					{/if}
-					{#each routes as route}
-						<li class:active={currentPagePath.startsWith(route.path)}>
-							<a id={route.name.toLowerCase()} href={route.path}>{route.name}</a>
-						</li>
+					{#each routes[0].children as childRoute}
+						{#if childRoute.path === '/app' || childRoute.path === '/settings'}
+							<li class:active={currentPagePath === childRoute.path}>
+								<a
+									id={childRoute.name.toLowerCase().replaceAll(' ', '-')}
+									class:active={currentPagePath === childRoute.path}
+									href={childRoute.path}
+								>
+									<svg
+										aria-hidden="true"
+										role="img"
+										class="icon"
+										xmlns="http://www.w3.org/2000/svg"
+										width="44"
+										height="44"
+										fill="none"
+										viewBox="0 0 44 44"
+									>
+										{#if childRoute.iconPath}
+											<path fill="currentColor" d={childRoute.iconPath} />
+										{:else}
+											<path
+												fill="currentColor"
+												d="M23.765 11.774a2.824 2.824 0 1 0-3.53 0l-4.83 7.598a2.26 2.26 0 0 1-3.263.593l-4.201-3.142a2.824 2.824 0 1 0-5.148-1.603 2.826 2.826 0 0 0 2.768 2.824l2.302 15.359a4.52 4.52 0 0 0 4.47 3.848h19.334a4.52 4.52 0 0 0 4.47-3.848l2.302-15.359a2.826 2.826 0 0 0-.056-5.649 2.824 2.824 0 0 0-2.324 4.428l-4.194 3.15a2.26 2.26 0 0 1-3.263-.594l-4.837-7.605Z"
+											/>
+										{/if}
+									</svg>
+									<span class="cta">{childRoute.name}</span>
+								</a>
+							</li>
+						{:else}
+							<li class:active={currentPagePath.startsWith(childRoute.path)}>
+								<a
+									id={childRoute.name.toLowerCase().replaceAll(' ', '-')}
+									class:active={currentPagePath.startsWith(childRoute.path)}
+									href={childRoute.path}
+								>
+									<svg
+										aria-hidden="true"
+										role="img"
+										class="icon"
+										xmlns="http://www.w3.org/2000/svg"
+										width="44"
+										height="44"
+										fill="none"
+										viewBox="0 0 44 44"
+									>
+										{#if childRoute.iconPath}
+											<path fill="currentColor" d={childRoute.iconPath} />
+										{:else}
+											<path
+												fill="currentColor"
+												d="M23.765 11.774a2.824 2.824 0 1 0-3.53 0l-4.83 7.598a2.26 2.26 0 0 1-3.263.593l-4.201-3.142a2.824 2.824 0 1 0-5.148-1.603 2.826 2.826 0 0 0 2.768 2.824l2.302 15.359a4.52 4.52 0 0 0 4.47 3.848h19.334a4.52 4.52 0 0 0 4.47-3.848l2.302-15.359a2.826 2.826 0 0 0-.056-5.649 2.824 2.824 0 0 0-2.324 4.428l-4.194 3.15a2.26 2.26 0 0 1-3.263-.594l-4.837-7.605Z"
+											/>
+										{/if}
+									</svg>
+									<span class="cta">{childRoute.name}</span>
+								</a>
+							</li>
+						{/if}
 					{/each}
-					{#if navType === 'protected'}
-						<li>
-							<button onclick={logout} class="btn">Logout</button>
-						</li>
-					{/if}
+				</ul>
+			</nav>
+		{/if}
 
-					{#if navType === 'public'}
+		<div class="mod">
+			{#if navType === 'public'}
+				<nav>
+					<ul class:active={isActive}>
 						{#if session}
 							<li>
 								<a href="/app" class="btn">Dashboard</a>
@@ -81,26 +114,28 @@
 								<a href="/register" class="btn">Register</a>
 							</li>
 						{/if}
-					{/if}
-				</ul>
-			</nav>
-
-			{#if navType === 'protected'}
-				{#if page.data.profile}
-					{#if page.data.profile.avatar_url}
-						<div class="small-avatar">
-							<img
-								src={page.data.profile.avatar_url}
-								alt={page.data.profile.full_name}
-								width="40"
-								height="40"
-							/>
-						</div>
-					{/if}
-				{/if}
+					</ul>
+				</nav>
 			{/if}
 
-			<ThemeToggle />
+			<!-- if protected, toggle will be in list :) -->
+			{#if navType === 'protected'}
+				<NavigationSettingsDropdown
+					name={page.data.profile.full_name}
+					email={page.data.session?.user.email}
+					avatarUrl={page.data.profile.avatar_url}
+					onlogout={logout}
+				/>
+				<button
+					class="collapse-toggle btn"
+					aria-label="collapse/expand menu"
+					class:minimize
+					onclick={() => (minimize = !minimize)}
+				>
+				</button>
+			{:else}
+				<ThemeToggle />
+			{/if}
 
 			<button
 				id="nav-toggle"

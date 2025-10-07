@@ -176,9 +176,11 @@
 	#build-tracker {
 		position: relative;
 		z-index: 3000;
+		display: inline-block;
+		vertical-align: top;
 		.build-tracker-dropdown {
 			position: absolute;
-			top: calc(100% + 0.5em);
+			bottom: calc(100% + 0.5em);
 			width: 100%;
 			min-width: 400px;
 			background-color: var(--bg);
@@ -190,6 +192,7 @@
 			transition: opacity 0.33s ease;
 			opacity: 0;
 			pointer-events: none;
+			right: 0;
 			@media only screen and (max-width: 1023px) {
 				min-width: auto;
 			}

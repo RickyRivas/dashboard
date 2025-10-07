@@ -8,6 +8,7 @@
 	import { Filemanager, getMenuOptions } from 'wx-svelte-filemanager';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import ModalImageBuilder from '$lib/components/image-builder/ModalImageBuilder.svelte';
+	import { buildTrackerState } from '$lib/tracker-state.svelte';
 	const imgTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
 
 	const { data }: PageProps = $props();

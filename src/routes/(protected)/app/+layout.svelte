@@ -3,7 +3,6 @@
 	import type { LayoutProps } from '../$types';
 	const { children }: LayoutProps = $props();
 	import { findRouteInfo, type RouteInfo } from '$lib/navigation';
-	import PageLoader from '$lib/PageLoader.svelte';
 
 	let currentPagePath = $derived(page.url.pathname);
 	let routes = $derived(findRouteInfo('/app')?.route.children as RouteInfo[]);
@@ -19,6 +18,7 @@
 	import { onMount, setContext } from 'svelte';
 	import { getChecklistFromSB, getNotesFromSB } from '$lib/supabase-db';
 	import ChecklistWidget from '$lib/widgets/ChecklistWidget.svelte';
+	import BuildTracker from '$lib/widgets/BuildTracker.svelte';
 
 	let showNotesModal = $state(false);
 	let notesJSON = $state();
@@ -46,39 +46,12 @@
 	});
 </script>
 
-<main>
-	<section>
-		<div class="container">
-			<div id="subnav">
-				<h2>Sub Navigation</h2>
-				<ul>
-					{#each routes as route}
-						{#if route.path === '/app'}
-							<li class:active={currentPagePath === route.path}>
-								<a class="btn" class:active={currentPagePath === route.path} href={route.path}>
-									{route.name}
-								</a>
-							</li>
-						{:else}
-							<li class:active={currentPagePath.startsWith(route.path)}>
-								<a
-									class="btn"
-									class:active={currentPagePath.startsWith(route.path)}
-									href={route.path}>{route.name}</a
-								>
-							</li>
-						{/if}
-					{/each}
-				</ul>
-			</div>
-		</div>
-	</section>
-	{@render children()}
-</main>
+{@render children()}
 
 <!-- App Global -->
 <div class="global-fixed-btns">
 	<ToTop />
+	<BuildTracker />
 	<button
 		class="btn"
 		class:active={showNotesModal}

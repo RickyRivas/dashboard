@@ -13,6 +13,8 @@
 	let { data }: PageProps = $props();
 	const { codeAsset, category } = data;
 
+	console.log(codeAsset);
+
 	configureCloudinary({
 		cloudName: PUBLIC_CLOUDINARY_CLOUD_NAME
 	});
@@ -79,7 +81,8 @@
 				<p class="time">
 					Updated: {moment(codeAsset.updated_at).format('MMMM D, YYYY [at] h:mm A')}
 				</p>
-				<a class="btn" href={`/app/sections/${category}`}>Go back</a>
+				<!-- <a class="btn" href={`/app/sections/${category}`}>Go back</a> -->
+				<a class="btn" href={`/app/library?type=${codeAsset.type}&category=${category}`}>Go back</a>
 				<a class="btn" href={`/app/manager?code_asset_id=${codeAsset.id}`}>Edit code asset</a>
 			</Card>
 		</CardGroup>

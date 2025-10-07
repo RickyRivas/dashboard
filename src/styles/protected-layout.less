@@ -1,0 +1,19 @@
+@sidebarwidth: 250;
+@navheight: 85;
+
+.protected-body-wrapper {
+    width: 100%;
+
+    @media only screen and (min-width:1024px) {
+        .flex;
+
+        #main-nav {
+            width: (@sidebarwidth*1px);
+        }
+
+        &>main {
+            width: ~"calc(100% -"((@sidebarwidth *1px))~")";
+            padding: 3em 0;
+        }
+    }
+}

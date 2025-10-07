@@ -25,6 +25,20 @@
 				{/if}
 			</Card>
 
+			<Card heading="List view">
+				{#each codeAssetsGroups as group}
+					<ul>
+						{#each group.codeAssets as codeAsset}
+							<li>
+								{codeAsset.title}
+								<button class="btn">copy</button>
+							</li>
+						{/each}
+					</ul>
+					<hr />
+				{/each}
+			</Card>
+
 			{#each codeAssetsGroups as group}
 				<Card heading={group.category}>
 					<ul class="code-asset-snippet-group">

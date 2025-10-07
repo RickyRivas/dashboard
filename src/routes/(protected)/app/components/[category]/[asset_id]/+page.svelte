@@ -78,7 +78,8 @@
 				<p class="time">
 					Updated: {moment(codeAsset.updated_at).format('MMMM D, YYYY [at] h:mm A')}
 				</p>
-				<a class="btn" href={`/app/components/${category}`}>Go back</a>
+				<!-- <a class="btn" href={`/app/components/${category}`}>Go back</a> -->
+				<a class="btn" href={`/app/library?type=${codeAsset.type}&category=${category}`}>Go back</a>
 				<a class="btn" href={`/app/manager?code_asset_id=${codeAsset.id}`}>Edit code asset</a>
 			</Card>
 		</CardGroup>
