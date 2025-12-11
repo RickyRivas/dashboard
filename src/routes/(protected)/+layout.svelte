@@ -9,6 +9,14 @@
 	let currentPagePath = $derived(page.url.pathname);
 </script>
 
+<svelte:head>
+	<!-- cloudinary -->
+	<script
+		src="https://upload-widget.cloudinary.com/latest/global/all.js"
+		type="text/javascript"
+	></script>
+</svelte:head>
+
 <div class="protected-body-wrapper">
 	<Navigation navType="protected" {routes} />
 

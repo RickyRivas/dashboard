@@ -21,10 +21,10 @@
 	type Lang = 'javascript' | 'html' | 'css';
 
 	// formatting/highlighting
-	import Prism from 'prismjs';
 	import beautify from 'js-beautify';
 	import 'prismjs/components/prism-javascript';
 	import 'prismjs/components/prism-css';
+	import { highlightCode } from '$lib/highlight-code';
 
 	const formatOpts = {
 		inline: [''],
@@ -122,7 +122,7 @@
 
 			if (doc !== currentDoc) {
 				// one time reformat, on lang change.
-				doc = beautify[lang === 'javascript' ? 'js' : lang](doc, formatOpts);
+				// doc = beautify[lang === 'javascript' ? 'js' : lang](doc, formatOpts);
 
 				isUpdatingFromProp = true;
 				view.dispatch({
@@ -140,7 +140,7 @@
 		}
 	});
 
-	onMount(() => {
+	onMount(async () => {
 		view = createEditorView();
 	});
 
@@ -149,4 +149,4 @@
 	});
 </script>
 
-<div class="manager-code-editor {classes.join(' ')}" bind:this={editorContainer}></div>
+<div class="block-viewer__code-editor {classes.join(' ')}" bind:this={editorContainer}></div>

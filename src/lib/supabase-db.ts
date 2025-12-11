@@ -100,7 +100,7 @@ function flattenAndStripCodeObject(code) {
     )
 
     // Define the fields to extract and process
-    const fieldsToExtract = ['title', 'description', 'type', 'category', 'thumbnailurl', 'favorite', 'buildtime'];
+    const fieldsToExtract = ['title', 'description', 'type', 'category', 'libraries', 'thumbnailurl', 'favorite', 'buildtime'];
 
     // Create the result object
     const result = Object.fromEntries(
@@ -170,6 +170,7 @@ export async function getCodeFromSupabase(id) {
             title: data.title,
             description: data.description,
             type: data.type,
+            libraries: data.libraries,
             category: data.category,
             thumbnailurl: data.thumbnailurl,
             favorite: data.favorite,

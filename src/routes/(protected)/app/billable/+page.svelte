@@ -22,6 +22,7 @@
 	}
 
 	let estimatedTotal = $state(0);
+
 	if (timeEntries.length) {
 		estimatedTotal = timeEntries.reduce(
 			(total: number, timeEntry: any) =>
@@ -29,6 +30,22 @@
 			0
 		);
 	}
+
+	// let overallTotal = $state(0);
+	// if (timeEntries.length) {
+	// 	// estimatedTotal = timeEntries.reduce(
+	// 	// 	(total: number, timeEntry: any) => total + timeEntry.billable_amount,
+	// 	// 	0
+	// 	// );
+
+	// 	timeEntries.forEach((entry) => {
+	// 		// console.log(entry);
+	// 		overallTotal = overallTotal + entry.billable_amount;
+	// 		// overallTotal + entry.billable_amount;
+	// 	});
+	// }
+
+	// $inspect(overallTotal);
 </script>
 
 <section>
@@ -45,7 +62,8 @@
 								<th>Task</th>
 								<th>Status</th>
 								<th>Time Spent</th>
-								<th></th>
+								<th>action</th>
+								<th>rate</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -109,6 +127,7 @@
 											<button class="btn error">Delete</button>
 										</form>
 									</td>
+									<td>{entry.hourly_rate}</td>
 								</tr>
 							{/each}
 						</tbody>

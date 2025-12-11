@@ -54,6 +54,7 @@
 		"prismjs": "^1.30.0",
 		"quill": "^2.0.3",
 		"sharp": "^0.34.4",
+		"shiki": "^3.13.0",
 		"sortable-tree": "^0.7.2",
 		"sortablejs": "^1.15.6",
 		"stripe": "^18.1.1",

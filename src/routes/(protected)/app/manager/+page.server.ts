@@ -35,16 +35,19 @@ export const actions: Actions = {
         const javascript = formData.get('javascript')
         const favorite = formData.get('favorite')
         const assetId = formData.get('code-asset-id')
+        // getAll()-> checkboxes. TODO: dynamically extra form data 
+        const libraries = formData.getAll('libraries')
 
         if (assetId) {
             // editing code asset
             const { data, error } = await supabase
                 .from(table)
                 .update({
-                    title, description, type, category, thumbnailurl, buildtime, favorite, html, css, javascript
+                    title, description, type, category, thumbnailurl, buildtime, favorite, html, css, javascript, libraries
                 })
                 .eq('id', assetId)
                 .select()
+
             if (error) return fail(400, { message: 'Error updating new code asset.', errors: [] })
             return { success: true, redirectTo: type === 'snippet' ? `/app/${type}s` : `/app/${type}s/${category}/${assetId}` }
         } else {
@@ -52,7 +55,7 @@ export const actions: Actions = {
             const { data, error } = await supabase
                 .from(table)
                 .insert({
-                    title, description, type, category, thumbnailurl, buildtime, favorite, html, css, javascript
+                    title, description, type, category, thumbnailurl, buildtime, favorite, html, css, javascript, libraries,
                 })
                 .select()
 

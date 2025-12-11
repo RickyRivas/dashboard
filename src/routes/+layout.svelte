@@ -2,9 +2,10 @@
 	import { onMount } from 'svelte';
 	import { invalidate } from '$app/navigation';
 	import type { LayoutProps } from './$types';
-	import './styles.less';
 	const { children, data }: LayoutProps = $props();
 	const { supabase, session } = data;
+
+	import './styles.less';
 
 	onMount(() => {
 		// Set up auth state listener

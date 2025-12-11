@@ -5,7 +5,6 @@
 	import CardGroup from '$lib/components/CardGroup.svelte';
 	import CodeAssetLink from '$lib/components/code/CodeAssetLink.svelte';
 	import SnippetCard from '$lib/components/code/SnippetCard.svelte';
-	import RenderComponent from '$lib/render/RenderComponent.svelte';
 	import { hardCodedFavorites } from '$lib/snippets.js';
 
 	type libraryType = 'snippet' | 'section' | 'component';
@@ -16,8 +15,6 @@
 	let selectedTypeCategories = $derived(data.categories);
 	let selectedTypeCategory = $derived(data.category);
 	let codeAssets = $derived(data.assets);
-
-	console.log(codeAssets);
 
 	// const favorites = $derived(data.favorites);
 	const favorites = hardCodedFavorites;
@@ -135,12 +132,6 @@
 						<ul class="code-asset-snippet-group">
 							{#each codeAssets as asset}
 								<SnippetCard codeAsset={asset} />
-							{/each}
-						</ul>
-					{:else if selectedType === 'component'}
-						<ul class="code-asset-snippet-group">
-							{#each codeAssets as asset}
-								<RenderComponent code={asset} />
 							{/each}
 						</ul>
 					{:else}

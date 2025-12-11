@@ -19,8 +19,6 @@
 	$effect(() => {
 		triggerUpdate(index, value);
 	});
-
-	$inspect('c', value);
 </script>
 
 <div class="form-control">
@@ -32,7 +30,13 @@
 			<div class="form-checkbox-group">
 				{#each configuration.inputAttributes.options as { name, label, value: optionValue, disabled }}
 					<label>
-						<input type="checkbox" {name} bind:group={value} value={optionValue} {disabled} />
+						<input
+							type="checkbox"
+							name={configuration.inputAttributes.name}
+							bind:group={value}
+							value={optionValue}
+							{disabled}
+						/>
 						{label}
 					</label>
 				{/each}

@@ -40,6 +40,7 @@
 			}
 		};
 		managerConfig.fieldDefinitions.push(newFieldDefinition);
+
 		// update form values
 		updateConfigWithValues(managerConfig, data.codeAsset);
 		updateConfigWithValues(deleteConfig, data.codeAsset);

@@ -148,6 +148,36 @@ export const lessMixins = `// Font weight and style
 
 
 export const lessBase = `
+html body {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    min-width: 180px;
+    max-width: 100%;
+    padding: 0;
+    margin: 0
+}
+    
+html {
+    font-size: 100%;
+    cursor: default;
+    overflow-y: scroll;
+    -webkit-tap-highlight-color: transparent;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    font-size: 100%;
+    margin: 0
+}
+
+.centered-container {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100%;
+}
+
 /* ===============================================
                     colors
  =============================================== */
@@ -200,6 +230,7 @@ body {
     color: #000;
     position: relative;
     overflow: hidden;
+    background-color: #fff;
 
     @media only screen and (min-width: 1300px) {
         font-size: 20px; //do not change - this informs factor for em units on desktop layouts || is not content font-size ||

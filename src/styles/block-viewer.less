@@ -1,0 +1,97 @@
+// for our block viewer modules
+.ui-blocks {
+    .flex;
+    .fdir(column);
+    gap: 1em;
+
+    .block-viewer {
+        display: block;
+        width: 100%;
+        background-color: var(--bg-alternate);
+        padding: 1em;
+        // outline: 1px solid red;
+
+        &__toolbar {
+            // background-color: slateblue;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1em;
+
+            &-tabs {
+                .flex;
+                gap: 5px;
+            }
+        }
+
+        &__tabpanels {
+            // background-color: slateblue;
+            // outline: 1px solid red;
+            border: 1px solid var(--border-color);
+        }
+
+        &__controls {}
+
+
+        .iframe-container {
+            width: 100%;
+            min-height: 300px;
+            position: relative;
+            overflow: auto;
+
+            .asset-preview {
+                display: block;
+                .overlay;
+                border: none;
+
+                &--error {
+                    border: 1px solid red;
+                }
+            }
+        }
+
+        &__code {
+            @tabspanelwidth: 200;
+            display: flex;
+
+            &-tabs {
+                width: (@tabspanelwidth/20em);
+                border-right: 1px solid var(--border-color);
+
+
+                &-tab {
+                    @lh: 44; //line-height
+                    @fs: 14; //font-size
+
+                    line-height: (@lh/@fs);
+                    .fs(~'clamp( 12px,'(@fs/20em) ~','(@fs*1px) ~')');
+                    display: block;
+                    .buttonreset;
+                    .upp;
+                    width: 100%;
+                    text-align: left;
+                    padding: 0 .5em;
+                    color: var(--text);
+                    transition: background-color .33s ease-in-out;
+
+                    &--active,
+                    &:hover,
+                    &:focus {
+                        background-color: var(--primary);
+                    }
+                }
+            }
+
+            &-editor {
+                @fs: 16;
+                @minheight: 300;
+                width: ~"calc(100% -"(@tabspanelwidth/@fs*1em)~")";
+                font-size: (@fs*1px);
+
+                .cm-editor {
+                    min-height: (@minheight/@fs*1em);
+                }
+            }
+        }
+    }
+}

@@ -1,5 +1,14 @@
 import type { FormConfig } from "$lib/form-types";
 
+import { LIBRARIES } from '$lib/utils/libraries';
+
+const libraryOptions = Object.keys(LIBRARIES).map(key => ({
+    label: key,
+    value: key,
+    name: key,
+    disabled: false
+}));
+
 export const managerFormConfig: FormConfig = {
     formAttributes: {
         action: '?/addToLibrary',
@@ -71,6 +80,27 @@ export const managerFormConfig: FormConfig = {
                 },
                 labelConfig: {
                     text: 'Type'
+                }
+            },
+            fieldState: {
+                hasError: false,
+                showSuccess: false,
+                statusMessage: ''
+            }
+        },
+        {
+            configuration: {
+                inputAttributes: {
+                    name: 'libraries',
+                    type: 'checkbox-group',
+                    required: false,
+                    disabled: false,
+                    placeholder: '',
+                    value: '',
+                    options: libraryOptions
+                },
+                labelConfig: {
+                    text: 'Required Libraries'
                 }
             },
             fieldState: {
