@@ -21,31 +21,15 @@
 		}
 	}
 
-	let estimatedTotal = $state(0);
+	let estimatedTotal = $derived.by(() => {
+		let total = 0;
 
-	if (timeEntries.length) {
-		estimatedTotal = timeEntries.reduce(
-			(total: number, timeEntry: any) =>
-				total + (timeEntry.status === 'Pending' ? timeEntry.billable_amount : 0),
-			0
-		);
-	}
+		for (const n of timeEntries) {
+			total += n.billable_amount;
+		}
 
-	// let overallTotal = $state(0);
-	// if (timeEntries.length) {
-	// 	// estimatedTotal = timeEntries.reduce(
-	// 	// 	(total: number, timeEntry: any) => total + timeEntry.billable_amount,
-	// 	// 	0
-	// 	// );
-
-	// 	timeEntries.forEach((entry) => {
-	// 		// console.log(entry);
-	// 		overallTotal = overallTotal + entry.billable_amount;
-	// 		// overallTotal + entry.billable_amount;
-	// 	});
-	// }
-
-	// $inspect(overallTotal);
+		return total;
+	});
 </script>
 
 <section>
@@ -69,7 +53,17 @@
 						<tbody>
 							{#each timeEntries as entry (entry.id)}
 								<tr transition:fly={{ x: 100 }}>
-									<td>{entry.project_name}</td>
+									<td>
+										<button
+											class="copy-project-name-btn"
+											onclick={() => {
+												navigator.clipboard.writeText(entry.project_name);
+											}}
+											aria-label="copy project name: {entry.project_name}"
+										>
+											{entry.project_name}
+										</button>
+									</td>
 									<td>{entry.client_contact}</td>
 									<td>{entry.date}</td>
 									<td>{entry.task_category}</td>

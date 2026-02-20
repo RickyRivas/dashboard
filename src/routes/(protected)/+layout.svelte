@@ -6,7 +6,7 @@
 	const { children }: LayoutProps = $props();
 	const routes = getNavRoutes('protected');
 
-	let currentPagePath = $derived(page.url.pathname);
+	let currentPage = $derived(page.url.pathname.split('/')[page.url.pathname.split('/').length - 1]);
 </script>
 
 <svelte:head>
@@ -20,7 +20,7 @@
 <div class="protected-body-wrapper">
 	<Navigation navType="protected" {routes} />
 
-	<main class="protected-layout">
+	<main class="protected-layout page-{currentPage}">
 		{@render children()}
 	</main>
 </div>
