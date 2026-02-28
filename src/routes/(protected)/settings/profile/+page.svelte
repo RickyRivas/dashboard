@@ -64,7 +64,51 @@
 	const deleteFormHandler = handleTriggerUpdate(deleteConfig);
 
 	// 4. display form. add a few fields that wont be updated by user
-	const extraFields: FieldDefinition[] = [];
+	const extraFields: FieldDefinition[] = [
+		{
+			configuration: {
+				inputAttributes: {
+					name: 'last-sign-in',
+					type: 'text',
+					value: moment(data.user?.last_sign_in_at).format('MMMM D, YYYY h:mm A'),
+					disabled: false
+				},
+				labelConfig: {
+					text: 'Last Sign In'
+				}
+			},
+			fieldState: { hasError: false, showSuccess: false, statusMessage: '' }
+		},
+		{
+			configuration: {
+				inputAttributes: {
+					name: 'created-at',
+					type: 'text',
+					value: moment(data.user?.created_at).format('MMMM D, YYYY h:mm A'),
+					disabled: false
+				},
+				labelConfig: {
+					text: 'Created At'
+				}
+			},
+			fieldState: { hasError: false, showSuccess: false, statusMessage: '' }
+		},
+		{
+			configuration: {
+				inputAttributes: {
+					name: 'updated-at',
+					type: 'text',
+					value: moment(data.user?.updated_at).format('MMMM D, YYYY h:mm A'),
+					disabled: false
+				},
+				labelConfig: {
+					text: 'Profile Last Updated'
+				}
+			},
+			fieldState: { hasError: false, showSuccess: false, statusMessage: '' }
+		}
+	];
+
 	const passwordField: FieldDefinition = $state({
 		configuration: {
 			inputAttributes: {
@@ -87,6 +131,8 @@
 			passwordField.configuration.inputAttributes.value =
 				'A password request has been sent to your email.';
 	});
+
+	console.log(data);
 </script>
 
 <section>
@@ -113,6 +159,7 @@
 						/>
 					{/if}
 				{:else}
+					<!-- display purposes, can add extra non-editable fields -->
 					<DisplayForm
 						classes={['display-form', 'child-form']}
 						name="display user data"

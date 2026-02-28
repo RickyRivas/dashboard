@@ -27,7 +27,9 @@
 		let total = 0;
 
 		for (const n of timeEntries) {
-			total += n.billable_amount;
+			if (n.status === 'Pending') {
+				total += n.billable_amount;
+			}
 		}
 
 		return `$${total}`;
@@ -43,8 +45,6 @@
 
 		return str;
 	});
-
-	$inspect(encryptedTotal);
 </script>
 
 <section>
