@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { page } from '$app/state';
 	import SlideshowWidget from '$lib/widgets/SlideshowWidget.svelte';
 </script>
@@ -17,4 +17,4 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section> -->
