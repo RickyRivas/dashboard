@@ -80,14 +80,14 @@
 		}}
 	>
 		{#snippet modalContent()}
-			<NotesWidget
+			<!-- <NotesWidget
 				data={notesJSON}
 				{notesLastSaved}
 				onUpdateValue={(newData) => {
 					if (newData.notes) notesJSON = newData.notes;
 					if (newData.lastUpdated) notesLastSaved = newData.lastUpdated;
 				}}
-			/>
+			/> -->
 		{/snippet}
 	</Modal>
 {/if}
