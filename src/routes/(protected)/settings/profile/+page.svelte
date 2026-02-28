@@ -131,8 +131,6 @@
 			passwordField.configuration.inputAttributes.value =
 				'A password request has been sent to your email.';
 	});
-
-	console.log(data);
 </script>
 
 <section>

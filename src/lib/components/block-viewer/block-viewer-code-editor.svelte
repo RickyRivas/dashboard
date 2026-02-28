@@ -20,12 +20,6 @@
 	import { oneDark } from '@codemirror/theme-one-dark';
 	type Lang = 'javascript' | 'html' | 'css';
 
-	// formatting/highlighting
-	import beautify from 'js-beautify';
-	import 'prismjs/components/prism-javascript';
-	import 'prismjs/components/prism-css';
-	import { highlightCode } from '$lib/highlight-code';
-
 	const formatOpts = {
 		inline: [''],
 		wrap_line_length: 100,
