@@ -10,19 +10,19 @@
 	import ToTop from '$lib/components/ToTop.svelte';
 
 	// // TODO: MIGRATE
-	// import Modal from '$lib/components/ui/Modal.svelte';
+	import Modal from '$lib/components/ui/Modal.svelte';
 
 	// // notes
-	// import NotesWidget from '$lib/widgets/NotesWidget.svelte';
+	import NotesWidget from '$lib/widgets/NotesWidget.svelte';
 	// import { createSettingsStore } from '$lib/components/content-editor/settingsStore';
 	// import { onMount, setContext } from 'svelte';
 	// import { getChecklistFromSB, getNotesFromSB } from '$lib/supabase-db';
 	// import ChecklistWidget from '$lib/widgets/ChecklistWidget.svelte';
 	import BuildTracker from '$lib/widgets/BuildTracker.svelte';
 
-	// let showNotesModal = $state(false);
-	// let notesJSON = $state();
-	// let notesLastSaved = $state('');
+	let showNotesModal = $state(false);
+	let notesJSON = $state();
+	let notesLastSaved = $state('');
 
 	// // Lexical Editor (global state)
 	// const settings = createSettingsStore();
@@ -52,7 +52,7 @@
 <div class="global-fixed-btns">
 	<ToTop />
 	<BuildTracker />
-	<!-- <button
+	<button
 		class="btn"
 		class:active={showNotesModal}
 		onclick={() => {
@@ -61,7 +61,7 @@
 	>
 		App Notes
 	</button>
-	<button
+	<!-- <button
 		class="btn"
 		class:active={showChecklistModal}
 		onclick={() => {
@@ -72,7 +72,7 @@
 	</button> -->
 </div>
 
-<!-- {#if showNotesModal}
+{#if showNotesModal}
 	<Modal
 		maxWidth={1000}
 		closeModal={() => {
@@ -92,7 +92,7 @@
 	</Modal>
 {/if}
 
-{#if showChecklistModal}
+<!-- {#if showChecklistModal}
 	<Modal
 		closeModal={() => {
 			showChecklistModal = false;
