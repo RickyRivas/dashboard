@@ -7,7 +7,7 @@
 	// let currentPagePath = $derived(page.url.pathname);
 	// let routes = $derived(findRouteInfo('/app')?.route.children as RouteInfo[]);
 
-	// import ToTop from '$lib/components/ToTop.svelte';
+	import ToTop from '$lib/components/ToTop.svelte';
 
 	// // TODO: MIGRATE
 	// import Modal from '$lib/components/ui/Modal.svelte';
@@ -18,7 +18,7 @@
 	// import { onMount, setContext } from 'svelte';
 	// import { getChecklistFromSB, getNotesFromSB } from '$lib/supabase-db';
 	// import ChecklistWidget from '$lib/widgets/ChecklistWidget.svelte';
-	// import BuildTracker from '$lib/widgets/BuildTracker.svelte';
+	import BuildTracker from '$lib/widgets/BuildTracker.svelte';
 
 	// let showNotesModal = $state(false);
 	// let notesJSON = $state();
@@ -49,10 +49,10 @@
 {@render children()}
 
 <!-- App Global -->
-<!-- <div class="global-fixed-btns">
+<div class="global-fixed-btns">
 	<ToTop />
 	<BuildTracker />
-	<button
+	<!-- <button
 		class="btn"
 		class:active={showNotesModal}
 		onclick={() => {
@@ -69,10 +69,10 @@
 		}}
 	>
 		Build Checklist
-	</button>
+	</button> -->
 </div>
 
-{#if showNotesModal}
+<!-- {#if showNotesModal}
 	<Modal
 		maxWidth={1000}
 		closeModal={() => {
