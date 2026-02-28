@@ -108,7 +108,7 @@
 	<div class="build-tracker-dropdown">
 		<h2>Build Tracker</h2>
 		{#if trackingBuild}
-			<h3>Tracking: {account}</h3>
+			<h3>Tracking: <span class="account">{account}</span></h3>
 		{/if}
 
 		{#if trackingBuild}
@@ -201,10 +201,19 @@
 			margin-bottom: 1em;
 		}
 		.build-tracker-btn-group {
-			display: flex;
-			flex-direction: column;
+			width: 100%;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			// display: flex;
+			// flex-direction: column;
 			flex-wrap: wrap;
-			gap: 5px;
+			gap: 0.5em;
+
+			a,
+			button {
+				overflow: auto;
+				white-space: nowrap;
+			}
 		}
 
 		&.open {
