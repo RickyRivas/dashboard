@@ -276,9 +276,13 @@ svg {
 
 .global-fixed-btns {
     position: fixed;
+    right: 0;
+    padding: 0 1em;
     bottom: 1em;
-    right: 1em;
     z-index: 3001;
+    display: block;
+    pointer-events: none;
+    // background-color: slateblue;
 
     #btt {
         transition: background-color .33s ease-in-out,
@@ -1026,5 +1030,13 @@ svg {
             //     font-size: .8em;
             // }
         }
+    }
+}
+
+main {
+    padding: 3em 0;
+
+    @media only screen and (min-width:1024px) {
+        padding: 5em 0;
     }
 }

@@ -45,26 +45,28 @@
 
 <!-- App Global -->
 <div class="global-fixed-btns">
-	<ToTop />
-	<BuildTracker />
-	<button
-		class="btn"
-		class:active={showNotesModal}
-		onclick={() => {
-			showNotesModal = !showNotesModal;
-		}}
-	>
-		App Notes
-	</button>
-	<button
-		class="btn"
-		class:active={showChecklistModal}
-		onclick={() => {
-			showChecklistModal = !showChecklistModal;
-		}}
-	>
-		Build Checklist
-	</button>
+	<div class="scroll-container">
+		<ToTop />
+		<BuildTracker />
+		<button
+			class="btn"
+			class:active={showNotesModal}
+			onclick={() => {
+				showNotesModal = !showNotesModal;
+			}}
+		>
+			<span class="cta">App Notes</span>
+		</button>
+		<button
+			class="btn"
+			class:active={showChecklistModal}
+			onclick={() => {
+				showChecklistModal = !showChecklistModal;
+			}}
+		>
+			<span class="cta">Build Checklist</span>
+		</button>
+	</div>
 </div>
 
 {#if showNotesModal}

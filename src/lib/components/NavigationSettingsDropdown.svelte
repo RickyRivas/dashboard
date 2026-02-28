@@ -60,15 +60,21 @@
 			gap: 10px;
 			background-color: transparent;
 			border: 1px solid transparent;
-			border-radius: var(--border-radius);
-			padding: 0.25em 0.25em;
+			border-radius: calc(var(--border-radius) / 2);
+			padding: 4px;
 			overflow: hidden;
 			transition:
 				background-color 0.33s ease-in-out,
 				border-color 0.33s ease-in-out;
-
+			@media only screen and (min-width: 1024px) {
+				padding: 0.25em 0.25em;
+				border-radius: var(--border-radius);
+			}
 			.info {
 				transition: opacity 0.33s ease-in-out;
+				@media only screen and (max-width: 1023px) {
+					display: none;
+				}
 			}
 			.name,
 			.email {
@@ -88,8 +94,8 @@
 				font-size: 13px;
 			}
 			.avatar {
-				width: 27px;
-				height: 27px;
+				width: 40px;
+				height: 40px;
 				border: 1px solid transparent;
 				flex-shrink: 0;
 				position: relative;
@@ -98,7 +104,10 @@
 				transition:
 					border-color 0.33s ease-in-out,
 					transform 0.1s ease-in-out;
-
+				@media only screen and (min-width: 1024px) {
+					width: 27px;
+					height: 27px;
+				}
 				img {
 					position: absolute;
 					top: 0;

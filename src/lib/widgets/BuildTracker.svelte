@@ -103,7 +103,7 @@
 			open = !open;
 		}}
 	>
-		<span>Build Tracker</span>
+		<span class="cta">Build Tracker</span>
 	</button>
 	<div class="build-tracker-dropdown">
 		<h2>Build Tracker</h2>
@@ -125,12 +125,12 @@
 				<a class="btn" target="_blank" href="https://www.sesamehub.com/sites/{account}/tools">
 					Build Tools
 				</a>
-				<a class="btn" href={spec_url} target="_blank">Go to spec url</a>
-				<a class="btn" href="http://localhost:8888/{account}/" target="_blank">localhost</a>
-				<a class="btn" href="http://{account}.sesamehub.com/" target="_blank">live</a>
+				<a class="btn" href={spec_url} target="_blank">SPEC</a>
+				<a class="btn" href="http://localhost:8888/{account}/" target="_blank">Localhost</a>
+				<a class="btn" href="http://{account}.sesamehub.com/" target="_blank">Live</a>
 				<a class="btn" href="http://{account}.sesamehub.com/proofs/index.html" target="_blank">
-					proof</a
-				>
+					Proof
+				</a>
 				<a
 					class="btn"
 					href="http://{account}.sesamehub.com/forms/appointment-request/success"
@@ -202,6 +202,7 @@
 		}
 		.build-tracker-btn-group {
 			display: flex;
+			flex-direction: column;
 			flex-wrap: wrap;
 			gap: 5px;
 		}
