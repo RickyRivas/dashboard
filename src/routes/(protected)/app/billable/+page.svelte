@@ -11,6 +11,8 @@
 	const { data }: PageProps = $props();
 	const timeEntries = $state(data.timeEntries);
 
+	let showEstimatedAmount = $state(false);
+
 	let timeEntryConfig = $state(timeEntryFormConfig);
 	const timeEntryFormHandler = handleTriggerUpdate(timeEntryConfig);
 
@@ -28,14 +30,39 @@
 			total += n.billable_amount;
 		}
 
-		return total;
+		return `$${total}`;
 	});
+
+	let encryptedTotal = $derived.by(() => {
+		const randChars = '~!@#$%^&*()?|}{';
+		let str = '';
+
+		for (let i = 0; i < `${estimatedTotal}`.length; i++) {
+			str += randChars[Math.floor(Math.random() * randChars.length)];
+		}
+
+		return str;
+	});
+
+	$inspect(encryptedTotal);
 </script>
 
 <section>
 	<div class="container">
 		<CardGroup>
-			<Card heading="Timesheet - Estimated Payout: ${estimatedTotal}">
+			<Card heading="Timesheet">
+				<h3>
+					<span>Estimated Payout:</span>
+					<button
+						class="btn estimated-payout-toggle"
+						aria-label="toggle shown amount"
+						onclick={() => {
+							showEstimatedAmount = !showEstimatedAmount;
+						}}
+					>
+						{showEstimatedAmount ? estimatedTotal : encryptedTotal}
+					</button>
+				</h3>
 				<div class="timesheet">
 					<table>
 						<thead>
@@ -138,3 +165,12 @@
 		</CardGroup>
 	</div>
 </section>
+
+<style lang="less">
+	h3 {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1em;
+	}
+</style>
