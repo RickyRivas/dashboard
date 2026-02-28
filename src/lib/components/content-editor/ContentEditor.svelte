@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
+	// required
 	import prism from 'prismjs';
 
 	import {
