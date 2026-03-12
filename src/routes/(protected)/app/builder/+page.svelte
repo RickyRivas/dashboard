@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { addCustomBlocks } from '$lib/builder/CustomBlocks';
+	import { addCustomSections } from '$lib/builder/CustomSections';
 	import TopPanel from '$lib/components/builder/TopPanel.svelte';
 	import DesktopView from '$lib/components/icons/DesktopView.svelte';
 	import DownloadIcon from '$lib/components/icons/DownloadIcon.svelte';
@@ -209,6 +211,8 @@
 		let pages = defaultPages;
 
 		let firstPage = Object.keys(pages)[0];
+
+		// inputs
 
 		let Input = {
 			init: function (name) {},
@@ -1939,17 +1943,21 @@
 			},
 			/* controls */
 			loadControlGroups: function () {
+				// Base & Embeds
 				let componentsList = document.querySelectorAll('.components-list');
 
-				let item = {},
-					component = {};
+				let item = {};
+				let component = {};
 				let count = 0;
 
 				componentsList.forEach(function (list, i) {
-					let type = list.dataset.type;
+					let type: 'leftpanel' | 'addbox' = list.dataset.type;
+
 					list.replaceChildren();
+
 					count++;
 
+					// load each group and their components
 					for (let group in Vvveb.ComponentsGroup) {
 						list.append(
 							generateElements(
@@ -1975,17 +1983,22 @@
 							component = Vvveb.Components.get(componentType);
 
 							if (component) {
+								// generate dnd button
 								item =
 									generateElements(`<li data-section="${group}" data-drag-type="component" data-type="${componentType}" data-search="${component.name.toLowerCase()}">
 							<span>${component.name}</span>
 						</li>`)[0];
 
-								if (component.image) {
-									item.style.backgroundImage = 'url(' + Vvveb.imgBaseUrl + component.image + ')';
-									item.style.backgroundRepeat = 'no-repeat';
-								}
+								// add special icons for each icon
+
+								// if (component.image) {
+								// 	item.style.backgroundImage = 'url(' + Vvveb.imgBaseUrl + component.image + ')';
+								// 	item.style.backgroundRepeat = 'no-repeat';
+								// }
 
 								componentsSubList.append(item);
+							} else {
+								console.error(`Component: ${componentType} not defined.`);
 							}
 						}
 					}
@@ -2000,7 +2013,7 @@
 					let type = list.dataset.type;
 					list.replaceChildren();
 
-					for (group in Vvveb.SectionsGroup) {
+					for (let group in Vvveb.SectionsGroup) {
 						list.append(
 							generateElements(
 								`<li class="header" data-section="${group}"  data-search="">
@@ -2016,12 +2029,12 @@
 						let sectionsSubList = list.querySelector('li[data-section="' + group + '"]  ol');
 						let sections = Vvveb.SectionsGroup[group];
 
-						for (i in sections) {
+						for (let i in sections) {
 							const sectionType = sections[i];
 							const section = Vvveb.Sections.get(sectionType);
 
 							if (section) {
-								item =
+								let item =
 									generateElements(`<li data-section="${group}" data-drag-type="section" data-type="${sectionType}" data-search="${section.name.toLowerCase()}">
 									<span class="name">${section.name}</span>
 									<div class="add-section-btn" title="Add section"><i class="la la-plus"></i></div>
@@ -2056,7 +2069,7 @@
 					let type = list.dataset.type;
 					list.replaceChildren();
 
-					for (group in Vvveb.BlocksGroup) {
+					for (let group in Vvveb.BlocksGroup) {
 						list.append(
 							generateElements(
 								`<li class="header" data-section="${group}"  data-search="">
@@ -2070,9 +2083,9 @@
 						);
 
 						let blocksSubList = list.querySelector('li[data-section="' + group + '"]  ol');
-						blocks = Vvveb.BlocksGroup[group];
+						let blocks = Vvveb.BlocksGroup[group];
 
-						for (i in blocks) {
+						for (let i in blocks) {
 							const blockType = blocks[i];
 							const block = Vvveb.Blocks.get(blockType);
 
@@ -2262,7 +2275,7 @@
 			},
 
 			loadNodeComponent: function (node) {
-				console.log('loadNodeComponent', node);
+				// console.log('loadNodeComponent', node);
 				const data = Vvveb.Components.matchNode(node);
 				let component;
 
@@ -2356,7 +2369,7 @@
 			},
 
 			selectNode: function (node) {
-				console.log('selecting node:', node);
+				// console.log('selecting node:', node);
 				let SelectBox = document.getElementById('select-box');
 
 				if (!node) {
@@ -2730,7 +2743,7 @@
 				self.frameBody.addEventListener('dblclick', highlightDbClick);
 
 				let highlightClick = function (event) {
-					console.log('highlightClick');
+					// console.log('highlightClick');
 					if (Vvveb.Builder.isPreview == false) {
 						if (event.target) {
 							if (Vvveb.WysiwygEditor.isActive) {
@@ -6840,6 +6853,7 @@
 
 		Vvveb.ComponentsGroup['Base'] = [
 			'html/heading',
+			'html/ricky',
 			'html/image',
 			'html/hr',
 			'html/form',
@@ -8647,6 +8661,9 @@ ignorance of what is good or evil..</pre>`,
 			});
 			Vvveb.ComponentsGroup['Embeds'].push('embeds/' + provider);
 		}
+
+		addCustomBlocks(Vvveb);
+		addCustomSections(Vvveb);
 
 		// step 1
 		Vvveb.Builder.init(pages[firstPage]['url'], function () {
