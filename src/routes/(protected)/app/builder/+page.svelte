@@ -205,6 +205,15 @@
 				title: 'Home page',
 				folder: null,
 				description: 'Website homepage'
+			},
+			interior: {
+				name: 'interior',
+				filename: 'interior.html',
+				file: '/builder-interior.html',
+				url: '/builder-interior.html',
+				title: 'Interior Page',
+				folder: null,
+				description: 'Interior Page'
 			}
 		};
 
@@ -2670,7 +2679,8 @@
 
 						//if component properties is loaded in left panel tab instead of right panel show tab
 						let propertiesTab = document.querySelector('.component-properties-tab a');
-						if (propertiesTab.offsetParent) {
+
+						if (propertiesTab && propertiesTab.offsetParent) {
 							//if properites tab is enabled/visible
 							propertiesTab.style.display = '';
 							console.log('show properites tab');
@@ -3105,6 +3115,7 @@
 							.forEach((e) => (e.style.display = 'none'));
 
 						self.dragType = element.dataset.dragType;
+
 						if (self.dragType == 'component') {
 							self.component = Vvveb.Components.get(element.dataset.type);
 						} else if (self.dragType == 'section') {
@@ -3122,7 +3133,6 @@
 						}
 
 						self.dragElement = generateElements(html)[0];
-						//self.dragElement.css("border", "1px dashed #4285f4");
 
 						if (self.component.dragStart)
 							self.dragElement = self.component.dragStart(self.dragElement);
@@ -3189,7 +3199,6 @@
 								})
 							);
 
-							//self.frameBody.trigger("mousemove", event);
 							event.stopPropagation();
 							self.selectNode(false);
 						}
@@ -3294,7 +3303,7 @@
 				if (type == 'section') {
 					Vvveb.Sections.add('reusable/' + name, {
 						name,
-						image: 'img/logo-small.png',
+						image: '/logo.svg',
 						html: element.outerHTML
 					});
 
@@ -3307,7 +3316,7 @@
 				} else {
 					Vvveb.Blocks.add('reusable/' + name, {
 						name,
-						image: 'img/logo-small.png',
+						image: '/logo.svg',
 						html: element.outerHTML
 					});
 
@@ -3321,27 +3330,28 @@
 
 				let data = { type, name, html: element.outerHTML };
 
-				fetch(saveReusableUrl, { method: 'POST', body: new URLSearchParams(data) })
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(response);
-						}
-						return response.text();
-					})
-					.then((data) => {
-						if (callback) callback(data);
-						let bg = 'bg-success';
-						if (true || data.success || text == 'success') {
-						} else {
-							bg = 'bg-danger';
-						}
+				// TODO: Save reusable to DB
+				// fetch(saveReusableUrl, { method: 'POST', body: new URLSearchParams(data) })
+				// 	.then((response) => {
+				// 		if (!response.ok) {
+				// 			throw new Error(response);
+				// 		}
+				// 		return response.text();
+				// 	})
+				// 	.then((data) => {
+				// 		if (callback) callback(data);
+				// 		let bg = 'bg-success';
+				// 		if (true || data.success || text == 'success') {
+				// 		} else {
+				// 			bg = 'bg-danger';
+				// 		}
 
-						displayToast(bg, 'Save', data.message ?? data);
-					})
-					.catch((error) => {
-						console.log(error.statusText);
-						displayToast('bg-danger', 'Error', 'Error saving!');
-					});
+				// 		displayToast(bg, 'Save', data.message ?? data);
+				// 	})
+				// 	.catch((error) => {
+				// 		console.log(error.statusText);
+				// 		displayToast('bg-danger', 'Error', 'Error saving!');
+				// 	});
 			},
 
 			saveAjax: function (data, saveUrl, callback, error) {
@@ -8703,6 +8713,7 @@ ignorance of what is good or evil..</pre>`,
 							id="new-file-btn"
 							data-vvveb-action="newPage"
 							data-vvveb-shortcut=""
+							disabled="true"
 						>
 							<span>Add new</span>
 						</button>
