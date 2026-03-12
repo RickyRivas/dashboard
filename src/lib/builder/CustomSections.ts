@@ -1,10 +1,10 @@
 const customSections = [
-    {
-        group: 'Rivas Web Designs',
-        type: 'rwd/slideshow',
-        name: 'Common Hero Swiper Slideshow',
-        image: '',
-        html: `<div class='swiper slideshow-swiper'>
+  {
+    group: 'Rivas Web Designs',
+    type: 'rwd/slideshow',
+    name: 'Common Hero Swiper Slideshow',
+    image: '',
+    html: `<section class="hero"><div class='swiper slideshow-swiper'>
   <div class="swiper-wrapper">
     <div class="swiper-slide slide">
       <div class="decor">
@@ -58,20 +58,20 @@ const customSections = [
   <button class="slideshownext" aria-label="next slide">
     <span class="icon fas fa-arrow-right" aria-hidden="true" role="img"></span>
   </button>
-</div>`
-    }
+</div><section>`
+  }
 ];
 
 export function addCustomSections(singleton) {
-    for (const block of customSections) {
-        singleton.SectionsGroup[block.group] ??= []
+  for (const block of customSections) {
+    singleton.SectionsGroup[block.group] ??= []
 
-        if (!singleton.SectionsGroup[block.group].includes(block.type)) {
-            singleton.SectionsGroup[block.group].push(block.type)
-        }
-
-        singleton.Sections.add(block.type, {
-            name: block.name, image: block.image, html: block.html
-        })
+    if (!singleton.SectionsGroup[block.group].includes(block.type)) {
+      singleton.SectionsGroup[block.group].push(block.type)
     }
+
+    singleton.Sections.add(block.type, {
+      name: block.name, image: block.image, html: block.html
+    })
+  }
 }

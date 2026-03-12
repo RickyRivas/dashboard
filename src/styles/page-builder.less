@@ -166,14 +166,22 @@ main.page-builder {
                                 padding: 0 1em;
 
                                 .file-actions {
+                                    .flex;
+                                    .jc(center);
+                                    .ai(center);
+                                    gap: 2px;
 
                                     button,
                                     a {
-                                        line-height: 44px;
-                                        height: 44px;
-                                        width: 24px;
+                                        height: 30px;
+                                        width: 30px;
                                         display: inline-block;
                                         vertical-align: top;
+                                        padding: 0 5px;
+                                        .lh(30px);
+                                        border-radius: 5px;
+
+                                        svg {}
                                     }
                                 }
                             }
@@ -293,6 +301,8 @@ main.page-builder {
                                         width: 24px;
                                         height: 44px;
                                         line-height: 44px;
+                                        padding: 0;
+                                        border-radius: 5px;
                                     }
                                 }
 
@@ -313,6 +323,13 @@ main.page-builder {
 
                                 .tree {
                                     margin: 0;
+                                }
+
+                                // dragging state
+                                &.drag-over {
+                                    border-style: dotted;
+                                    border-color: green;
+                                    border-width: 2px;
                                 }
                             }
                         }

@@ -5483,6 +5483,8 @@
 			},
 
 			restore: function (mutation, undo) {
+				let addedNodes, removedNodes;
+
 				switch (mutation.type) {
 					case 'childList':
 						if (undo == true) {
@@ -5535,7 +5537,7 @@
 							: mutation.newValue;
 						break;
 					case 'attributes':
-						value = undo ? mutation.oldValue : mutation.newValue;
+						let value = undo ? mutation.oldValue : mutation.newValue;
 
 						if (value || value === false || value === 0)
 							mutation.target.setAttribute(mutation.attributeName, value);
@@ -6863,7 +6865,6 @@
 
 		Vvveb.ComponentsGroup['Base'] = [
 			'html/heading',
-			'html/ricky',
 			'html/image',
 			'html/hr',
 			'html/form',
@@ -7017,7 +7018,7 @@
 			html:
 				'<img src="' +
 				Vvveb.baseUrl +
-				'icons/image.svg" width="200" class="img-fluid align-center">',
+				'icons/image.svg" width="200" height="200" class="img-fluid align-center">',
 			image: 'icons/image.svg',
 			resizable: true, //show select box resize handlers
 

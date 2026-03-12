@@ -245,11 +245,11 @@
 			  </div>
 				<div class="buttons">
 					<a class="delete-btn" href="" title="Remove section"><i class="icon-trash-outline text-danger"></i></a>
-					<!-- 
+					
 					<a class="up-btn" href="" title="Move element up"><i class="la la-arrow-up"></i></a>
 					<a class="down-btn" href="" title="Move element down"><i class="la la-arrow-down"></i></a>
 					<a class="properties-btn" href="" title="Properties"><i class="icon-settings-outline"></i></a>
-					-->
+					
 		</div>
 			</div>
 
@@ -528,9 +528,26 @@
 		<label for="{%=name%}" {% if (typeof description !== 'undefined') { %} title="{%=description%}" {% } %}>
 			<span>{%=title%}</span>
 			<div class="file-actions">
-				<button href="#" class="delete btn btn-outline-danger" title="Delete"><i class="la la-trash"></i></button>
-				<a href="{%=url%}" target="_blank" class="view btn btn-outline-primary" title="View page"><i class="la la la-external-link-alt"></i></a>
-				<button href="#" class="rename btn btn-outline-primary" title="Rename"><i class="la la-pen"></i></button>
+				<button  class="delete btn btn-outline-danger" title="Delete">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M15.998 4.805 15.4 6.6H8.8c-1.217 0-2.2.983-2.2 2.2S7.583 11 8.8 11h26.4c1.217 0 2.2-.983 2.2-2.2s-.983-2.2-2.2-2.2h-6.6l-.598-1.795a2.203 2.203 0 0 0-2.09-1.505h-7.824c-.949 0-1.787.605-2.09 1.505ZM35.2 14.3H8.8l1.45 22.213a3.296 3.296 0 0 0 3.294 3.087h16.912a3.296 3.296 0 0 0 3.293-3.087L35.2 14.3Z" />
+					</svg>
+				</button>
+				<a href="{%=url%}" target="_blank" class="view btn btn-outline-primary" title="View page">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none"
+						viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M26.4 4.4c-1.217 0-2.2.983-2.2 2.2s.983 2.2 2.2 2.2h5.686L18.239 22.646a2.203 2.203 0 0 0 3.115 3.114L35.2 11.915V17.6c0 1.217.983 2.2 2.2 2.2s2.2-.983 2.2-2.2v-11c0-1.217-.983-2.2-2.2-2.2h-11ZM9.9 11a5.499 5.499 0 0 0-5.5 5.5v17.6c0 3.039 2.461 5.5 5.5 5.5h17.6c3.039 0 5.5-2.461 5.5-5.5v-5.5c0-1.217-.983-2.2-2.2-2.2s-2.2.983-2.2 2.2v5.5c0 .605-.495 1.1-1.1 1.1H9.9c-.605 0-1.1-.495-1.1-1.1V16.5c0-.605.495-1.1 1.1-1.1h5.5c1.217 0 2.2-.983 2.2-2.2s-.983-2.2-2.2-2.2H9.9Z">
+						</path>
+					</svg>
+				</a>
+				<button href="#" class="rename btn btn-outline-primary" title="Rename">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M6.902 28.683a6.076 6.076 0 0 1 1.554-2.661l12.458-12.457 2.33-2.331 7.15 7.15 2.331 2.33-2.33 2.331-12.458 12.458a6.103 6.103 0 0 1-2.66 1.553L6.49 39.504c-.57.158-1.19 0-1.609-.426a1.66 1.66 0 0 1-.42-1.61l2.441-8.785Zm3.823-.255a2.726 2.726 0 0 0-.64 1.142L8.43 35.544l5.974-1.657a2.76 2.76 0 0 0 1.169-.667l-4.854-4.792h.007Zm24.337-10.044-7.15-7.15-2.337-2.33 3.087-3.088a4.946 4.946 0 0 1 3.513-1.457c1.32 0 2.585.522 3.513 1.457l2.454 2.455a4.97 4.97 0 0 1 1.458 3.513 4.958 4.958 0 0 1-1.458 3.513l-3.086 3.087h.007Z" />
+					</svg>
+				</button>
 			</div>
 		</label> <input type="checkbox" id="{%=name%}" />
 		<!-- <ol></ol> -->
@@ -621,12 +638,33 @@
 				</div>
 			</div>
 			<div class="buttons">
-				<a class="delete-btn" href="" title="Remove section"><i class="la la-trash text-danger"></i></a>
-				<!-- 
-				<a class="up-btn" href="" title="Move element up"><i class="la la-arrow-up"></i></a>
-				<a class="down-btn" href="" title="Move element down"><i class="la la-arrow-down"></i></a>
-				-->
-				<a class="properties-btn" href="" title="Properties"><i class="icon-settings-outline"></i></a>
+				<a class="delete-btn btn" href="" title="Remove section">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none"
+						viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M15.998 4.805 15.4 6.6H8.8c-1.217 0-2.2.983-2.2 2.2S7.583 11 8.8 11h26.4c1.217 0 2.2-.983 2.2-2.2s-.983-2.2-2.2-2.2h-6.6l-.598-1.795a2.203 2.203 0 0 0-2.09-1.505h-7.824c-.949 0-1.787.605-2.09 1.505ZM35.2 14.3H8.8l1.45 22.213a3.296 3.296 0 0 0 3.294 3.087h16.912a3.296 3.296 0 0 0 3.293-3.087L35.2 14.3Z">
+						</path>
+					</svg>
+				</a>
+				<a class="up-btn btn" href="" title="Move element up">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M14.929 12.247a1 1 0 0 1 0-1.415l6.364-6.364a1 1 0 0 1 1.414 0l6.364 6.364a1 1 0 0 1-1.414 1.415L23 7.589v31.236h-2V7.589l-4.657 4.658a1 1 0 0 1-1.414 0Z" />
+					</svg>
+				</a>
+				<a class="down-btn btn" href="" title="Move element down">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M14.929 30.753a1 1 0 0 0 0 1.414l6.364 6.365a1 1 0 0 0 1.414 0l6.364-6.364a1 1 0 0 0-1.414-1.415L23 35.411V4.175h-2v31.236l-4.657-4.658a1 1 0 0 0-1.414 0Z" />
+					</svg>
+				</a>
+				<a class="properties-btn btn" href="" title="Properties">
+					<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+						<path fill="currentColor"
+							d="M17.813 5.053A2.195 2.195 0 0 1 19.965 3.3h4.111c1.045 0 1.946.735 2.152 1.753l.997 4.812c.97.413 1.877.942 2.702 1.568l4.661-1.547c.99-.33 2.076.083 2.599.99l2.056 3.561a2.193 2.193 0 0 1-.447 2.743l-3.665 3.26c.062.508.09 1.03.09 1.56s-.035 1.052-.09 1.56l3.672 3.266c.783.694.962 1.843.446 2.743l-2.055 3.561a2.205 2.205 0 0 1-2.599.99l-4.661-1.546a13.378 13.378 0 0 1-2.702 1.567l-.99 4.806A2.2 2.2 0 0 1 24.09 40.7h-4.111a2.195 2.195 0 0 1-2.152-1.753l-.99-4.806c-.97-.412-1.87-.942-2.702-1.567L9.453 34.12a2.197 2.197 0 0 1-2.599-.99L4.8 29.57a2.194 2.194 0 0 1 .447-2.744l3.67-3.266A12.947 12.947 0 0 1 8.828 22c0-.53.035-1.052.09-1.56l-3.671-3.266A2.204 2.204 0 0 1 4.8 14.43l2.055-3.56a2.197 2.197 0 0 1 2.6-.99l4.66 1.546a13.37 13.37 0 0 1 2.702-1.567l.997-4.806ZM22.021 27.5a5.499 5.499 0 0 0 5.479-5.52 5.499 5.499 0 0 0-5.52-5.48 5.499 5.499 0 0 0-5.48 5.52 5.498 5.498 0 0 0 5.52 5.48Z" />
+					</svg>
+
+				</a>
 		</div>
 		</div>
 
