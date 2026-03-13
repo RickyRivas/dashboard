@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { attachContainerComponents } from '$lib/builder/components';
 	import { addCustomBlocks } from '$lib/builder/CustomBlocks';
 	import { addCustomSections } from '$lib/builder/CustomSections';
 	import TopPanel from '$lib/components/builder/TopPanel.svelte';
+	import TreeListNav from '$lib/components/builder/TreeListNav.svelte';
 	import DesktopView from '$lib/components/icons/DesktopView.svelte';
 	import DownloadIcon from '$lib/components/icons/DownloadIcon.svelte';
 	import ExpandIcon from '$lib/components/icons/ExpandIcon.svelte';
@@ -1365,24 +1367,16 @@
 				if (!node || !node.tagName) return false;
 
 				if (node.attributes && node.attributes.length) {
-					//search for attributes
 					for (let i in node.attributes) {
 						if (node.attributes[i]) {
-							// attr = node.attributes[i].name;
-							// value = node.attributes[i].value;
-							let attr = node.attributes[i].name;
-							let value = node.attributes[i].value;
+							const attr = node.attributes[i].name;
+							const value = node.attributes[i].value;
 
 							if (attr in this._attributesLookup) {
-								// component = this._attributesLookup[attr];
-								let component = this._attributesLookup[attr];
+								component = this._attributesLookup[attr];
 
-								//currently we check that is not a component by looking at name attribute
-								//if we have a collection of objects it means that attribute value must be checked
 								if (typeof component['name'] === 'undefined') {
-									if (value in component) {
-										return component[value];
-									}
+									if (value in component) return component[value];
 								} else {
 									return component;
 								}
@@ -1391,37 +1385,30 @@
 					}
 
 					for (let i in node.attributes) {
-						// attr = node.attributes[i].name;
-						// value = node.attributes[i].value;
-						let attr = node.attributes[i].name;
-						let value = node.attributes[i].value;
+						if (!node.attributes[i]) continue;
+						const attr = node.attributes[i].name;
+						const value = node.attributes[i].value;
 
-						//check for node classes
 						if (attr == 'class') {
-							// classes = value.split(' ');
-							let classes = value.split(' ');
+							const classes = value.split(' ');
 
-							for (let j in classes) {
+							for (const j in classes) {
 								if (classes[j] in this._classesLookup) return this._classesLookup[classes[j]];
 							}
 
-							for (regex in this._classesRegexLookup) {
-								regexObj = new RegExp(regex);
-								if (regexObj.exec(value)) {
-									return this._classesRegexLookup[regex];
-								}
+							for (const regex in this._classesRegexLookup) {
+								const regexObj = new RegExp(regex);
+								if (regexObj.exec(value)) return this._classesRegexLookup[regex];
 							}
 						}
 					}
 				}
 
-				let tagName = node.tagName.toLowerCase();
+				const tagName = node.tagName.toLowerCase();
 				if (tagName in this._nodesLookup) return this._nodesLookup[tagName];
 
 				return false;
-				//return false;
 			},
-
 			render: function (type, panel = false) {
 				let component = this._components[type];
 				if (!component) return;
@@ -2284,7 +2271,6 @@
 			},
 
 			loadNodeComponent: function (node) {
-				// console.log('loadNodeComponent', node);
 				const data = Vvveb.Components.matchNode(node);
 				let component;
 
@@ -4219,6 +4205,7 @@
 
 						let element;
 						let matchChild;
+						// only returns REGISTERED components to the tree
 						if (
 							child &&
 							child['attributes'] != undefined &&
@@ -4275,6 +4262,21 @@
 						id = prefix + '-' + j + '-' + i;
 					}
 
+					let title = '';
+
+					// use either title, id, or first classname in the tree li markup
+					if (node.title) {
+						title = friendlyName(node.title.substr(0, 21));
+					} else if (node.node.id) {
+						title = `#${node.node.id}`;
+					} else if (node.node.classList.length > 0) {
+						title = `.${node.node.classList[0]}`;
+					}
+
+					if (title) {
+						title = ` - <span class="text-secondary">${title}</span>`;
+					}
+
 					if (tree[i].children.length > 0) {
 						li = generateElements(
 							'<li data-component="' +
@@ -4285,9 +4287,13 @@
 								'" style="background-image:url(' +
 								Vvveb.imgBaseUrl +
 								node.image +
-								')"><span>' +
+								')">\
+									<span>' +
 								node.name +
-								'</span></label>\
+								'</span>' +
+								title +
+								'\
+								</label>\
 								<input type="checkbox" id="id' +
 								id +
 								'">\
@@ -4304,9 +4310,13 @@
 								'" style="background-image:url(' +
 								Vvveb.imgBaseUrl +
 								node.image +
-								')"><span>' +
+								')">\
+								<span>' +
 								node.name +
-								'</span></label>\
+								'</span>' +
+								title +
+								'\
+							</label>\
 							<input type="checkbox" id="id' +
 								id +
 								'">\
@@ -4668,7 +4678,10 @@
 						Vvveb.Builder.loadNodeComponent(node);
 
 						document.querySelector(self.selector + ' .active')?.classList.remove('active');
+
+						// treelist active tab/button
 						element.querySelector('label').classList.add('active');
+						// element.querySelector('button').classList.add('active');
 					}
 				});
 
@@ -4733,16 +4746,19 @@
 
 			loadComponents: function () {
 				let list = this.container.querySelector('.tree > ol');
+
 				//if navigator not visible don't load
 				if (list.offsetParent === null) return;
 
 				this.tree = [];
 				this.idToNode = {};
+
 				getNodeTree(window.FrameDocument.body, this.tree, {}, this.idToNode);
 
 				let ol = drawComponentsTree(this.tree);
+
 				list.replaceWith(ol);
-				//list.replaceWith(html);
+				// list.replaceWith(html);
 			}
 		};
 
@@ -6861,8 +6877,6 @@
 			properties: []
 		});
 
-		// initialize
-
 		Vvveb.ComponentsGroup['Base'] = [
 			'html/heading',
 			'html/image',
@@ -8170,6 +8184,7 @@ ignorance of what is good or evil..</pre>`,
 				}
 			]
 		});
+
 		Vvveb.Components.extend('_base', 'html/tablecell', {
 			nodes: ['td'],
 			image: 'icons/table.svg',
@@ -8675,8 +8690,9 @@ ignorance of what is good or evil..</pre>`,
 
 		addCustomBlocks(Vvveb);
 		addCustomSections(Vvveb);
+		attachContainerComponents(Vvveb);
 
-		// step 1
+		// INITIALIZE
 		Vvveb.Builder.init(pages[firstPage]['url'], function () {
 			//load code after page is loaded here
 		});
@@ -9885,26 +9901,4 @@ ignorance of what is good or evil..</pre>`,
 	</div>
 </div>
 
-<!--  -->
-<div id="tree-list" class="d-none">
-	<div class="header">
-		<div>Navigator</div>
-		<button class="btn btn-sm" data-vvveb-action="toggleTreeList" aria-pressed="true">
-			<i class="icon-close"></i>
-		</button>
-	</div>
-	<div class="tree">
-		<ol>
-			<!--
-			<li data-component="Products" class="file">							
-				<label for="idNaN" style="background-image:url(/js/vvvebjs/icons/products.svg)"><span>Products</span></label>							
-				<input type="checkbox" id="idNaN">
-			</li>
-			<li data-component="Posts" class="file">							
-				<label for="idNaN" style="background-image:url(/js/vvvebjs/icons/posts.svg)"><span>Posts</span></label>							
-				<input type="checkbox" id="idNaN">
-			</li>
-			-->
-		</ol>
-	</div>
-</div>
+<TreeListNav />

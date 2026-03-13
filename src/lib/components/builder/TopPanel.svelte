@@ -110,12 +110,12 @@
 		</button>
 
 		<button
-			class="btn icon-btn active"
+			class="btn icon-btn"
 			title="Toggle navigator (Ctrl + Shift + N)"
 			id="toggle-tree-list"
 			data-bs-toggle="button"
 			data-vvveb-action="toggleTreeList"
-			aria-pressed="true"
+			aria-pressed="false"
 		>
 			<LayersIcon />
 		</button>

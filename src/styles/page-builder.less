@@ -779,9 +779,9 @@ main.page-builder {
         display: block;
         border-bottom: 1px solid var(--border-color);
 
-        input[type="checkbox"] {
-            display: none;
-        }
+        // input[type="checkbox"] {
+        //     display: none;
+        // }
 
         input[type="checkbox"]:checked {
             background-color: pink;
@@ -851,8 +851,124 @@ main.page-builder {
     height: 500px;
     resize: both;
     overflow: hidden;
+    border: 2px solid var(--primary);
 
-    .header {}
+    // remove
+    z-index: 7777;
+
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 20px;
+        cursor: grabbing;
+
+        .cta {
+            font-size: .8em;
+            line-height: 44px;
+        }
+
+        .btns {
+            button {
+                line-height: 30px;
+                height: 30px;
+                width: 30px;
+                padding: 0;
+                border-radius: 5px;
+            }
+        }
+    }
+
+    .tree {
+        padding: 20px;
+        font-size: 14px;
+        overflow-x: auto;
+        height: 100%;
+
+        ul,
+        ol {
+            display: block;
+            margin: 0;
+            list-style: none;
+            margin-left: 10px;
+            background-color: fade(slateblue, 10%);
+
+            // // sub lists
+            // &:not(.top-level-list) {
+            //     &>li {
+            //         &>button {
+            //             background: pink;
+            //         }
+
+            //         &>ol {
+            //             // .hide;
+            //         }
+            //     }
+            // }
+
+            // ol {
+            //     .hide;
+            // }
+
+            li {
+                position: relative;
+
+                // chevron
+                // &::after {
+                //     content: "";
+                //     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M11.152 17.647c.47.469 1.23.469 1.7 0l7.2-7.2a1.202 1.202 0 0 0-1.7-1.698L12 15.1 5.647 8.752a1.202 1.202 0 0 0-1.698 1.699l7.2 7.2.004-.004Z'/%3E%3C/svg%3E%0A") center / cover no-repeat;
+                //     width: 24px;
+                //     height: 24px;
+                //     position: absolute;
+                //     top: 0;
+                //     right: 0;
+                // }
+
+                button {
+                    font: inherit;
+                    font-size: 14px;
+                    background: none;
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    .flex;
+                    .ai(center);
+                    overflow-y: auto;
+                    line-height: 24px;
+                    gap: 5px;
+                    color: inherit;
+                    white-space: nowrap;
+
+                    // .icon {
+                    //     width: 44px;
+                    //     // temp
+                    //     .hide;
+                    // }
+                }
+
+                .mod {
+
+
+
+
+                    label {
+                        white-space: nowrap;
+                        overflow: auto;
+                    }
+
+                    input[type="checkbox"] {
+                        .hide;
+
+                        &::checked+li {
+                            height: 44px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     &.d-none {
         display: none;

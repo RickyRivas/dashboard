@@ -16,7 +16,9 @@ How it works:
 
 3. FileManager.init() - attaches listeners to filemanager elements (I.E. rename page)
 
-4. 
+4. SectionList.init() - reads the iframe and returns the sections and makes them into a configurable list in the gui
+
+5. TreeList.init() - adds dnd to navigator
 
 
 VVVEB Singleton:
